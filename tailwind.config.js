@@ -14,6 +14,9 @@ module.exports = {
       screens: {
         "2xl": "1400px",
       },
+      debugScreens: {
+        position: ['bottom', 'left'],
+      },
     },
     extend: {
       colors: {
@@ -72,5 +75,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("tailwindcss-debug-screens")
+  ],
 }

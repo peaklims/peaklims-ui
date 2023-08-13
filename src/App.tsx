@@ -8,7 +8,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="h-full min-h-screen font-sans antialiased scroll-smooth">
+      <div className="h-full min-h-screen font-sans antialiased scroll-smooth debug-screens">
         <Main />
       </div>
     </QueryClientProvider>
