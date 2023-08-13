@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { buttonVariants } from "./components/ui/button";
+import NavigationLayout from "./layouts/NavigationLayout";
 import { useAuthUser } from "./services/auth";
 
 const queryClient = new QueryClient();
@@ -7,7 +8,9 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Main />
+      <div className="h-full min-h-screen font-sans antialiased scroll-smooth">
+        <Main />
+      </div>
     </QueryClientProvider>
   );
 }
@@ -16,7 +19,7 @@ function Main() {
   const { isLoggedIn, username, logoutUrl, isLoading } = useAuthUser();
   // const { data: recipes } = useRecipes();
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center w-screen h-screen transition-all bg-slate-100">
         <svg
@@ -41,30 +44,35 @@ function Main() {
         </svg>
       </div>
     );
+  }
 
   return (
-    <div className="p-20">
+    <>
       {!isLoggedIn ? (
-        <a
-          href="/bff/login?returnUrl=/"
-          className={buttonVariants({ variant: "default" })}
-        >
-          Login
-        </a>
+        <div className="p-20">
+          <a
+            href="/bff/login?returnUrl=/"
+            className={buttonVariants({ variant: "default" })}
+          >
+            Login
+          </a>
+        </div>
       ) : (
-        <div className="flex-shrink-0 block">
-          <div className="flex items-center">
-            <div className="ml-3">
-              <p className="block text-base font-medium text-blue-500 md:text-sm">{`Hi, ${username}!`}</p>
-              <a
-                href={logoutUrl?.value}
-                className={buttonVariants({ variant: "outline" })}
-              >
-                Logout
-              </a>
+        <NavigationLayout>
+          <div className="flex-shrink-0 block">
+            <div className="flex items-center">
+              <div className="ml-3">
+                <p className="block text-base font-medium text-blue-500 md:text-sm">{`Hi, ${username}!`}</p>
+                <a
+                  href={logoutUrl?.value}
+                  className={buttonVariants({ variant: "outline" })}
+                >
+                  Logout
+                </a>
+              </div>
             </div>
           </div>
-        </div>
+        </NavigationLayout>
       )}
       {/* {
         <ul className="py-10 space-y-2">
@@ -76,7 +84,7 @@ function Main() {
             ))}
         </ul>
       } */}
-    </div>
+    </>
   );
 }
 
