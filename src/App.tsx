@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { buttonVariants } from "./components/ui/button";
 import { useAuthUser } from "./services/auth";
 
 const queryClient = new QueryClient();
@@ -17,9 +18,9 @@ function Main() {
 
   if (isLoading)
     return (
-      <div className="h-screen w-screen bg-slate-100 transition-all flex items-center justify-center">
+      <div className="flex items-center justify-center w-screen h-screen transition-all bg-slate-100">
         <svg
-          className="animate-spin h-6 w-6 text-slate-800"
+          className="w-6 h-6 animate-spin text-slate-800"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -46,7 +47,7 @@ function Main() {
       {!isLoggedIn ? (
         <a
           href="/bff/login?returnUrl=/"
-          className="inline-block px-4 py-2 text-base font-medium text-center text-white bg-blue-500 border border-transparent rounded-md hover:bg-opacity-75"
+          className={buttonVariants({ variant: "default" })}
         >
           Login
         </a>
@@ -57,7 +58,7 @@ function Main() {
               <p className="block text-base font-medium text-blue-500 md:text-sm">{`Hi, ${username}!`}</p>
               <a
                 href={logoutUrl?.value}
-                className="block mt-1 text-sm font-medium text-blue-200 hover:text-blue-500 md:text-xs"
+                className={buttonVariants({ variant: "outline" })}
               >
                 Logout
               </a>
@@ -69,7 +70,7 @@ function Main() {
         <ul className="py-10 space-y-2">
           {recipes &&
             recipes.map((recipe) => (
-              <li className="text-medium px-4 py-3 rounded-md border border-gray-20 shadow">
+              <li className="px-4 py-3 border rounded-md shadow text-medium border-gray-20">
                 {recipe.title}
               </li>
             ))}
