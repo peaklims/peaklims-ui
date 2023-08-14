@@ -13,7 +13,6 @@ import { cn } from "@/lib/utils";
 import { User as UserType, useAuthUser } from "@/services/auth";
 import {
   Aperture,
-  Calendar,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -22,17 +21,17 @@ import {
 } from "lucide-react";
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: LayoutDashboard, current: true },
-  { name: "Team", href: "#", icon: Aperture, current: false },
-  { name: "Projects", href: "#", icon: Aperture, current: false },
-  { name: "Calendar", href: "#", icon: Calendar, current: false },
-  { name: "Documents", href: "#", icon: Aperture, current: false },
-  { name: "Reports", href: "#", icon: Calendar, current: false },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard, current: true },
+  { name: "Orders", href: "/orders", icon: Aperture, current: false },
+  // { name: "Projects", href: "#", icon: Aperture, current: false },
+  // { name: "Calendar", href: "#", icon: Calendar, current: false },
+  // { name: "Documents", href: "#", icon: Aperture, current: false },
+  // { name: "Reports", href: "#", icon: Calendar, current: false },
 ];
 const teams = [
-  { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-  { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-  { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
+  // { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
+  // { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
+  // { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
 ];
 
 export default function NavigationLayout({

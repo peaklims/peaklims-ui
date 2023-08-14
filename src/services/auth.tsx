@@ -57,6 +57,8 @@ function useAuthUser() {
     setIsLoggedIn(!!username);
   }, [username]);
 
+  console.log("isLoggedIn", isLoggedIn);
+
   return {
     user,
     logoutUrl: logoutUrl?.value ?? undefined,
