@@ -1,5 +1,7 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { useAuthUser } from "@/services/auth";
 import { Aperture, Calendar, Menu } from "lucide-react";
 
 const navigation = [
@@ -21,10 +23,12 @@ export default function NavigationLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { user } = useAuthUser();
+
   return (
     <>
       <div>
-        <DesktopMenu />
+        <DesktopMenu user={user} />
 
         <div className="sticky top-0 z-40 flex items-center px-4 py-4 bg-white shadow-sm gap-x-6 sm:px-6 lg:hidden">
           <div className="flex-1 text-sm font-semibold leading-6 text-gray-900">
@@ -142,7 +146,7 @@ function MobileMenu() {
   );
 }
 
-function DesktopMenu() {
+function DesktopMenu({ user }: { user: any }) {
   return (
     <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
       {/* Sidebar component, swap this element with another sidebar if you like */}
@@ -221,13 +225,12 @@ function DesktopMenu() {
                 href="#"
                 className="flex items-center px-6 py-3 text-sm font-semibold leading-6 text-gray-900 gap-x-4 hover:bg-gray-50"
               >
-                <img
-                  className="w-8 h-8 rounded-full bg-gray-50"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt=""
-                />
+                <Avatar>
+                  <AvatarImage src={user?.image} />
+                  <AvatarFallback>{user?.initials}</AvatarFallback>
+                </Avatar>
                 <span className="sr-only">Your profile</span>
-                <span aria-hidden="true">Tom Cook</span>
+                <span aria-hidden="true">{user?.name}</span>
               </a>
             </li>
           </ul>

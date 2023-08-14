@@ -38,6 +38,19 @@ function useAuthUser() {
     claims?.find((claim: any) => claim.type === "name") ||
     claims?.find((claim: any) => claim.type === "sub");
   const username = nameDict?.value;
+  const firstName = claims?.find((claim: any) => claim.type === "given_name");
+  const lastName = claims?.find((claim: any) => claim.type === "family_name");
+  const email = claims?.find((claim: any) => claim.type === "email");
+  const name = `${firstName?.value} ${lastName?.value}`;
+  const initials = `${firstName?.value[0]}${lastName?.value[0]}`;
+  const user = {
+    username,
+    firstName,
+    lastName,
+    email,
+    initials,
+    name,
+  } as User;
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
@@ -45,11 +58,20 @@ function useAuthUser() {
   }, [username]);
 
   return {
-    username,
+    user,
     logoutUrl,
     isLoading,
     isLoggedIn,
   };
 }
+
+export type User = {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  initials: string;
+  name: string;
+};
 
 export { useAuthUser };
