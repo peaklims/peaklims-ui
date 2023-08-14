@@ -64,7 +64,7 @@ function Main() {
               <div className="ml-3">
                 <p className="block text-base font-medium text-blue-500 md:text-sm">{`Hi, ${username}!`}</p>
                 <a
-                  href={logoutUrl?.value}
+                  href={logoutUrl}
                   className={buttonVariants({ variant: "outline" })}
                 >
                   Logout

@@ -59,9 +59,14 @@ function useAuthUser() {
 
   return {
     user,
-    logoutUrl,
+    logoutUrl: logoutUrl?.value ?? undefined,
     isLoading,
     isLoggedIn,
+  } as {
+    user: User;
+    logoutUrl: string | undefined;
+    isLoading: boolean;
+    isLoggedIn: boolean;
   };
 }
 
