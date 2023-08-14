@@ -14,6 +14,7 @@ import { User as UserType, useAuthUser } from "@/services/auth";
 import {
   Aperture,
   Calendar,
+  LayoutDashboard,
   LogOut,
   Menu,
   Settings,
@@ -21,7 +22,7 @@ import {
 } from "lucide-react";
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: Aperture, current: true },
+  { name: "Dashboard", href: "#", icon: LayoutDashboard, current: true },
   { name: "Team", href: "#", icon: Aperture, current: false },
   { name: "Projects", href: "#", icon: Aperture, current: false },
   { name: "Calendar", href: "#", icon: Calendar, current: false },
@@ -47,17 +48,11 @@ export default function NavigationLayout({
         <DesktopMenu user={user} logoutUrl={logoutUrl} />
 
         <div className="sticky top-0 z-40 flex items-center px-4 py-4 bg-white shadow-sm gap-x-6 sm:px-6 lg:hidden">
-          <div className="flex-1 text-sm font-semibold leading-6 text-gray-900">
-            Dashboard
+          <div className="flex-1 text-sm font-semibold leading-6 text-primary">
+            Peak LIMS
           </div>
-          <a href="#">
-            <span className="sr-only">Your profile</span>
-            <img
-              className="w-8 h-8 rounded-full bg-gray-50"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
-            />
-          </a>
+
+          <ProfileManagement user={user} logoutUrl={logoutUrl} />
         </div>
 
         <main className="py-10 lg:pl-72">
@@ -79,7 +74,7 @@ function MobileMenu() {
             <div className="flex items-center h-16 shrink-0">
               <img
                 className="w-auto h-8"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
                 alt="Your Company"
               />
             </div>
@@ -93,16 +88,16 @@ function MobileMenu() {
                           href={item.href}
                           className={cn(
                             item.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
+                              ? "bg-gray-50 text-foreground"
+                              : "text-gray-700 hover:text-foreground hover:bg-gray-50",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                           )}
                         >
                           <item.icon
                             className={cn(
                               item.current
-                                ? "text-indigo-600"
-                                : "text-gray-400 group-hover:text-indigo-600",
+                                ? "text-foreground"
+                                : "text-gray-400 group-hover:text-foreground",
                               "h-6 w-6 shrink-0"
                             )}
                             aria-hidden="true"
@@ -124,16 +119,16 @@ function MobileMenu() {
                           href={team.href}
                           className={cn(
                             team.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
+                              ? "bg-gray-50 text-foreground"
+                              : "text-gray-700 hover:text-foreground hover:bg-gray-50",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                           )}
                         >
                           <span
                             className={cn(
                               team.current
-                                ? "text-indigo-600 border-indigo-600"
-                                : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",
+                                ? "text-foreground border-foreground"
+                                : "text-gray-400 border-gray-200 group-hover:border-foreground group-hover:text-foreground",
                               "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white"
                             )}
                           >
@@ -176,7 +171,7 @@ function DesktopMenu({
         <div className="flex items-center h-16 shrink-0">
           <img
             className="w-auto h-8"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+            src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
             alt="Your Company"
           />
         </div>
@@ -190,16 +185,16 @@ function DesktopMenu({
                       href={item.href}
                       className={cn(
                         item.current
-                          ? "bg-gray-50 text-indigo-600"
-                          : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
+                          ? "bg-gray-50 text-foreground"
+                          : "text-gray-700 hover:text-foreground hover:bg-gray-50",
                         "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                       )}
                     >
                       <item.icon
                         className={cn(
                           item.current
-                            ? "text-indigo-600"
-                            : "text-gray-400 group-hover:text-indigo-600",
+                            ? "text-foreground"
+                            : "text-gray-400 group-hover:text-foreground",
                           "h-6 w-6 shrink-0"
                         )}
                         aria-hidden="true"
@@ -221,16 +216,16 @@ function DesktopMenu({
                       href={team.href}
                       className={cn(
                         team.current
-                          ? "bg-gray-50 text-indigo-600"
-                          : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
+                          ? "bg-gray-50 text-foreground"
+                          : "text-gray-700 hover:text-foreground hover:bg-gray-50",
                         "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                       )}
                     >
                       <span
                         className={cn(
                           team.current
-                            ? "text-indigo-600 border-indigo-600"
-                            : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",
+                            ? "text-foreground border-foreground"
+                            : "text-gray-400 border-gray-200 group-hover:border-foreground group-hover:text-foreground",
                           "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white"
                         )}
                       >
@@ -243,54 +238,68 @@ function DesktopMenu({
               </ul>
             </li>
             <li className="mt-auto">
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <a
-                    href="#"
-                    className="flex items-center flex-1 py-3 pr-6 text-sm font-semibold leading-6 text-gray-900 gap-x-4 hover:bg-gray-50"
-                  >
-                    <Avatar>
-                      {/* <AvatarImage src={user?.image} /> */}
-                      <AvatarFallback>{user?.initials}</AvatarFallback>
-                    </Avatar>
-                    <span className="sr-only">Your profile</span>
-                    <span aria-hidden="true">{user?.name}</span>
-                  </a>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent className="rounded-b-none w-72">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {logoutUrl && (
-                    <>
-                      <a href={logoutUrl}>
-                        <DropdownMenuItem className="cursor-pointer">
-                          <LogOut className="w-4 h-4 mr-2" />
-                          <span>Log out</span>
-                          {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
-                        </DropdownMenuItem>
-                      </a>
-                      <DropdownMenuSeparator />
-                    </>
-                  )}
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem disabled>
-                      <UserIcon className="w-4 h-4 mr-2" />
-                      <span>Profile</span>
-                      {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem disabled>
-                      <Settings className="w-4 h-4 mr-2" />
-                      <span>Settings</span>
-                      {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <ProfileManagement user={user} logoutUrl={logoutUrl} />
             </li>
           </ul>
         </nav>
       </div>
     </div>
+  );
+}
+
+function ProfileManagement({
+  user,
+  logoutUrl,
+}: {
+  user: UserType;
+  logoutUrl: string | undefined;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <a
+          href="#"
+          className="flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 lg:pr-6 lg:py-3 gap-x-4"
+        >
+          <Avatar>
+            {/* <AvatarImage src={user?.image} /> */}
+            <AvatarFallback>{user?.initials}</AvatarFallback>
+          </Avatar>
+          <span className="hidden sr-only lg:inline">Your profile</span>
+          <span aria-hidden="true" className="hidden lg:inline">
+            {user?.name}
+          </span>
+        </a>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent className="rounded-b-none w-72">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {logoutUrl && (
+          <>
+            <a href={logoutUrl}>
+              <DropdownMenuItem className="cursor-pointer">
+                <LogOut className="w-4 h-4 mr-2" />
+                <span>Log out</span>
+                {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
+              </DropdownMenuItem>
+            </a>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        <DropdownMenuGroup>
+          <DropdownMenuItem disabled>
+            <UserIcon className="w-4 h-4 mr-2" />
+            <span>Profile</span>
+            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
+          </DropdownMenuItem>
+          <DropdownMenuItem disabled>
+            <Settings className="w-4 h-4 mr-2" />
+            <span>Settings</span>
+            {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
