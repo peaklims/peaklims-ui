@@ -103,10 +103,16 @@ function MobileMenu() {
                     {navigation.map((item) => (
                       <li key={item.name}>
                         <button
+                          data-status={
+                            item.href === window.location.pathname
+                              ? "active"
+                              : "inactive"
+                          }
                           onClick={() => navigateAndClose(item.href)}
                           className={cn(
-                            "w-full text-gray-700 hover:text-foreground hover:bg-gray-50",
-                            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                            "w-full text-secondary-foreground hover:text-primary/80 hover:bg-gray-50 py-3",
+                            "group flex gap-x-3 rounded-md px-2 text-sm leading-6 font-semibold",
+                            "data-[status=active]:bg-card data-[status=active]:text-primary data-[status=active]:hover:bg-secondary/50"
                           )}
                         >
                           <item.icon
@@ -178,7 +184,7 @@ function DesktopMenu({
   return (
     <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
       {/* Sidebar component, swap this element with another sidebar if you like */}
-      <div className="flex flex-col px-6 overflow-y-auto bg-white border-r border-gray-200 grow gap-y-5">
+      <div className="flex flex-col px-6 overflow-y-auto border-r bg-card grow gap-y-5">
         <div className="flex items-center h-16 shrink-0">
           <img
             className="w-auto h-8"
@@ -195,12 +201,10 @@ function DesktopMenu({
                     <Link
                       to={item.href}
                       className={cn(
-                        "text-gray-700 hover:text-foreground hover:bg-gray-50",
-                        "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                        "text-secondary-foreground hover:text-primary/80 hover:bg-gray-50",
+                        "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                        "data-[status=active]:bg-card data-[status=active]:text-primary data-[status=active]:hover:bg-secondary/50"
                       )}
-                      activeProps={{
-                        className: "bg-card text-emerald-500",
-                      }}
                     >
                       <item.icon
                         className={cn("h-6 w-6 shrink-0")}
