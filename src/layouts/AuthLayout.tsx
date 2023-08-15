@@ -11,7 +11,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { User as UserType, useAuthUser } from "@/services/auth";
-import { Link, Outlet } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  RegisteredRoutesInfo,
+  useNavigate,
+} from "@tanstack/react-router";
 import {
   Aperture,
   LayoutDashboard,
@@ -20,19 +25,26 @@ import {
   Settings,
   User as UserIcon,
 } from "lucide-react";
+import { useState } from "react";
+
+type NavType = {
+  name: string;
+  href: RegisteredRoutesInfo["routePaths"];
+  icon: React.FC<any>;
+};
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard, current: true },
-  { name: "Orders", href: "/orders", icon: Aperture, current: false },
-  // { name: "Projects", href: "#", icon: Aperture, current: false },
-  // { name: "Calendar", href: "#", icon: Calendar, current: false },
-  // { name: "Documents", href: "#", icon: Aperture, current: false },
-  // { name: "Reports", href: "#", icon: Calendar, current: false },
-];
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Orders", href: "/orders", icon: Aperture },
+  // { name: "Projects", href: "#", icon: Aperture },
+  // { name: "Calendar", href: "#", icon: Calendar },
+  // { name: "Documents", href: "#", icon: Aperture },
+  // { name: "Reports", href: "#", icon: Calendar },
+] as NavType[];
 const teams = [
-  // { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-  // { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-  // { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
+  // { id: 1, name: "Heroicons", href: "#", initial: "H" },
+  // { id: 2, name: "Tailwind Labs", href: "#", initial: "T" },
+  // { id: 3, name: "Workcation", href: "#", initial: "W" },
 ];
 
 export default function AuthLayout() {
@@ -65,8 +77,15 @@ export default function AuthLayout() {
 }
 
 function MobileMenu() {
+  const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
+  const navigate = useNavigate();
+  function navigateAndClose(target: RegisteredRoutesInfo["routePaths"]) {
+    navigate({ to: target });
+    setMobileMenuIsOpen(false);
+  }
+
   return (
-    <Dialog>
+    <Dialog open={mobileMenuIsOpen} onOpenChange={setMobileMenuIsOpen}>
       <div className="relative inset-0 flex">
         <DialogContent className="relative flex flex-1 w-full">
           <div className="flex flex-col px-6 pb-2 overflow-y-auto grow gap-y-5">
@@ -83,31 +102,24 @@ function MobileMenu() {
                   <ul role="list" className="-mx-2 space-y-1">
                     {navigation.map((item) => (
                       <li key={item.name}>
-                        <Link
-                          to={item.href}
+                        <button
+                          onClick={() => navigateAndClose(item.href)}
                           className={cn(
-                            item.current
-                              ? "bg-gray-50 text-foreground"
-                              : "text-gray-700 hover:text-foreground hover:bg-gray-50",
+                            "w-full text-gray-700 hover:text-foreground hover:bg-gray-50",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                           )}
                         >
                           <item.icon
-                            className={cn(
-                              item.current
-                                ? "text-foreground"
-                                : "text-gray-400 group-hover:text-foreground",
-                              "h-6 w-6 shrink-0"
-                            )}
+                            className={cn("h-6 w-6 shrink-0")}
                             aria-hidden="true"
                           />
                           {item.name}
-                        </Link>
+                        </button>
                       </li>
                     ))}
                   </ul>
                 </li>
-                <li>
+                {/* <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400">
                     Your teams
                   </div>
@@ -138,7 +150,7 @@ function MobileMenu() {
                       </li>
                     ))}
                   </ul>
-                </li>
+                </li> */}
               </ul>
             </nav>
           </div>
@@ -183,19 +195,15 @@ function DesktopMenu({
                     <Link
                       to={item.href}
                       className={cn(
-                        item.current
-                          ? "bg-gray-50 text-foreground"
-                          : "text-gray-700 hover:text-foreground hover:bg-gray-50",
+                        "text-gray-700 hover:text-foreground hover:bg-gray-50",
                         "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                       )}
+                      activeProps={{
+                        className: "bg-card text-emerald-500",
+                      }}
                     >
                       <item.icon
-                        className={cn(
-                          item.current
-                            ? "text-foreground"
-                            : "text-gray-400 group-hover:text-foreground",
-                          "h-6 w-6 shrink-0"
-                        )}
+                        className={cn("h-6 w-6 shrink-0")}
                         aria-hidden="true"
                       />
                       {item.name}
@@ -204,7 +212,7 @@ function DesktopMenu({
                 ))}
               </ul>
             </li>
-            <li>
+            {/* <li>
               <div className="text-xs font-semibold leading-6 text-gray-400">
                 Your teams
               </div>
@@ -235,7 +243,7 @@ function DesktopMenu({
                   </li>
                 ))}
               </ul>
-            </li>
+            </li> */}
             <li className="mt-auto">
               <ProfileManagement user={user} logoutUrl={logoutUrl} />
             </li>
