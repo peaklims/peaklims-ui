@@ -40,7 +40,14 @@ const appRoute = new RootRoute({
 
         <div className="h-full min-h-screen font-sans antialiased scroll-smooth debug-screens">
           <Outlet />
-          <TanStackRouterDevtools position="top-right" />
+          <TanStackRouterDevtools
+            toggleButtonProps={{
+              style: {
+                marginLeft: "20vw",
+                // transform: `scale(.7)`,
+              },
+            }}
+          />
         </div>
       </>
     );

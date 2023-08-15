@@ -29,7 +29,9 @@ function useClaims() {
 }
 
 function useAuthUser() {
-  const { data: claims, isLoading } = useClaims();
+  const { data: claims, isLoading, isError } = useClaims();
+
+  if (isError) window.location.href = "/bff/login";
 
   const logoutUrl = claims?.find(
     (claim: any) => claim.type === "bff:logout_url"

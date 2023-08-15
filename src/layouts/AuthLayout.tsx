@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { User as UserType, useAuthUser } from "@/services/auth";
-import { Outlet } from "@tanstack/react-router";
+import { Link, Outlet } from "@tanstack/react-router";
 import {
   Aperture,
   LayoutDashboard,
@@ -36,7 +36,8 @@ const teams = [
 ];
 
 export default function AuthLayout() {
-  const { user, logoutUrl } = useAuthUser();
+  const { user, logoutUrl, isLoading } = useAuthUser();
+  if (isLoading) return <Loading />;
 
   return (
     <>
@@ -82,8 +83,8 @@ function MobileMenu() {
                   <ul role="list" className="-mx-2 space-y-1">
                     {navigation.map((item) => (
                       <li key={item.name}>
-                        <a
-                          href={item.href}
+                        <Link
+                          to={item.href}
                           className={cn(
                             item.current
                               ? "bg-gray-50 text-foreground"
@@ -101,7 +102,7 @@ function MobileMenu() {
                             aria-hidden="true"
                           />
                           {item.name}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -113,8 +114,8 @@ function MobileMenu() {
                   <ul role="list" className="mt-2 -mx-2 space-y-1">
                     {teams.map((team) => (
                       <li key={team.name}>
-                        <a
-                          href={team.href}
+                        <Link
+                          to={team.href}
                           className={cn(
                             team.current
                               ? "bg-gray-50 text-foreground"
@@ -133,7 +134,7 @@ function MobileMenu() {
                             {team.initial}
                           </span>
                           <span className="truncate">{team.name}</span>
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -179,8 +180,8 @@ function DesktopMenu({
               <ul role="list" className="-mx-2 space-y-1">
                 {navigation.map((item) => (
                   <li key={item.name}>
-                    <a
-                      href={item.href}
+                    <Link
+                      to={item.href}
                       className={cn(
                         item.current
                           ? "bg-gray-50 text-foreground"
@@ -198,7 +199,7 @@ function DesktopMenu({
                         aria-hidden="true"
                       />
                       {item.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -210,8 +211,8 @@ function DesktopMenu({
               <ul role="list" className="mt-2 -mx-2 space-y-1">
                 {teams.map((team) => (
                   <li key={team.name}>
-                    <a
-                      href={team.href}
+                    <Link
+                      to={team.href}
                       className={cn(
                         team.current
                           ? "bg-gray-50 text-foreground"
@@ -230,7 +231,7 @@ function DesktopMenu({
                         {team.initial}
                       </span>
                       <span className="truncate">{team.name}</span>
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -299,5 +300,32 @@ function ProfileManagement({
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function Loading() {
+  return (
+    <div className="flex items-center justify-center w-screen h-screen transition-all bg-slate-100">
+      <svg
+        className="w-6 h-6 animate-spin text-slate-800"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx={12}
+          cy={12}
+          r={10}
+          stroke="currentColor"
+          strokeWidth={4}
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        />
+      </svg>
+    </div>
   );
 }
