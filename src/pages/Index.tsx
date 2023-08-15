@@ -1,5 +1,4 @@
 import { buttonVariants } from "@/components/ui/button";
-import NavigationLayout from "@/layouts/NavigationLayout";
 import { useAuthUser } from "@/services/auth";
 
 export function IndexPage() {
@@ -17,35 +16,29 @@ export function IndexPage() {
           </a>
         </div>
       ) : (
-        <NavigationLayout>
-          <div className="flex-shrink-0 block">
-            <div className="flex items-center">
-              <div className="ml-3">
-                <p className="block text-base font-medium text-blue-500 md:text-sm">{`Hi, ${user.username}!`}</p>
-                <a
-                  href={logoutUrl}
-                  className={buttonVariants({ variant: "outline" })}
-                >
-                  Logout
-                </a>
-              </div>
+        <div className="flex-shrink-0 block">
+          <div className="flex items-center">
+            <div className="ml-3">
+              <p className="block text-base font-medium text-blue-500 md:text-sm">{`Hi, ${user.username}!`}</p>
+              <a
+                href={logoutUrl}
+                className={buttonVariants({ variant: "outline" })}
+              >
+                Logout
+              </a>
             </div>
           </div>
-        </NavigationLayout>
+        </div>
       )}
     </>
   );
 }
 
 export function OrdersPage() {
-  return (
-    <NavigationLayout>
-      <div className="">Orders here!</div>
-    </NavigationLayout>
-  );
+  return <div className="">Orders here!</div>;
 }
 
-function Loading() {
+export function Loading() {
   return (
     <div className="flex items-center justify-center w-screen h-screen transition-all bg-slate-100">
       <svg

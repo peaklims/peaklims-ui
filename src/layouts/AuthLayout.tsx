@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { User as UserType, useAuthUser } from "@/services/auth";
+import { Outlet } from "@tanstack/react-router";
 import {
   Aperture,
   LayoutDashboard,
@@ -34,11 +35,7 @@ const teams = [
   // { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
 ];
 
-export default function NavigationLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthLayout() {
   const { user, logoutUrl } = useAuthUser();
 
   return (
@@ -55,7 +52,9 @@ export default function NavigationLayout({
         </div>
 
         <main className="py-10 lg:pl-72">
-          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+          <div className="px-4 sm:px-6 lg:px-8">
+            <Outlet />
+          </div>
         </main>
 
         <MobileMenu />
