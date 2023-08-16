@@ -1,5 +1,5 @@
 import AuthLayout from "@/layouts/AuthLayout";
-import { ReactQueryDevtools, TanStackRouterDevtools } from "@/lib/DevTools";
+import { ReactQueryDevtools, TanStackRouterDevtools } from "@/lib/dev-tools";
 import { AccessionWorklistPage } from "@/pages/Accessions";
 import { IndexPage } from "@/pages/Index";
 import {
@@ -9,16 +9,18 @@ import {
   Route,
   Router,
 } from "@tanstack/react-router";
+import { Helmet } from "react-helmet";
+import { siteConfig } from "./lib/site-config";
 
 const appRoute = new RootRoute({
   component: () => {
     return (
       <>
-        {/* <Helmet
+        <Helmet
           titleTemplate={`%s | ${siteConfig.name}`}
-          defaultTitle={siteConfig.name}>
-
-          <meta name="description" content={siteConfig.description} />
+          defaultTitle={siteConfig.name}
+        >
+          {/* <meta name="description" content={siteConfig.description} />
           <meta name="authhor" content="bachiitter" />
           <link rel="author" href="https://bachitter.dev" />
 
@@ -36,8 +38,8 @@ const appRoute = new RootRoute({
             property="twitter:description"
             content={siteConfig.description}
           />
-          <meta property="twitter:image" content={siteConfig.ogImage} />
-        </Helmet> */}
+          <meta property="twitter:image" content={siteConfig.ogImage} /> */}
+        </Helmet>
 
         <div className="h-full min-h-screen font-sans antialiased scroll-smooth debug-screens">
           <Outlet />
