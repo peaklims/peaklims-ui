@@ -29,10 +29,14 @@ function useClaims() {
   );
 }
 
+export function login() {
+  window.location.href = "/bff/login";
+}
+
 function useAuthUser() {
   const { data: claims, isLoading, isError } = useClaims();
 
-  if (isError) window.location.href = "/bff/login";
+  if (isError) login();
 
   const logoutUrl = claims?.find((claim) => claim.type === "bff:logout_url");
   const nameDict =
