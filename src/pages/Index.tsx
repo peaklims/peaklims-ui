@@ -8,7 +8,3 @@ export function IndexPage() {
     </>
   );
 }
-
-export function OrdersPage() {
-  return <div className="">Orders here!</div>;
-}

@@ -1,6 +1,7 @@
 import AuthLayout from "@/layouts/AuthLayout";
 import { ReactQueryDevtools, TanStackRouterDevtools } from "@/lib/DevTools";
-import { IndexPage, OrdersPage } from "@/pages/Index";
+import { AccessionWorklistPage } from "@/pages/Accessions";
+import { IndexPage } from "@/pages/Index";
 import {
   Outlet,
   RegisteredRoutesInfo,
@@ -41,20 +42,12 @@ const appRoute = new RootRoute({
         <div className="h-full min-h-screen font-sans antialiased scroll-smooth debug-screens">
           <Outlet />
           <TanStackRouterDevtools
-            position="bottom-right"
             toggleButtonProps={{
               style: {
-                marginRight: "8rem",
               },
             }}
           />
           <ReactQueryDevtools
-            position="bottom-right"
-            toggleButtonProps={{
-              style: {
-                marginRight: "15rem",
-              },
-            }}
           />
         </div>
       </>
@@ -76,8 +69,8 @@ const indexRoute = new Route({
 
 const orderRoute = new Route({
   getParentRoute: () => authLayout,
-  path: "/orders",
-  component: OrdersPage,
+  path: "/accessions",
+  component: AccessionWorklistPage,
 });
 
 const routeTree = appRoute.addChildren([

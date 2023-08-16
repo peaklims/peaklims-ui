@@ -18,10 +18,10 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import {
-  Aperture,
   LayoutDashboard,
   LogOut,
   Menu,
+  PackageOpen,
   Settings,
   User as UserIcon,
 } from "lucide-react";
@@ -35,11 +35,7 @@ type NavType = {
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Orders", href: "/orders", icon: Aperture },
-  // { name: "Projects", href: "#", icon: Aperture },
-  // { name: "Calendar", href: "#", icon: Calendar },
-  // { name: "Documents", href: "#", icon: Aperture },
-  // { name: "Reports", href: "#", icon: Calendar },
+  { name: "Accessioning", href: "/accessions", icon: PackageOpen },
 ] as NavType[];
 const teams = [
   // { id: 1, name: "Heroicons", href: "#", initial: "H" },
