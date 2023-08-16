@@ -20,7 +20,7 @@ const getAccessions = async ({
   hasArtificialDelay,
   delayInMs,
 }: AccessionListApiProps) => {
-  queryString = queryString.length <= 0 ? queryString : `?${queryString}`;
+  queryString = queryString?.length <= 0 ? queryString : `?${queryString}`;
 
   delayInMs = hasArtificialDelay ? delayInMs : 0;
 
