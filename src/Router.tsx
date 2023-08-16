@@ -1,5 +1,5 @@
 import AuthLayout from "@/layouts/AuthLayout";
-import { TanStackRouterDevtools } from "@/lib/DevTools";
+import { ReactQueryDevtools, TanStackRouterDevtools } from "@/lib/DevTools";
 import { IndexPage, OrdersPage } from "@/pages/Index";
 import {
   Outlet,
@@ -41,10 +41,18 @@ const appRoute = new RootRoute({
         <div className="h-full min-h-screen font-sans antialiased scroll-smooth debug-screens">
           <Outlet />
           <TanStackRouterDevtools
+            position="bottom-right"
             toggleButtonProps={{
               style: {
-                marginLeft: "20vw",
-                // transform: `scale(.7)`,
+                marginRight: "8rem",
+              },
+            }}
+          />
+          <ReactQueryDevtools
+            position="bottom-right"
+            toggleButtonProps={{
+              style: {
+                marginRight: "15rem",
               },
             }}
           />
