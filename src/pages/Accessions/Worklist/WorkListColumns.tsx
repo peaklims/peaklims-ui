@@ -2,6 +2,7 @@
 
 import { AccessionDto } from "@/domain/Accessions/types";
 import { ColumnDef } from "@tanstack/react-table";
+import { DataTableColumnHeader } from "./data-table-column-header";
 
 export const columns: ColumnDef<AccessionDto>[] = [
   {
@@ -10,11 +11,15 @@ export const columns: ColumnDef<AccessionDto>[] = [
   },
   {
     accessorKey: "accessionNumber",
-    header: "Accession Number",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Accession Number" />
+    ),
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
   },
   // {
   //   accessorKey: "amount",
