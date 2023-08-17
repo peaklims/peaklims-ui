@@ -2,6 +2,7 @@ import { PagedResponse, Pagination } from "@/types/apis";
 // import { generateSieveSortOrder } from "@/utils/sorting";
 import { peakLimsApi } from "@/services/apiClient";
 import { useQuery } from "@tanstack/react-query";
+import { SortingState } from "@tanstack/react-table";
 import { AxiosResponse } from "axios";
 import queryString from "query-string";
 import { AccessionDto, QueryParams } from "../types";
@@ -48,7 +49,7 @@ export const useAccessions = ({
   sortOrder,
   delayInMs = 0,
 }: AccessionListHookProps = {}) => {
-  const sortOrderString = undefined; // generateSieveSortOrder(sortOrder);
+  const sortOrderString = generateSieveSortOrder(sortOrder);
   const queryParams = queryString.stringify({
     pageNumber,
     pageSize,
@@ -61,3 +62,9 @@ export const useAccessions = ({
     getAccessions({ queryString: queryParams, hasArtificialDelay, delayInMs })
   );
 };
+
+// TODO: add tests
+export const generateSieveSortOrder = (sortOrder: SortingState | undefined) =>
+  sortOrder && sortOrder.length > 0
+    ? sortOrder?.map((s) => (s.desc ? `-${s.id}` : s.id)).join(",")
+    : undefined;

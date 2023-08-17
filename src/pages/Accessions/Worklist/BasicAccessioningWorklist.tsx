@@ -24,10 +24,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Pagination } from "@/types/apis";
+import { PaginationControls } from "./Pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  pagination?: Pagination;
+  isLoading?: boolean;
+  skeletonRowCount?: number;
 }
 
 interface PaginatedTableContextResponse {
@@ -44,7 +49,7 @@ const PaginatedTableContext = createContext<PaginatedTableContextResponse>(
   {} as PaginatedTableContextResponse
 );
 
-const PageSizeOptions = [1, 10, 20, 30, 40, 50] as const;
+export const PageSizeOptions = [1, 10, 20, 30, 40, 50] as const;
 export type PageSizeNumber = (typeof PageSizeOptions)[number];
 interface PaginatedTableProviderProps {
   initialPageSize?: PageSizeNumber;
@@ -54,8 +59,8 @@ interface PaginatedTableProviderProps {
 
 export function PaginatedTableProvider({
   initialPageSize = 10,
-  props,
   children,
+  props,
 }: PaginatedTableProviderProps) {
   const [sorting, setSorting] = useState<SortingState>();
   const [pageSize, setPageSize] = useState<number>(initialPageSize);
@@ -77,7 +82,7 @@ export function PaginatedTableProvider({
   );
 }
 
-function usePaginatedTableContext() {
+export function usePaginatedTableContext() {
   const context = useContext(PaginatedTableContext);
   if (Object.keys(context).length === 0)
     throw new Error(
@@ -86,16 +91,18 @@ function usePaginatedTableContext() {
   return context;
 }
 
-export function BasicAccessioningWorklist<TData, TValue>({
+export function PaginatedDataTable<TData, TValue>({
   columns,
   data,
+  pagination,
+  isLoading = false,
+  skeletonRowCount = 3,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     id: false,
   });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  // const [sorting, setSorting] = useState<SortingState>([]);
 
   const {
     sorting,
@@ -104,7 +111,6 @@ export function BasicAccessioningWorklist<TData, TValue>({
     setPageSize,
     pageNumber,
     setPageNumber,
-    initialPageSize,
   } = usePaginatedTableContext();
 
   const table = useReactTable({
@@ -115,7 +121,13 @@ export function BasicAccessioningWorklist<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+      pagination: {
+        pageSize: pageSize ?? 10,
+        pageIndex: pageNumber ?? 1,
+      },
     },
+    manualPagination: true,
+    manualSorting: true,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -151,28 +163,73 @@ export function BasicAccessioningWorklist<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+          {isLoading ? (
+            <>
+              {Array.from({ length: skeletonRowCount }, (_, rowIndex) => (
+                <tr key={`row${rowIndex}`} className="px-6 py-4">
+                  {Array.from(
+                    {
+                      length:
+                        columns.length -
+                        Object.values(columnVisibility).filter(
+                          (value) => value === false
+                        ).length,
+                    },
+                    (_, cellIndex) => (
+                      <td
+                        key={`row${cellIndex}col${rowIndex}`}
+                        className="px-6 py-3"
+                      >
+                        <div
+                          key={`row${cellIndex}col${rowIndex}`}
+                          className="w-3/4 h-2 rounded-full bg-slate-200 dark:bg-slate-800"
+                        ></div>
+                      </td>
+                    )
+                  )}
+                </tr>
+              ))}
+            </>
           ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
+            <>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </>
           )}
         </TableBody>
       </Table>
+      <PaginationControls
+        entityPlural={"Accessions"}
+        pageNumber={pageNumber}
+        apiPagination={pagination}
+        pageSize={pageSize}
+        setPageSize={setPageSize}
+        setPageNumber={setPageNumber}
+      />
     </div>
   );
 }
