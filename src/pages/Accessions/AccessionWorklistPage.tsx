@@ -14,7 +14,9 @@ export function AccessionWorklistPage() {
         <title>Accessioning Worklist</title>
       </Helmet>
 
-      <h1>Accessioning Worklist</h1>
+      <h1 className="text-4xl font-bold tracking-tight scroll-m-20">
+        Accessioning Worklist
+      </h1>
       <div className="pt-6">
         <PaginatedTableProvider>
           <AccessioningWorklist />

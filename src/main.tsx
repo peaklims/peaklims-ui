@@ -5,21 +5,14 @@ import ReactDOM from "react-dom/client";
 import { router } from "./Router";
 import "./index.css";
 
-const queryClient = new QueryClient();
-
-// const rootElement = document.getElementById("root")!;
-// if (!rootElement.innerHTML) {
-//   const root = ReactDOM.createRoot(rootElement);
-//   root.render(
-//     <StrictMode>
-//       <QueryClientProvider client={queryClient}>
-//         <div className="h-full min-h-screen font-sans antialiased scroll-smooth debug-screens">
-//           <RouterProvider router={router} />
-//         </div>
-//       </QueryClientProvider>
-//     </StrictMode>
-//   );
-// }
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
