@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 ("use client");
 
 import {
@@ -30,6 +30,62 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
+interface PaginatedTableContextResponse {
+  setPageNumber: React.Dispatch<React.SetStateAction<number>>;
+  pageNumber: number;
+  pageSize: number;
+  setPageSize: React.Dispatch<React.SetStateAction<number>>;
+  sorting: SortingState;
+  setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
+  initialPageSize: number;
+}
+
+const PaginatedTableContext = createContext<PaginatedTableContextResponse>(
+  {} as PaginatedTableContextResponse
+);
+
+const PageSizeOptions = [1, 10, 20, 30, 40, 50] as const;
+export type PageSizeNumber = (typeof PageSizeOptions)[number];
+interface PaginatedTableProviderProps {
+  initialPageSize?: PageSizeNumber;
+  children: React.ReactNode;
+  props?: any;
+}
+
+export function PaginatedTableProvider({
+  initialPageSize = 10,
+  props,
+  children,
+}: PaginatedTableProviderProps) {
+  const [sorting, setSorting] = useState<SortingState>();
+  const [pageSize, setPageSize] = useState<number>(initialPageSize);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const value = {
+    sorting,
+    setSorting,
+    pageSize,
+    setPageSize,
+    pageNumber,
+    setPageNumber,
+    initialPageSize,
+  };
+
+  return (
+    <PaginatedTableContext.Provider value={value} {...props}>
+      {children}
+    </PaginatedTableContext.Provider>
+  );
+}
+
+function usePaginatedTableContext() {
+  const context = useContext(PaginatedTableContext);
+  if (Object.keys(context).length === 0)
+    throw new Error(
+      "usePaginatedTableContext must be used within a PaginatedTableProvider"
+    );
+  return context;
+}
+
 export function BasicAccessioningWorklist<TData, TValue>({
   columns,
   data,
@@ -39,7 +95,17 @@ export function BasicAccessioningWorklist<TData, TValue>({
     id: false,
   });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  // const [sorting, setSorting] = useState<SortingState>([]);
+
+  const {
+    sorting,
+    setSorting,
+    pageSize,
+    setPageSize,
+    pageNumber,
+    setPageNumber,
+    initialPageSize,
+  } = usePaginatedTableContext();
 
   const table = useReactTable({
     data,
