@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import { Pagination } from "@/types/apis";
 import { PaginationControls } from "./Pagination";
+import { AccessionWorklistToolbar } from "./accession-worklist-toolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -43,6 +44,8 @@ interface PaginatedTableContextResponse {
   sorting: SortingState;
   setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
   initialPageSize: number;
+  filter: string | null;
+  setFilter: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const PaginatedTableContext = createContext<PaginatedTableContextResponse>(
@@ -65,6 +68,7 @@ export function PaginatedTableProvider({
   const [sorting, setSorting] = useState<SortingState>();
   const [pageSize, setPageSize] = useState<number>(initialPageSize);
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [filter, setFilter] = useState<string | null>(null);
   const value = {
     sorting,
     setSorting,
@@ -73,6 +77,8 @@ export function PaginatedTableProvider({
     pageNumber,
     setPageNumber,
     initialPageSize,
+    filter,
+    setFilter,
   };
 
   return (
@@ -142,95 +148,98 @@ export function PaginatedDataTable<TData, TValue>({
   });
 
   return (
-    <div className="border rounded-md">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {isLoading ? (
-            <>
-              {Array.from({ length: skeletonRowCount }, (_, rowIndex) => (
-                <TableRow className="px-6 py-4">
-                  {Array.from(
-                    {
-                      length:
-                        columns.length -
-                        Object.values(columnVisibility).filter(
-                          (value) => value === false
-                        ).length,
-                    },
-                    (_, cellIndex) => (
-                      <TableCell
-                        key={`row${cellIndex}col${rowIndex}`}
-                        colSpan={columns.length}
-                        className="px-6 py-3"
-                      >
-                        <div
+    <div className="space-y-6">
+      <AccessionWorklistToolbar table={table} />
+      <div className="border rounded-md">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <>
+                {Array.from({ length: skeletonRowCount }, (_, rowIndex) => (
+                  <TableRow className="px-6 py-4">
+                    {Array.from(
+                      {
+                        length:
+                          columns.length -
+                          Object.values(columnVisibility).filter(
+                            (value) => value === false
+                          ).length,
+                      },
+                      (_, cellIndex) => (
+                        <TableCell
                           key={`row${cellIndex}col${rowIndex}`}
-                          className="w-3/4 h-2 rounded-full bg-input"
-                        />
-                      </TableCell>
-                    )
-                  )}
-                </TableRow>
-              ))}
-            </>
-          ) : (
-            <>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
+                          colSpan={columns.length}
+                          className="px-6 py-3"
+                        >
+                          <div
+                            key={`row${cellIndex}col${rowIndex}`}
+                            className="w-3/4 h-2 rounded-full bg-input"
+                          />
+                        </TableCell>
+                      )
+                    )}
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </>
-          )}
-        </TableBody>
-      </Table>
-      <PaginationControls
-        entityPlural={"Accessions"}
-        pageNumber={pageNumber}
-        apiPagination={pagination}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-        setPageNumber={setPageNumber}
-      />
+                ))}
+              </>
+            ) : (
+              <>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
+            )}
+          </TableBody>
+        </Table>
+        <PaginationControls
+          entityPlural={"Accessions"}
+          pageNumber={pageNumber}
+          apiPagination={pagination}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          setPageNumber={setPageNumber}
+        />
+      </div>
     </div>
   );
 }

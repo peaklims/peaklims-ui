@@ -1,10 +1,10 @@
 "use client";
 
-import { AccessionDto } from "@/domain/Accessions/types";
+import { AccessionWorklistDto } from "@/domain/Accessions/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table-column-header";
 
-export const columns: ColumnDef<AccessionDto>[] = [
+export const columns: ColumnDef<AccessionWorklistDto>[] = [
   {
     accessorKey: "id",
     header: "Id",
