@@ -96,11 +96,15 @@ export const useAccessioningWorklistTableStore =
         const statusFilter = get()
           .status.map((status) => `status == "${status}"`)
           .join(" || ");
-        const accessionNumberFilter = get().filterInput;
+        const accessionNumberFilter = get().filterInput
+          ? `accessionNumber @=* "${get().filterInput}"`
+          : "";
         if (statusFilter && accessionNumberFilter) {
-          return `${statusFilter} && accessionNumber @=* "${accessionNumberFilter}"`;
+          return `${statusFilter} && ${accessionNumberFilter}`;
         }
-        return statusFilter;
+        if (statusFilter.length > 0) return statusFilter;
+        if (accessionNumberFilter.length > 0) return accessionNumberFilter;
+        return "";
       },
     },
   }));
