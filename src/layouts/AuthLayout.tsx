@@ -52,7 +52,7 @@ export default function AuthLayout() {
       <div>
         <DesktopMenu user={user} logoutUrl={logoutUrl} />
 
-        <div className="sticky top-0 z-40 flex items-center px-4 py-4 bg-white shadow-sm gap-x-6 sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-40 flex items-center px-4 py-4 shadow-sm bg-background gap-x-6 sm:px-6 lg:hidden">
           <div className="flex-1 text-sm font-semibold leading-6 text-primary">
             Peak LIMS
           </div>
@@ -60,7 +60,7 @@ export default function AuthLayout() {
           <ProfileManagement user={user} logoutUrl={logoutUrl} />
         </div>
 
-        <main className="py-10 lg:pl-72">
+        <main className="py-10 lg:pl-52">
           <div className="px-4 sm:px-6 lg:px-8">
             <Outlet />
           </div>
@@ -178,7 +178,7 @@ function DesktopMenu({
   logoutUrl: string | undefined;
 }) {
   return (
-    <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+    <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-52 lg:flex-col">
       {/* Sidebar component, swap this element with another sidebar if you like */}
       <div className="flex flex-col px-6 overflow-y-auto border-r bg-card grow gap-y-5">
         <div className="flex items-center h-16 shrink-0">
