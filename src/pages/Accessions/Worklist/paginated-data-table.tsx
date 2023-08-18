@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import { useState } from "react";
 ("use client");
 
 import {
@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pagination } from "@/types/apis";
+import { create } from "zustand";
 import { PaginationControls } from "./Pagination";
 import { AccessionWorklistToolbar } from "./accession-worklist-toolbar";
 
@@ -36,66 +37,73 @@ interface DataTableProps<TData, TValue> {
   skeletonRowCount?: number;
 }
 
-interface PaginatedTableContextResponse {
-  setPageNumber: React.Dispatch<React.SetStateAction<number>>;
+export const PageSizeOptions = [1, 10, 20, 30, 40, 50] as const;
+export type PageSizeNumber = (typeof PageSizeOptions)[number];
+
+export interface PaginatedTableStore {
+  setPageNumber: (page: number) => void;
   pageNumber: number;
   pageSize: number;
-  setPageSize: React.Dispatch<React.SetStateAction<number>>;
+  setPageSize: (size: number) => void;
   sorting: SortingState;
   setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
   initialPageSize: number;
-  filter: string | null;
-  setFilter: React.Dispatch<React.SetStateAction<string | null>>;
-}
-
-const PaginatedTableContext = createContext<PaginatedTableContextResponse>(
-  {} as PaginatedTableContextResponse
-);
-
-export const PageSizeOptions = [1, 10, 20, 30, 40, 50] as const;
-export type PageSizeNumber = (typeof PageSizeOptions)[number];
-interface PaginatedTableProviderProps {
-  initialPageSize?: PageSizeNumber;
-  children: React.ReactNode;
-  props?: any;
-}
-
-export function PaginatedTableProvider({
-  initialPageSize = 10,
-  children,
-  props,
-}: PaginatedTableProviderProps) {
-  const [sorting, setSorting] = useState<SortingState>();
-  const [pageSize, setPageSize] = useState<number>(initialPageSize);
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [filter, setFilter] = useState<string | null>(null);
-  const value = {
-    sorting,
-    setSorting,
-    pageSize,
-    setPageSize,
-    pageNumber,
-    setPageNumber,
-    initialPageSize,
-    filter,
-    setFilter,
+  isFiltered: { result: () => boolean };
+  resetFilters: () => void;
+  queryKit: {
+    filterValue: () => string;
   };
-
-  return (
-    <PaginatedTableContext.Provider value={value} {...props}>
-      {children}
-    </PaginatedTableContext.Provider>
-  );
 }
 
-export function usePaginatedTableContext() {
-  const context = useContext(PaginatedTableContext);
-  if (Object.keys(context).length === 0)
-    throw new Error(
-      "usePaginatedTableContext must be used within a PaginatedTableProvider"
-    );
-  return context;
+export interface AccessioningWorklistTableStore extends PaginatedTableStore {
+  status: string[];
+  addStatus: (status: string) => void;
+  removeStatus: (status: string) => void;
+  filterInput: string | null;
+  setFilterInput: (f: string | null) => void;
 }
+
+export const useAccessioningWorklistTableStore =
+  create<AccessioningWorklistTableStore>((set, get) => ({
+    initialPageSize: 10,
+    pageNumber: 1,
+    setPageNumber: (page) => set({ pageNumber: page }),
+    pageSize: 10,
+    setPageSize: (size) => set({ pageSize: size }),
+    sorting: [],
+    setSorting: (sortOrUpdater) => {
+      if (typeof sortOrUpdater === "function") {
+        set((prevState) => ({ sorting: sortOrUpdater(prevState.sorting) }));
+      } else {
+        set({ sorting: sortOrUpdater });
+      }
+    },
+    status: [],
+    addStatus: (status) =>
+      set((prevState) => ({ status: [...prevState.status, status] })),
+    removeStatus: (status) =>
+      set((prevState) => ({
+        status: prevState.status.filter((s) => s !== status),
+      })),
+    filterInput: null,
+    setFilterInput: (f) => set({ filterInput: f }),
+    isFiltered: {
+      result: () => get().status.length > 0 || get().filterInput !== null,
+    },
+    resetFilters: () => set({ status: [], filterInput: null }),
+    queryKit: {
+      filterValue: () => {
+        const statusFilter = get()
+          .status.map((status) => `status == "${status}"`)
+          .join(" || ");
+        const accessionNumberFilter = get().filterInput;
+        if (statusFilter && accessionNumberFilter) {
+          return `${statusFilter} && accessionNumber @=* "${accessionNumberFilter}"`;
+        }
+        return statusFilter;
+      },
+    },
+  }));
 
 export function PaginatedDataTable<TData, TValue>({
   columns,
@@ -117,7 +125,7 @@ export function PaginatedDataTable<TData, TValue>({
     setPageSize,
     pageNumber,
     setPageNumber,
-  } = usePaginatedTableContext();
+  } = useAccessioningWorklistTableStore();
 
   const table = useReactTable({
     data,
@@ -149,7 +157,7 @@ export function PaginatedDataTable<TData, TValue>({
 
   return (
     <div className="space-y-6">
-      <AccessionWorklistToolbar table={table} />
+      <AccessionWorklistToolbar />
       <div className="border rounded-md">
         <Table>
           <TableHeader>
@@ -174,7 +182,7 @@ export function PaginatedDataTable<TData, TValue>({
             {isLoading ? (
               <>
                 {Array.from({ length: skeletonRowCount }, (_, rowIndex) => (
-                  <TableRow className="px-6 py-4">
+                  <TableRow className="px-6 py-4" key={rowIndex}>
                     {Array.from(
                       {
                         length:

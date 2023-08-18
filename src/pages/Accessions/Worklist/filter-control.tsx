@@ -1,4 +1,3 @@
-import { Column } from "@tanstack/react-table";
 import { CheckIcon, PlusCircleIcon } from "lucide-react";
 import * as React from "react";
 
@@ -20,10 +19,9 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { usePaginatedTableContext } from "./paginated-data-table";
+import { useAccessioningWorklistTableStore } from "./paginated-data-table";
 
-interface FilterControl<TData, TValue> {
-  column?: Column<TData, TValue>;
+interface FilterControl {
   title?: string;
   options: {
     label: string;
@@ -32,15 +30,10 @@ interface FilterControl<TData, TValue> {
   }[];
 }
 
-export function FilterControl<TData, TValue>({
-  column,
-  title,
-  options,
-}: FilterControl<TData, TValue>) {
-  const selectedValues = new Set(column?.getFilterValue() as string[]);
-
-  const { filter, setFilter } = usePaginatedTableContext();
-  console.log(filter);
+export function FilterControl({ title, options }: FilterControl) {
+  const { addStatus, removeStatus, status } =
+    useAccessioningWorklistTableStore();
+  const selectedValues = new Set(status);
 
   return (
     <Popover>
@@ -96,15 +89,12 @@ export function FilterControl<TData, TValue>({
                     key={option.value}
                     onSelect={() => {
                       if (isSelected) {
+                        removeStatus(option.value);
                         selectedValues.delete(option.value);
                       } else {
+                        addStatus(option.value);
                         selectedValues.add(option.value);
                       }
-                      const filterValues = Array.from(selectedValues);
-                      column?.setFilterValue(
-                        filterValues.length ? filterValues : undefined
-                      );
-                      setFilter(option.value);
                     }}
                   >
                     <div
@@ -130,7 +120,7 @@ export function FilterControl<TData, TValue>({
                 <CommandSeparator />
                 <CommandGroup>
                   <CommandItem
-                    onSelect={() => column?.setFilterValue(undefined)}
+                    onSelect={() => status.length > 0}
                     className="justify-center text-center"
                   >
                     Clear filters

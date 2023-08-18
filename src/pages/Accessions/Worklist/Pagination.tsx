@@ -23,8 +23,8 @@ interface PaginationControlsProps {
   pageNumber: number;
   apiPagination: Pagination | undefined;
   pageSize: number;
-  setPageSize: React.Dispatch<React.SetStateAction<number>>;
-  setPageNumber: React.Dispatch<React.SetStateAction<number>>;
+  setPageSize: (size: number) => void;
+  setPageNumber: (page: number) => void;
 }
 
 export function PaginationControls({
