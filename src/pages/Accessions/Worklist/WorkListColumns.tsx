@@ -22,6 +22,25 @@ export const columns: ColumnDef<AccessionDto>[] = [
     ),
   },
   // {
+  //   accessorKey: "patient",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Patient" canSort={false} />
+  //   ),
+  //   cell: ({ row }) => {
+  //     const firstName = row.getValue("patient.firstName");
+  //     const lastName = row.getValue("patient.lastName");
+
+  //     return (
+  //       <div className="">
+  //         <p>
+  //           {firstName}
+  //           {lastName}
+  //         </p>
+  //       </div>
+  //     );
+  //   },
+  // },
+  // {
   //   accessorKey: "amount",
   //   header: () => <div className="text-right">Amount</div>,
   //   cell: ({ row }) => {

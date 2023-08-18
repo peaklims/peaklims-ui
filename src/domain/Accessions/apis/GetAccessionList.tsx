@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { SortingState } from "@tanstack/react-table";
 import { AxiosResponse } from "axios";
 import queryString from "query-string";
-import { AccessionDto, QueryParams } from "../types";
+import { AccessionWorklistDto, QueryParams } from "../types";
 import { AccessionKeys } from "./Accession.keys";
 
 interface delayProps {
@@ -27,14 +27,14 @@ const getAccessions = async ({
 
   const [json] = await Promise.all([
     peakLimsApi
-      .get(`/accessions${queryString}`)
-      .then((response: AxiosResponse<AccessionDto[]>) => {
+      .get(`/accessions/worklist${queryString}`)
+      .then((response: AxiosResponse<AccessionWorklistDto[]>) => {
         return {
-          data: response.data as AccessionDto[],
+          data: response.data as AccessionWorklistDto[],
           pagination: JSON.parse(
             response.headers["x-pagination"] ?? ""
           ) as Pagination,
-        } as PagedResponse<AccessionDto>;
+        } as PagedResponse<AccessionWorklistDto>;
       }),
     new Promise((resolve) => setTimeout(resolve, delayInMs)),
   ]);
@@ -42,7 +42,7 @@ const getAccessions = async ({
 };
 
 interface AccessionListHookProps extends QueryParams, delayProps {}
-export const useAccessions = ({
+export const useAccessioningWorklist = ({
   pageNumber,
   pageSize,
   filters,

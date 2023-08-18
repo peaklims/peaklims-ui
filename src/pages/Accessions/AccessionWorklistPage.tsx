@@ -1,4 +1,4 @@
-import { useAccessions } from "@/domain/Accessions/apis/GetAccessionList";
+import { useAccessioningWorklist } from "@/domain/Accessions/apis/GetAccessionList";
 import { Helmet } from "react-helmet";
 import {
   PaginatedDataTable,
@@ -28,7 +28,7 @@ export function AccessionWorklistPage() {
 
 function AccessioningWorklist() {
   const { sorting, pageSize, pageNumber } = usePaginatedTableContext();
-  const { data, isLoading } = useAccessions({
+  const { data, isLoading } = useAccessioningWorklist({
     sortOrder: sorting,
     pageSize,
     pageNumber,

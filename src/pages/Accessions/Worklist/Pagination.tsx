@@ -63,27 +63,19 @@ export function PaginationControls({
       </div>
 
       <div className="inline-flex items-center -space-x-[2px]">
-        <button
+        <Button
           aria-label="First page"
-          className={cn(
-            "ml-0 block rounded-l-lg border border-slate-300 bg-white py-2 px-3 leading-tight text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400",
-            !apiPagination?.hasPrevious
-              ? "cursor-not-allowed opacity-50 transition-opacity duration-500"
-              : "hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-white"
-          )}
+          variant="outline"
+          className={cn("rounded-r-none")}
           onClick={() => setPageNumber(1)}
           disabled={!apiPagination?.hasPrevious}
         >
           {<ArrowLeftToLine className="w-5 h-5" />}
-        </button>
-        <button
+        </Button>
+        <Button
           aria-label="Previous page"
-          className={cn(
-            "inline border border-slate-300 bg-white py-2 px-3 leading-tight text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400",
-            !apiPagination?.hasPrevious
-              ? "cursor-not-allowed opacity-50 transition-opacity duration-500"
-              : "hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-white"
-          )}
+          variant="outline"
+          className={cn("rounded-none")}
           onClick={() =>
             setPageNumber(
               apiPagination?.pageNumber ? apiPagination?.pageNumber - 1 : 1
@@ -92,15 +84,11 @@ export function PaginationControls({
           disabled={!apiPagination?.hasPrevious}
         >
           {<ChevronLeftIcon className="w-5 h-5" />}
-        </button>
-        <button
+        </Button>
+        <Button
           aria-label="Next page"
-          className={cn(
-            "inline border border-slate-300 bg-white py-2 px-3 leading-tight text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400",
-            !apiPagination?.hasNext
-              ? "cursor-not-allowed opacity-50 transition-opacity duration-500"
-              : "hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-white"
-          )}
+          variant="outline"
+          className={cn("rounded-none")}
           onClick={() =>
             setPageNumber(
               apiPagination?.pageNumber ? apiPagination?.pageNumber + 1 : 1
@@ -109,15 +97,11 @@ export function PaginationControls({
           disabled={!apiPagination?.hasNext}
         >
           {<ChevronRightIcon className="w-5 h-5" />}
-        </button>
-        <button
+        </Button>
+        <Button
           aria-label="Last page"
-          className={cn(
-            "block rounded-r-lg border border-slate-300 bg-white py-2 px-3 leading-tight text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400",
-            !apiPagination?.hasNext
-              ? "cursor-not-allowed opacity-50 transition-opacity duration-500"
-              : "hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-white"
-          )}
+          variant="outline"
+          className={cn("rounded-l-none")}
           onClick={() =>
             setPageNumber(
               apiPagination?.totalPages ? apiPagination?.totalPages : 1
@@ -126,7 +110,7 @@ export function PaginationControls({
           disabled={!apiPagination?.hasNext}
         >
           {<ArrowRightFromLine className="w-5 h-5" />}
-        </button>
+        </Button>
       </div>
     </div>
   );

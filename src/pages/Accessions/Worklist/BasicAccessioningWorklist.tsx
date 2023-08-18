@@ -166,7 +166,7 @@ export function PaginatedDataTable<TData, TValue>({
           {isLoading ? (
             <>
               {Array.from({ length: skeletonRowCount }, (_, rowIndex) => (
-                <tr key={`row${rowIndex}`} className="px-6 py-4">
+                <TableRow className="px-6 py-4">
                   {Array.from(
                     {
                       length:
@@ -176,18 +176,19 @@ export function PaginatedDataTable<TData, TValue>({
                         ).length,
                     },
                     (_, cellIndex) => (
-                      <td
+                      <TableCell
                         key={`row${cellIndex}col${rowIndex}`}
+                        colSpan={columns.length}
                         className="px-6 py-3"
                       >
                         <div
                           key={`row${cellIndex}col${rowIndex}`}
-                          className="w-3/4 h-2 rounded-full bg-slate-200 dark:bg-slate-800"
-                        ></div>
-                      </td>
+                          className="w-3/4 h-2 rounded-full bg-input"
+                        />
+                      </TableCell>
                     )
                   )}
-                </tr>
+                </TableRow>
               ))}
             </>
           ) : (

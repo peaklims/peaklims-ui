@@ -7,10 +7,15 @@ export interface QueryParams {
   sortOrder?: SortingState;
 }
 
-export type AccessionDto = {
+export type AccessionWorklistDto = {
   id: string;
   accessionNumber: string;
   status: string;
+  patient: {
+    firstName?: string;
+    lastName?: string;
+    age?: number;
+  };
 };
 
 // need a string enum list?
