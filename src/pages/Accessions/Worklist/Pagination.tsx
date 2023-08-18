@@ -16,7 +16,7 @@ import {
   ChevronsUpDown,
 } from "lucide-react";
 import { useState } from "react";
-import { PageSizeOptions } from "./BasicAccessioningWorklist";
+import { PageSizeOptions } from "./paginated-data-table";
 
 interface PaginationControlsProps {
   entityPlural: string;
@@ -51,7 +51,7 @@ export function PaginationControls({
           </span>
         </span>
 
-        <div className="w-32">
+        <div className="hidden w-32 sm:block">
           <PaginationCombobox
             value={pageSize.toString()}
             onValueChange={(value) => {
