@@ -170,6 +170,8 @@ function MobileMenu() {
   );
 }
 
+const sideNavWidth = "lg:w-52";
+
 function DesktopMenu({
   user,
   logoutUrl,
@@ -178,7 +180,12 @@ function DesktopMenu({
   logoutUrl: string | undefined;
 }) {
   return (
-    <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-52 lg:flex-col">
+    <div
+      className={cn(
+        "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
+        sideNavWidth
+      )}
+    >
       {/* Sidebar component, swap this element with another sidebar if you like */}
       <div className="flex flex-col px-6 overflow-y-auto border-r bg-card grow gap-y-5">
         <div className="flex items-center h-16 shrink-0">
@@ -266,7 +273,9 @@ function ProfileManagement({
       <DropdownMenuTrigger>
         <a
           href="#"
-          className="flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 lg:pr-6 lg:py-3 gap-x-4"
+          className={
+            "flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 lg:pr-6 lg:py-3 gap-x-4"
+          }
         >
           <Avatar>
             {/* <AvatarImage src={user?.image} /> */}
@@ -279,7 +288,7 @@ function ProfileManagement({
         </a>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="rounded-b-none w-72">
+      <DropdownMenuContent className={cn("rounded-b-none", sideNavWidth)}>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {logoutUrl && (
