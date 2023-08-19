@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAddAccession } from "@/domain/Accessions/apis/AddAccession";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { CircleIcon, TimerIcon, XCircle } from "lucide-react";
+import { CircleIcon, PlusCircle, TimerIcon, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FilterControl } from "./filter-control";
 import { useAccessioningWorklistTableStore } from "./paginated-data-table";
@@ -21,32 +22,59 @@ export function AccessionWorklistToolbar() {
     }
   }, [debouncedFilterInput, resetFilters, setFilterInput]);
 
+  const createAccessionApi = useAddAccession();
+  function createAccession() {
+    createAccessionApi
+      .mutateAsync()
+      .then((data) => {
+        // formMode = "Edit";
+        // AccessionData = data;
+        // router.push(`/settings/Accessions/${data.id}`);
+      })
+      .then(() => {
+        // Notifications.success("Accession created successfully");
+      })
+      .catch((e) => {
+        // Notifications.error("There was an error creating the Accession");
+        // console.error(e);
+      });
+  }
+
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center flex-1 space-x-2">
-        <Input
-          placeholder="Filter accessions..."
-          value={(liveValue as string) ?? ""}
-          onChange={(event) => {
-            setLiveValue(event.currentTarget.value);
-          }}
-          className="w-48 h-8 lg:w-54"
-        />
-        <FilterControl title="Status" options={statuses} />
-        {isFiltered.result() && (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setLiveValue(null);
-              resetFilters();
+    <div className="flex-col space-y-3 sm:flex-row sm:flex sm:items-center sm:justify-between sm:flex-1 sm:space-y-0">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center flex-1 space-x-2">
+          <Input
+            placeholder="Filter accessions..."
+            value={(liveValue as string) ?? ""}
+            onChange={(event) => {
+              setLiveValue(event.currentTarget.value);
             }}
-            className="h-8 px-2 lg:px-3"
-          >
-            Reset
-            <XCircle className="w-4 h-4 ml-2" />
-          </Button>
-        )}
+            className="w-48 lg:w-54"
+          />
+          <FilterControl title="Status" options={statuses} />
+          {isFiltered.result() && (
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setLiveValue(null);
+                resetFilters();
+              }}
+              className="h-8 px-2 lg:px-3"
+            >
+              Reset
+              <XCircle className="w-4 h-4 ml-2" />
+            </Button>
+          )}
+        </div>
       </div>
+      <Button
+        className="w-full space-x-2 sm:w-auto"
+        onClick={() => createAccession()}
+      >
+        <PlusCircle className="w-5 h-5" />
+        <span>Add Accession</span>
+      </Button>
     </div>
   );
 }
