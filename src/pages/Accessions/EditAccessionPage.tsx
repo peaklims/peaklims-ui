@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet";
+import { PatientCard } from "./components/PatientCard";
 
 export function EditAccessionPage() {
   return (
@@ -10,6 +11,10 @@ export function EditAccessionPage() {
       <h1 className="text-4xl font-bold tracking-tight scroll-m-20">
         Edit Accession
       </h1>
+
+      <div className="flex items-center justify-center w-full pt-3 md:block">
+        <PatientCard />
+      </div>
     </div>
   );
 }
