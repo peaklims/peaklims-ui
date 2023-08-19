@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAddAccession } from "@/domain/accessions/apis/add-accession";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { RegisteredRoutesInfo, useNavigate } from "@tanstack/react-router";
 import { CircleIcon, PlusCircle, TimerIcon, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -22,6 +23,7 @@ export function AccessionWorklistToolbar() {
     }
   }, [debouncedFilterInput, resetFilters, setFilterInput]);
 
+  const navigate = useNavigate();
   const createAccessionApi = useAddAccession();
   function createAccession() {
     createAccessionApi
@@ -29,7 +31,9 @@ export function AccessionWorklistToolbar() {
       .then((data) => {
         // formMode = "Edit";
         // AccessionData = data;
-        // router.push(`/settings/Accessions/${data.id}`);
+        navigate({
+          to: `/accessions/${data.id}` as RegisteredRoutesInfo["routePaths"],
+        });
       })
       .then(() => {
         // Notifications.success("Accession created successfully");
