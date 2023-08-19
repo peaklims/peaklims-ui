@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pagination } from "@/types/apis";
+import { RegisteredRoutesInfo, useNavigate } from "@tanstack/react-router";
 import { create } from "zustand";
 import { PaginationControls } from "./Pagination";
 import { AccessionWorklistToolbar } from "./accession-worklist-toolbar";
@@ -35,6 +36,9 @@ interface DataTableProps<TData, TValue> {
   pagination?: Pagination;
   isLoading?: boolean;
   skeletonRowCount?: number;
+  onRowClick?: (
+    event: React.MouseEvent<HTMLTableRowElement, MouseEvent>
+  ) => void | undefined; //(row: TData) => void;
 }
 
 export const PageSizeOptions = [1, 10, 20, 30, 40, 50] as const;
@@ -115,6 +119,7 @@ export function PaginatedDataTable<TData, TValue>({
   pagination,
   isLoading = false,
   skeletonRowCount = 3,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -159,6 +164,8 @@ export function PaginatedDataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-4">
       <AccessionWorklistToolbar />
@@ -184,33 +191,11 @@ export function PaginatedDataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <>
-                {Array.from({ length: skeletonRowCount }, (_, rowIndex) => (
-                  <TableRow className="px-6 py-4" key={rowIndex}>
-                    {Array.from(
-                      {
-                        length:
-                          columns.length -
-                          Object.values(columnVisibility).filter(
-                            (value) => value === false
-                          ).length,
-                      },
-                      (_, cellIndex) => (
-                        <TableCell
-                          key={`row${cellIndex}col${rowIndex}`}
-                          colSpan={columns.length}
-                          className="px-6 py-3"
-                        >
-                          <div
-                            key={`row${cellIndex}col${rowIndex}`}
-                            className="w-3/4 h-2 rounded-full bg-input"
-                          />
-                        </TableCell>
-                      )
-                    )}
-                  </TableRow>
-                ))}
-              </>
+              SkeletonRows<TData, TValue>(
+                skeletonRowCount,
+                columns,
+                columnVisibility
+              )
             ) : (
               <>
                 {table.getRowModel().rows?.length ? (
@@ -218,6 +203,13 @@ export function PaginatedDataTable<TData, TValue>({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
+                      onRowClick={() => {
+                        navigate({
+                          to: `/accessions/${row.getValue(
+                            "id"
+                          )}` as RegisteredRoutesInfo["routePaths"],
+                        });
+                      }}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
@@ -253,5 +245,41 @@ export function PaginatedDataTable<TData, TValue>({
         />
       </div>
     </div>
+  );
+}
+
+function SkeletonRows<TData, TValue>(
+  skeletonRowCount: number,
+  columns: ColumnDef<TData, TValue>[],
+  columnVisibility: VisibilityState
+) {
+  return (
+    <>
+      {Array.from({ length: skeletonRowCount }, (_, rowIndex) => (
+        <TableRow className="px-6 py-4" key={rowIndex}>
+          {Array.from(
+            {
+              length:
+                columns.length -
+                Object.values(columnVisibility).filter(
+                  (value) => value === false
+                ).length,
+            },
+            (_, cellIndex) => (
+              <TableCell
+                key={`row${cellIndex}col${rowIndex}`}
+                colSpan={columns.length}
+                className="px-6 py-3"
+              >
+                <div
+                  key={`row${cellIndex}col${rowIndex}`}
+                  className="w-3/4 h-2 rounded-full bg-input"
+                />
+              </TableCell>
+            )
+          )}
+        </TableRow>
+      ))}
+    </>
   );
 }

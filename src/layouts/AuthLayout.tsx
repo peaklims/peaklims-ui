@@ -60,7 +60,7 @@ export default function AuthLayout() {
           <ProfileManagement user={user} logoutUrl={logoutUrl} />
         </div>
 
-        <main className="py-10 lg:pl-52">
+        <main className="pt-4 pb-6 md:pt-6 md:pb-10 lg:pl-52">
           <div className="px-4 sm:px-6 lg:px-8">
             <Outlet />
           </div>

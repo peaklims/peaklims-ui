@@ -10,7 +10,9 @@ import {
   Router,
 } from "@tanstack/react-router";
 import { Helmet } from "react-helmet";
+import { z } from "zod";
 import { siteConfig } from "./lib/site-config";
+import { EditAccessionPage } from "./pages/Accessions/EditAccessionPage";
 
 const appRoute = new RootRoute({
   component: () => {
@@ -87,20 +89,40 @@ const authLayout = new Route({
   component: AuthLayout,
 });
 
-const indexRoute = new Route({
+const dashboardRoute = new Route({
   getParentRoute: () => authLayout,
   path: "/",
   component: IndexPage,
 });
 
-const orderRoute = new Route({
+const accessionsRoute = new Route({
   getParentRoute: () => authLayout,
-  path: "/accessions",
+  path: "accessions",
+  component: () => {
+    return <Outlet />;
+  },
+});
+
+const accessionWorklistRoute = new Route({
+  getParentRoute: () => accessionsRoute,
+  path: "/",
   component: AccessionWorklistPage,
 });
 
+const accessionRoute = new Route({
+  getParentRoute: () => accessionsRoute,
+  path: "$accessionId",
+  parseParams: (params) => ({
+    accessionId: z.string().uuid().parse(params.accessionId),
+  }),
+  component: EditAccessionPage,
+});
+
 const routeTree = appRoute.addChildren([
-  authLayout.addChildren([indexRoute, orderRoute]),
+  authLayout.addChildren([
+    dashboardRoute,
+    accessionsRoute.addChildren([accessionWorklistRoute, accessionRoute]),
+  ]),
 ]);
 
 // Create the router using your route tree
