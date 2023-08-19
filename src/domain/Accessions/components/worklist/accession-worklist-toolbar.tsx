@@ -1,13 +1,13 @@
 "use client";
 
+import { FilterControl } from "@/components/data-table/filter-control";
+import { useAccessioningWorklistTableStore } from "@/components/data-table/paginated-data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAddAccession } from "@/domain/Accessions/apis/AddAccession";
+import { useAddAccession } from "@/domain/accessions/apis/add-accession";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { CircleIcon, PlusCircle, TimerIcon, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { FilterControl } from "./filter-control";
-import { useAccessioningWorklistTableStore } from "./paginated-data-table";
 
 export function AccessionWorklistToolbar() {
   const { filterInput, setFilterInput, isFiltered, resetFilters } =

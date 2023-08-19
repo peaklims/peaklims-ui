@@ -1,3 +1,3 @@
-import { AccessionWorklistPage } from "./AccessionWorklistPage";
+import { AccessionWorklistPage } from "./accession-worklist-page";
 
 export { AccessionWorklistPage };

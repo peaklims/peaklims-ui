@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import { PatientCard } from "./components/PatientCard";
+import { PatientCard } from "../../domain/patients/components/patient-card";
 
 export function EditAccessionPage() {
   return (

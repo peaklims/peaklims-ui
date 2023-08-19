@@ -31,12 +31,13 @@ interface FilterControl {
 }
 
 export function FilterControl({ title, options }: FilterControl) {
-  const { addStatus, removeStatus, status } =
+  const { addStatus, removeStatus, status, clearStatus } =
     useAccessioningWorklistTableStore();
   const selectedValues = new Set(status);
+  const [popoverIsOpen, setPopoverIsOpen] = React.useState(false);
 
   return (
-    <Popover>
+    <Popover open={popoverIsOpen} onOpenChange={setPopoverIsOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="border-dashed">
           <PlusCircleIcon className="w-4 h-4 mr-2" />
@@ -120,7 +121,10 @@ export function FilterControl({ title, options }: FilterControl) {
                 <CommandSeparator />
                 <CommandGroup>
                   <CommandItem
-                    onSelect={() => status.length > 0}
+                    onSelect={() => {
+                      clearStatus();
+                      setPopoverIsOpen(false);
+                    }}
                     className="justify-center text-center"
                   >
                     Clear filters

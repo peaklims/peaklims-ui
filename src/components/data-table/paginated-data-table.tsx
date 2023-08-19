@@ -1,6 +1,3 @@
-import { useState } from "react";
-("use client");
-
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,6 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useState } from "react";
 
 import {
   Table,
@@ -24,11 +22,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AccessionWorklistToolbar } from "@/domain/accessions/components/worklist/accession-worklist-toolbar";
 import { Pagination } from "@/types/apis";
 import { RegisteredRoutesInfo, useNavigate } from "@tanstack/react-router";
 import { create } from "zustand";
-import { PaginationControls } from "./Pagination";
-import { AccessionWorklistToolbar } from "./accession-worklist-toolbar";
+import { PaginationControls } from "./pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,9 +34,6 @@ interface DataTableProps<TData, TValue> {
   pagination?: Pagination;
   isLoading?: boolean;
   skeletonRowCount?: number;
-  onRowClick?: (
-    event: React.MouseEvent<HTMLTableRowElement, MouseEvent>
-  ) => void | undefined; //(row: TData) => void;
 }
 
 export const PageSizeOptions = [1, 10, 20, 30, 40, 50] as const;
@@ -63,6 +58,7 @@ export interface AccessioningWorklistTableStore extends PaginatedTableStore {
   status: string[];
   addStatus: (status: string) => void;
   removeStatus: (status: string) => void;
+  clearStatus: () => void;
   filterInput: string | null;
   setFilterInput: (f: string | null) => void;
 }
@@ -89,6 +85,7 @@ export const useAccessioningWorklistTableStore =
       set((prevState) => ({
         status: prevState.status.filter((s) => s !== status),
       })),
+    clearStatus: () => set({ status: [] }),
     filterInput: null,
     setFilterInput: (f) => set({ filterInput: f }),
     isFiltered: {
@@ -119,7 +116,6 @@ export function PaginatedDataTable<TData, TValue>({
   pagination,
   isLoading = false,
   skeletonRowCount = 3,
-  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({

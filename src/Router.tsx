@@ -1,7 +1,9 @@
-import AuthLayout from "@/layouts/AuthLayout";
+import AuthLayout from "@/layouts/auth-layout";
 import { ReactQueryDevtools, TanStackRouterDevtools } from "@/lib/dev-tools";
-import { AccessionWorklistPage } from "@/pages/Accessions";
-import { IndexPage } from "@/pages/Index";
+import { siteConfig } from "@/lib/site-config";
+import { AccessionWorklistPage } from "@/pages/accessions";
+import { EditAccessionPage } from "@/pages/accessions/edit-accession-page";
+import { IndexPage } from "@/pages/dashboard";
 import {
   Outlet,
   RegisteredRoutesInfo,
@@ -11,8 +13,6 @@ import {
 } from "@tanstack/react-router";
 import { Helmet } from "react-helmet";
 import { z } from "zod";
-import { siteConfig } from "./lib/site-config";
-import { EditAccessionPage } from "./pages/Accessions/EditAccessionPage";
 
 const appRoute = new RootRoute({
   component: () => {

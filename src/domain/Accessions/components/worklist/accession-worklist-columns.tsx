@@ -1,8 +1,8 @@
 "use client";
 
-import { AccessionWorklistDto } from "@/domain/Accessions/types";
+import { AccessionWorklistDto } from "@/domain/accessions/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { DataTableColumnHeader } from "./data-table-column-header";
+import { DataTableColumnHeader } from "../../../../components/data-table/data-table-column-header";
 
 export const columns: ColumnDef<AccessionWorklistDto>[] = [
   {

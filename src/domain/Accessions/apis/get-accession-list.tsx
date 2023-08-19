@@ -6,7 +6,7 @@ import { SortingState } from "@tanstack/react-table";
 import { AxiosResponse } from "axios";
 import queryString from "query-string";
 import { AccessionWorklistDto, QueryParams } from "../types";
-import { AccessionKeys } from "./Accession.keys";
+import { AccessionKeys } from "./accession.keys";
 
 interface delayProps {
   hasArtificialDelay?: boolean;

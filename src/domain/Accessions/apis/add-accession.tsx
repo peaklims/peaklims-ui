@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { AccessionDto } from "../types";
-import { AccessionKeys } from "./Accession.keys";
+import { AccessionKeys } from "./accession.keys";
 
 const addAccession = async () => {
   return peakLimsApi
