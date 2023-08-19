@@ -160,7 +160,7 @@ export function PaginatedDataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <AccessionWorklistToolbar />
       <div className="border rounded-md">
         <Table>
