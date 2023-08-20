@@ -52,7 +52,7 @@ export default function AuthLayout() {
       <div>
         <DesktopMenu user={user} logoutUrl={logoutUrl} />
 
-        <div className="sticky top-0 z-40 flex items-center px-4 py-4 shadow-sm bg-background gap-x-6 sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-40 flex items-center px-4 py-4 shadow-sm bg-background gap-x-6 sm:px-6 md:hidden">
           <div className="flex-1 text-sm font-semibold leading-6 text-primary">
             Peak LIMS
           </div>
@@ -60,8 +60,8 @@ export default function AuthLayout() {
           <ProfileManagement user={user} logoutUrl={logoutUrl} />
         </div>
 
-        <main className="pt-4 pb-6 md:pt-6 md:pb-10 lg:pl-52">
-          <div className="px-4 sm:px-6 lg:px-8">
+        <main className="pt-4 pb-6 md:pt-6 md:pb-10 md:pl-52">
+          <div className="px-4 sm:px-6 md:px-8">
             <Outlet />
           </div>
         </main>
@@ -160,7 +160,7 @@ function MobileMenu() {
       </div>
 
       <DialogTrigger>
-        <div className="absolute z-10 p-1 rounded-full bottom-4 right-4 bg-slate-100 sm:p-2 lg:hidden">
+        <div className="absolute z-10 p-1 rounded-full bottom-4 right-4 bg-slate-100 sm:p-2 md:hidden">
           <div className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
             <Menu className="w-6 h-6" aria-hidden="true" />
           </div>
@@ -170,7 +170,7 @@ function MobileMenu() {
   );
 }
 
-const sideNavWidth = "lg:w-52";
+const sideNavWidth = "md:w-52";
 
 function DesktopMenu({
   user,
@@ -182,7 +182,7 @@ function DesktopMenu({
   return (
     <div
       className={cn(
-        "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
+        "hidden md:fixed md:inset-y-0 md:z-50 md:flex md:flex-col",
         sideNavWidth
       )}
     >
@@ -274,15 +274,15 @@ function ProfileManagement({
         <a
           href="#"
           className={
-            "flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 lg:pr-6 lg:py-3 gap-x-4"
+            "flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 md:pr-6 md:py-3 gap-x-4"
           }
         >
           <Avatar>
             {/* <AvatarImage src={user?.image} /> */}
             <AvatarFallback>{user?.initials}</AvatarFallback>
           </Avatar>
-          <span className="hidden sr-only lg:inline">Your profile</span>
-          <span aria-hidden="true" className="hidden lg:inline">
+          <span className="hidden sr-only md:inline">Your profile</span>
+          <span aria-hidden="true" className="hidden md:inline">
             {user?.name}
           </span>
         </a>
