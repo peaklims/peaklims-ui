@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import PatientForm from "./patient-form";
 
 export function PatientCard() {
   return (
@@ -93,21 +95,28 @@ export function PatientCard() {
           <div className="flex items-center justify-between w-full">
             <p className="select-none text-slate-800">No patient selected</p>
             <div className="transition-opacity">
-              <Dialog>
-                <div className="relative inset-0 flex">
-                  <DialogContent className="relative flex flex-1 w-full">
-                    <div className="flex flex-col px-6 pb-2 overflow-y-auto grow gap-y-5 min-h-[30vh]">
-                      all the inner stuff
-                    </div>
-                  </DialogContent>
-                </div>
+              <div className="max-md:min-h-[50vh]">
+                <Dialog>
+                  <div className="relative inset-0 flex">
+                    <DialogContent>
+                      <div className="px-6 pb-2 -mt-8 overflow-y-auto grow gap-y-5">
+                        <DialogTitle className="text-2xl font-semibold scroll-m-20">
+                          Add a Patient
+                        </DialogTitle>
+                        <div className="pt-6">
+                          <PatientForm />
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </div>
 
-                <DialogTrigger>
-                  <Button size="sm" variant="outline">
-                    Add
-                  </Button>
-                </DialogTrigger>
-              </Dialog>
+                  <DialogTrigger>
+                    <Button size="sm" variant="outline">
+                      Add
+                    </Button>
+                  </DialogTrigger>
+                </Dialog>
+              </div>
             </div>
           </div>
         </div>
