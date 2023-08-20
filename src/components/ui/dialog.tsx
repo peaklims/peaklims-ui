@@ -61,11 +61,11 @@ const DialogContent = React.forwardRef<
     >
       <DialogOverlay />
       <div className="fixed inset-0 z-50 overflow-y-auto">
-        <div className="flex items-end justify-center min-h-full text-center md:items-center md:p-0">
+        <div className="flex items-end justify-center min-h-full md:items-center md:p-0">
           <DialogPrimitive.Content ref={ref} {...props} asChild>
             <motion.div
               className={cn(
-                "fixed z-50 w-full mx-2 md:mx-0 md:max-w-xl -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow",
+                "fixed pt-12 md:mt-8 pb-4  min-h-[30vh] z-50 w-full mx-2 md:mx-0 md:max-w-xl -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow",
                 "max-md:[--y-isClosed:16px] [--opacity-isClosed:0%] md:[--scale-isClosed:90%]",
                 "max-md:[--y-isOpen:0px] [--opacity-isOpen:100%] md:[--scale-isOpen:100%]",
                 className

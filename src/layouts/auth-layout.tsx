@@ -84,7 +84,7 @@ function MobileMenu() {
     <Dialog open={mobileMenuIsOpen} onOpenChange={setMobileMenuIsOpen}>
       <div className="relative inset-0 flex">
         <DialogContent className="relative flex flex-1 w-full">
-          <div className="flex flex-col px-6 pb-2 overflow-y-auto grow gap-y-5 min-h-[30vh]">
+          <div className="flex flex-col px-6 pb-2 overflow-y-auto grow gap-y-5">
             <div className="flex items-center h-16 shrink-0">
               <img
                 className="w-auto h-8"
