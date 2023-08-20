@@ -95,7 +95,7 @@ export function PatientCard() {
           <div className="flex items-center justify-between w-full">
             <p className="select-none text-slate-800">No patient selected</p>
             <div className="transition-opacity">
-              <div className="max-md:min-h-[50vh]">
+              <div className="">
                 <Dialog>
                   <div className="relative inset-0 flex">
                     <DialogContent>
