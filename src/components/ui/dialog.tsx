@@ -65,7 +65,7 @@ const DialogContent = React.forwardRef<
           <DialogPrimitive.Content ref={ref} {...props} asChild>
             <motion.div
               className={cn(
-                "fixed pt-12 md:mt-8 pb-4 min-h-[30vh] z-50 w-full mx-2 md:mx-0 md:max-w-xl -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow",
+                "fixed pt-12 md:mt-8 pb-4  z-50 w-full mx-2 md:mx-0 md:max-w-xl -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow",
                 "max-md:[--y-isClosed:16px] [--opacity-isClosed:0%] md:[--scale-isClosed:90%]",
                 "max-md:[--y-isOpen:0px] [--opacity-isOpen:100%] md:[--scale-isOpen:100%]",
                 className
@@ -84,8 +84,8 @@ const DialogContent = React.forwardRef<
               }}
             >
               {children}
-              <DialogPrimitive.Close className="absolute right-5 top-5 lg:right-4 lg:top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                <X className="w-6 h-6 lg:w-4 lg:h-4" />
+              <DialogPrimitive.Close className="absolute right-6 top-6 lg:right-4 lg:top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                <X className="w-6 h-6" />
                 <span className="sr-only">Close</span>
               </DialogPrimitive.Close>
             </motion.div>
