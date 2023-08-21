@@ -24,6 +24,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", 
+  "utils/dates/date.extensions.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

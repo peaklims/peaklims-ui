@@ -1,8 +1,14 @@
+import { useParams } from "@tanstack/react-router";
 import { Helmet } from "react-helmet";
-import { PatientCard } from "../../domain/patients/components/patient-card";
+import {
+  EmptyPatientCard,
+  PatientCard,
+} from "../../domain/patients/components/patient-card";
 
 export function EditAccessionPage() {
   const accession = { accessionNumber: "ACC-000000000TBD" }; // get accession aggregate
+  const queryParams = useParams();
+  const accessionId = queryParams.accessionId;
 
   return (
     <div className="">
@@ -20,7 +26,10 @@ export function EditAccessionPage() {
       </div>
 
       <div className="flex items-center justify-center w-full pt-3 md:block">
-        <PatientCard />
+        <div className="space-y-10">
+          <PatientCard />
+          <EmptyPatientCard accessionId={accessionId} />
+        </div>
       </div>
     </div>
   );

@@ -14,33 +14,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Combobox } from "@/components/ui/combobox";
 import { ethnicitiesDropdown } from "../types/ethnicities";
 import { racesDropdown } from "../types/races";
 import { sexesDropdown } from "../types/sexes";
 
-function PatientForm() {
-  const patientFormSchema = z.object({
-    firstName: z.string().nonempty("First Name is required"),
-    lastName: z.string().nonempty("Last Name is required"),
-    dateOfBirth: z
-      .date({
-        required_error: "Date of Birth is required",
-      })
-      .refine((dob) => dob <= new Date(), {
-        message: "Date of Birth must not be in the future.",
-      }),
-    sex: z.string().nonempty("Sex is required"),
-    race: z.string(),
-    ethnicity: z.string(),
-  });
+export const patientFormSchema = z.object({
+  firstName: z.string().nonempty("First Name is required"),
+  lastName: z.string().nonempty("Last Name is required"),
+  dateOfBirth: z
+    .date({
+      required_error: "Date of Birth is required",
+    })
+    .refine((dob) => dob <= new Date(), {
+      message: "Date of Birth must not be in the future.",
+    }),
+  sex: z.string().nonempty("Sex is required"),
+  race: z.string(),
+  ethnicity: z.string(),
+});
 
+export function PatientForm({
+  onSubmit,
+}: {
+  onSubmit: (values: z.infer<typeof patientFormSchema>) => void;
+}) {
   const patientForm = useForm<z.infer<typeof patientFormSchema>>({
     resolver: zodResolver(patientFormSchema),
     defaultValues: {
@@ -52,10 +50,6 @@ function PatientForm() {
       ethnicity: "Not Given",
     },
   });
-
-  function onSubmit(values: z.infer<typeof patientFormSchema>) {
-    console.log(values);
-  }
 
   return (
     <Form {...patientForm}>
@@ -114,21 +108,7 @@ function PatientForm() {
                   <FormItem>
                     <FormLabel required={true}>Sex</FormLabel>
                     <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a sex" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {sexesDropdown.map((sex) => (
-                            <SelectItem key={sex.value} value={sex.value}>
-                              {sex.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Combobox items={sexesDropdown} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -143,27 +123,7 @@ function PatientForm() {
                   <FormItem>
                     <FormLabel required={false}>Race</FormLabel>
                     <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a race" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {racesDropdown.map((race) => (
-                            <SelectItem
-                              key={race.value}
-                              value={race.value}
-                              className={
-                                race.label === "" ? "hidden" : undefined
-                              }
-                            >
-                              {race.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Combobox items={racesDropdown} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -178,27 +138,7 @@ function PatientForm() {
                   <FormItem>
                     <FormLabel required={false}>Ethnicity</FormLabel>
                     <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select an ethnicity" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {ethnicitiesDropdown.map((ethnicity) => (
-                            <SelectItem
-                              key={ethnicity.value}
-                              value={ethnicity.value}
-                              className={
-                                ethnicity.label === "" ? "hidden" : undefined
-                              }
-                            >
-                              {ethnicity.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Combobox items={ethnicitiesDropdown} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -215,5 +155,3 @@ function PatientForm() {
     </Form>
   );
 }
-
-export default PatientForm;

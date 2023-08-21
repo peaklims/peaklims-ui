@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { caseInsensitiveEquals } from "@/utils/string-utilities";
+import { caseInsensitiveEquals } from "@/utils/strings";
 
 export function Combobox({
   items,
@@ -39,6 +39,12 @@ export function Combobox({
   const [open, setOpen] = React.useState(false);
   const [internalValue, setInternalValue] = React.useState(value);
 
+  const selectedItem = items.find((item) =>
+    caseInsensitiveEquals(item.value, internalValue)
+  );
+  const displayText =
+    (selectedItem?.label?.length ?? 0) > 0 ? selectedItem!.label : buttonText;
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -46,16 +52,19 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-48 block ", buttonProps?.className)}
+          className={cn(
+            "w-full block hover:bg-transparent ",
+            buttonProps?.className
+          )}
         >
-          <span className="flex items-center justify-between">
-            {internalValue
-              ? items.find((item) =>
-                  caseInsensitiveEquals(item.value, internalValue)
-                )?.label
-              : buttonText}
-            <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
-          </span>
+          <div className="flex">
+            <p className="flex items-center justify-between flex-1 truncate">
+              {displayText}
+            </p>
+            <div className="pl-2">
+              <ChevronsUpDown className="w-4 h-4 opacity-50 shrink-0" />
+            </div>
+          </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-48 p-0", dropdownProps?.className)}>
@@ -76,11 +85,14 @@ export function Combobox({
                     );
                   setOpen(false);
                 }}
+                className={item.label.length === 0 ? "hidden" : undefined}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === item.value ? "opacity-100" : "opacity-0"
+                    caseInsensitiveEquals(value, item.value)
+                      ? "opacity-100"
+                      : "opacity-0"
                   )}
                 />
                 {item.label}
