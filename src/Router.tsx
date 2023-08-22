@@ -45,7 +45,7 @@ const appRoute = new RootRoute({
 
         <div className="h-full min-h-screen font-sans antialiased scroll-smooth debug-screens">
           <Outlet />
-          <div className="hidden lg:block">
+          <div className="hidden md:block">
             <TanStackRouterDevtools
               position="top-right"
               toggleButtonProps={{
@@ -57,7 +57,7 @@ const appRoute = new RootRoute({
             />
             <ReactQueryDevtools position="top-right" />
           </div>
-          <div className="block lg:hidden">
+          <div className="block md:hidden">
             <TanStackRouterDevtools
               position="bottom-left"
               toggleButtonProps={{
