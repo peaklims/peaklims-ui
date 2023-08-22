@@ -10,8 +10,14 @@ export const getAccessionForEdit = async (id: string) => {
     .then((response: AxiosResponse<EditableAccessionDto>) => response.data);
 };
 
-export const useGetAccessionForEdit = (id: string | null | undefined) => {
-  return useQuery(AccessionKeys.detail(id!), () => getAccessionForEdit(id!), {
-    enabled: id !== null && id !== undefined,
-  });
+export const useGetAccessionForEdit = (
+  accessionId: string | null | undefined
+) => {
+  return useQuery(
+    AccessionKeys.forEdit(accessionId!),
+    () => getAccessionForEdit(accessionId!),
+    {
+      enabled: accessionId !== null && accessionId !== undefined,
+    }
+  );
 };

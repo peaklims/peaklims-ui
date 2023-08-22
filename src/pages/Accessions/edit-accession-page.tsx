@@ -1,4 +1,5 @@
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
+import { useRemoveAccessionPatient } from "@/domain/accessions/apis/remove-accession-patient";
 import { useParams } from "@tanstack/react-router";
 import { Helmet } from "react-helmet";
 import {
@@ -14,6 +15,13 @@ export function EditAccessionPage() {
 
   const accessionNumber = accession?.accessionNumber ?? "";
   const accessionNumberTitle = accessionNumber ? ` - ${accessionNumber}` : "";
+
+  const removeAccessionApi = useRemoveAccessionPatient();
+  function removePatientFromAccession() {
+    removeAccessionApi.mutateAsync(accessionId!).then(() => {
+      // TODO toast
+    });
+  }
   return (
     <div className="">
       <Helmet>
@@ -33,9 +41,7 @@ export function EditAccessionPage() {
         <div className="space-y-10">
           {accession?.patient ? (
             <PatientCard
-              onRemovePatient={() =>
-                alert(`Remove patient ${accession.patient?.id}`)
-              }
+              onRemovePatient={removePatientFromAccession}
               onEditPatient={() =>
                 alert(`Edit patient ${accession.patient?.id}`)
               }

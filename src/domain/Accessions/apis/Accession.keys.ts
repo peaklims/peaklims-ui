@@ -4,9 +4,11 @@ const AccessionKeys = {
   list: (queryParams: string) =>
     [...AccessionKeys.lists(), { queryParams }] as const,
   details: () => [...AccessionKeys.all, "detail"] as const,
-  detail: (id: string) => [...AccessionKeys.details(), id] as const,
+  detail: (accessionId: string) =>
+    [...AccessionKeys.details(), accessionId] as const,
   forEdits: () => [...AccessionKeys.all, "forEdit"] as const,
-  forEdit: (id: string) => [...AccessionKeys.forEdits(), id] as const,
+  forEdit: (accessionId: string) =>
+    [...AccessionKeys.forEdits(), accessionId] as const,
 };
 
 export { AccessionKeys };
