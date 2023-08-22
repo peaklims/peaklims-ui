@@ -18,6 +18,23 @@ export type AccessionWorklistDto = {
   };
 };
 
+export type EditableAccessionDto = {
+  id: string;
+  accessionNumber: string;
+  status: string;
+  patient: {
+    id: string;
+    firstName?: string;
+    lastName?: string;
+    age?: number;
+    dateOfBirth?: Date;
+    race?: string;
+    ethnicity?: string;
+    internalId: string;
+    sex: string;
+  };
+};
+
 export type AccessionDto = {
   id: string;
   accessionNumber: string;
