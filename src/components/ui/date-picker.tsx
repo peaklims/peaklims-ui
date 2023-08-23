@@ -17,10 +17,12 @@ export function DatePicker({
   value,
   onChange,
   buttonClassName,
+  disabled,
 }: {
   value?: Date | undefined;
   onChange?: (...event: any[]) => void;
   buttonClassName?: string;
+  disabled?: boolean;
 }) {
   const [date, setDate] = useState<Date>();
   value ??= date;
@@ -31,13 +33,14 @@ export function DatePicker({
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
+          disabled={disabled}
           className={cn(
             "block",
             !value && "text-muted-foreground",
             buttonClassName
           )}
         >
-          <div className="flex items-center justify-start font-normal text-left">
+          <div className="flex items-center justify-start font-normal text-left min-w-[7rem]">
             <CalendarIcon className="w-4 h-4 mr-2" />
             {value ? format(value, "PPP") : <span>Pick a date</span>}
           </div>

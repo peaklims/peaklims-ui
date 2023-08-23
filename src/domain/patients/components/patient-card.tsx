@@ -14,6 +14,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { PlusCircleIcon, SearchIcon } from "lucide-react";
 import { MouseEventHandler, useState } from "react";
 import { PatientForm } from "./patient-form";
+import { SearchExistingPatients } from "./search-existing-patients";
 
 export type PatientForCard = {
   id: string;
@@ -48,28 +49,10 @@ export function PatientCard({
     patientInfo && patientInfo.ethnicity ? patientInfo.ethnicity : "";
   const raceEth = [race, ethnicity].join(" ").trim();
   return (
-    <div className="group flex min-h-[5rem] overflow-hidden rounded-lg border border-emerald-500 shadow-md max-w-lg">
-      <div className="flex items-center justify-center px-2 py-2 border shadow-sm border-emerald-500 bg-emerald-500 shadow-emerald-700">
-        <div className="p-1 border border-white rounded-full">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-4 h-4 text-white"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-            />
-          </svg>
-        </div>
-      </div>
+    <BaseCard>
       <div className="flex items-stretch flex-1 px-4 py-3 bg-slate-50">
         <div className="flex-1">
-          <div className="items-start justify-between sm:flex">
+          <div className="flex items-start justify-between">
             <p className="text-2xl text-slate-800">{name}</p>
             <p className="max-w-[7rem] mt-1 rounded bg-gradient-to-r from-emerald-400 to-emerald-600 px-1 py-1 text-xs font-bold text-white shadow-md">
               {patientInfo?.internalId}
@@ -101,7 +84,7 @@ export function PatientCard({
               </div>
               <p className="text-xs font-medium text-slate-600">{raceEth}</p>
             </div>
-            <div className="flex items-center justify-between pt-3 space-x-2 sm:pt-0 sm:justify-end sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100">
+            <div className="flex items-center justify-between pt-3 space-x-2 md:pt-0 md:justify-end md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
               <Button
                 className="w-[48%]"
                 size="sm"
@@ -122,17 +105,13 @@ export function PatientCard({
           </div>
         </div>
       </div>
-    </div>
+    </BaseCard>
   );
 }
 
-export function EmptyPatientCard({
-  accessionId,
-}: {
-  accessionId: string | undefined;
-}) {
+function BaseCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="group flex min-h-[5rem] overflow-hidden rounded-lg border border-emerald-500 shadow-md max-w-lg">
+    <div className="group flex min-h-[5rem] overflow-hidden rounded-lg border border-emerald-500 shadow-md max-w-lg min-w-[20rem] sm:min-w-[30rem]">
       <div className="flex items-center justify-center px-2 py-2 border shadow-sm border-emerald-500 bg-emerald-500 shadow-emerald-700">
         <div className="p-1 border border-white rounded-full">
           <svg
@@ -151,16 +130,30 @@ export function EmptyPatientCard({
           </svg>
         </div>
       </div>
+      {children}
+    </div>
+  );
+}
+
+export function EmptyPatientCard({
+  accessionId,
+}: {
+  accessionId: string | undefined;
+}) {
+  return (
+    <BaseCard>
       <div className="flex items-center flex-1 px-4 py-3 bg-slate-50">
         <div className="flex items-center justify-between w-full">
           <p className="select-none text-slate-800">No patient selected</p>
           <div className="flex space-x-2">
-            <SearchExistingPatientsButton />
+            {accessionId && (
+              <SearchExistingPatientsButton accessionId={accessionId} />
+            )}
             {accessionId && <AddPatientButton accessionId={accessionId} />}
           </div>
         </div>
       </div>
-    </div>
+    </BaseCard>
   );
 }
 
@@ -197,9 +190,6 @@ function AddPatientButton({ accessionId }: { accessionId: string }) {
                             setPatientApi
                               .mutateAsync(dto)
                               .then(() => {
-                                console.log("Patient added");
-                              })
-                              .then(() => {
                                 setIsOpen(false);
                               })
                               .catch((err) => {
@@ -229,21 +219,30 @@ function AddPatientButton({ accessionId }: { accessionId: string }) {
   );
 }
 
-function SearchExistingPatientsButton() {
+function SearchExistingPatientsButton({
+  accessionId,
+}: {
+  accessionId: string;
+}) {
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
   return (
     <>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <div className="transition-opacity">
-              <Dialog>
+              <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
                 <div className="relative inset-0 flex">
                   <DialogContent>
                     <div className="px-6 pb-2 -mt-8 overflow-y-auto grow gap-y-5">
                       <DialogTitle className="text-2xl font-semibold scroll-m-20">
                         Find a Patient
                       </DialogTitle>
-                      <div className="pt-6">TODO Form</div>
+                      <SearchExistingPatients
+                        onClose={() => setDialogIsOpen(false)}
+                        onSetPatient={() => console.log("set")}
+                        accessionId={accessionId}
+                      />
                     </div>
                   </DialogContent>
                 </div>
