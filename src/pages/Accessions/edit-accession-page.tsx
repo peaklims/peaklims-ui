@@ -1,12 +1,11 @@
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
-import { useRemoveAccessionPatient } from "@/domain/accessions/apis/remove-accession-patient";
 import { useParams } from "@tanstack/react-router";
 import { Helmet } from "react-helmet";
 import {
   EmptyPatientCard,
   PatientCard,
   PatientForCard,
-} from "../../domain/patients/components/patient-card";
+} from "../../domain/patients/components/patient-card/patient-card";
 
 export function EditAccessionPage() {
   const queryParams = useParams();
@@ -16,12 +15,6 @@ export function EditAccessionPage() {
   const accessionNumber = accession?.accessionNumber ?? "";
   const accessionNumberTitle = accessionNumber ? ` - ${accessionNumber}` : "";
 
-  const removeAccessionApi = useRemoveAccessionPatient();
-  function removePatientFromAccession() {
-    removeAccessionApi.mutateAsync(accessionId!).then(() => {
-      // TODO toast
-    });
-  }
   return (
     <div className="">
       <Helmet>
@@ -39,12 +32,9 @@ export function EditAccessionPage() {
 
       <div className="flex items-center justify-center w-full pt-3 md:block">
         <div className="space-y-10">
-          {accession?.patient ? (
+          {accessionId && accession?.patient ? (
             <PatientCard
-              onRemovePatient={removePatientFromAccession}
-              onEditPatient={() =>
-                alert(`Edit patient ${accession.patient?.id}`)
-              }
+              accessionId={accessionId}
               patientInfo={
                 {
                   id: accession?.patient?.id,
@@ -60,7 +50,7 @@ export function EditAccessionPage() {
               }
             />
           ) : (
-            <EmptyPatientCard accessionId={accessionId} />
+            <>{accessionId && <EmptyPatientCard accessionId={accessionId} />}</>
           )}
         </div>
       </div>

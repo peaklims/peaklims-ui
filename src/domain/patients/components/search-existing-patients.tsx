@@ -17,7 +17,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnSort } from "@tanstack/react-table";
 import { FilterX, SearchIcon } from "lucide-react";
-import { MouseEventHandler, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useExistingPatientSearch } from "../apis/search-existing-patients";
@@ -28,13 +28,13 @@ const filterFormSchema = z.object({
 });
 
 export function SearchExistingPatients({
-  onSetPatient,
-  onClose,
   accessionId,
+  onClose,
+  openAddPatient,
 }: {
-  onSetPatient: MouseEventHandler<HTMLButtonElement>;
-  onClose: () => void;
   accessionId: string;
+  onClose: () => void;
+  openAddPatient: () => void;
 }) {
   const pageSize = 10;
   const pageNumber = 1;
@@ -58,7 +58,7 @@ export function SearchExistingPatients({
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: z.infer<typeof filterFormSchema>) => {
     const filterInputValue = data.filterInputValue;
     if ((filterInputValue?.length ?? 0) <= 0) {
       console.log("resetting filter");
@@ -243,7 +243,8 @@ or accession insensitive contains */}
         <Button
           variant={"outline"}
           onClick={() => {
-            console.log("close and add new patient");
+            onClose();
+            openAddPatient();
           }}
         >
           Close and Add New Patient
