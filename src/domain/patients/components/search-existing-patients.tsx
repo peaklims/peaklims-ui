@@ -21,24 +21,23 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useExistingPatientSearch } from "../apis/search-existing-patients";
+import { usePatientCardContext } from "./patient-card/patient-card";
 
 const filterFormSchema = z.object({
   filterInputValue: z.string().optional(),
   dateOfBirth: z.date().optional(),
 });
 
-export function SearchExistingPatients({
-  accessionId,
-  onClose,
-  openAddPatient,
-}: {
-  accessionId: string;
-  onClose: () => void;
-  openAddPatient: () => void;
-}) {
+export function SearchExistingPatients() {
   const pageSize = 10;
   const pageNumber = 1;
   const sorting = [] as ColumnSort[];
+
+  const {
+    setAddPatientDialogIsOpen,
+    accessionId,
+    setSearchExistingPatientsDialogIsOpen,
+  } = usePatientCardContext();
 
   const [filterValue, setFilterValue] = useState<string>("");
   const setPatientApi = useSetAccessionPatient();
@@ -215,7 +214,9 @@ or accession insensitive contains */}
                                   setPatientApi
                                     .mutateAsync(dto)
                                     .then(() => {
-                                      onClose();
+                                      setSearchExistingPatientsDialogIsOpen(
+                                        false
+                                      );
                                     })
                                     .catch((err) => {
                                       console.log(err);
@@ -237,14 +238,17 @@ or accession insensitive contains */}
         )}
       </div>
       <div className="flex justify-end pt-6 space-x-3">
-        <Button variant={"outline"} onClick={onClose}>
+        <Button
+          variant={"outline"}
+          onClick={() => setSearchExistingPatientsDialogIsOpen(false)}
+        >
           Cancel
         </Button>
         <Button
           variant={"outline"}
           onClick={() => {
-            onClose();
-            openAddPatient();
+            setSearchExistingPatientsDialogIsOpen(false);
+            setAddPatientDialogIsOpen(false);
           }}
         >
           Close and Add New Patient

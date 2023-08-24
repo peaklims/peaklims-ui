@@ -12,8 +12,8 @@ import {
 } from "@/domain/accessions/apis/set-accession-patient";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { PlusCircleIcon } from "lucide-react";
-import { useState } from "react";
 import { PatientForm } from "../patient-form";
+import { usePatientCardContext } from "./patient-card";
 
 export type PatientForCard = {
   id: string;
@@ -27,16 +27,20 @@ export type PatientForCard = {
   sex: string;
 };
 
-export function AddPatientButton({ accessionId }: { accessionId: string }) {
+export function AddPatientButton() {
+  const { accessionId, addPatientDialogIsOpen, setAddPatientDialogIsOpen } =
+    usePatientCardContext();
   const setPatientApi = useSetAccessionPatient();
-  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <div className="transition-opacity">
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
+              <Dialog
+                open={addPatientDialogIsOpen}
+                onOpenChange={setAddPatientDialogIsOpen}
+              >
                 <div className="relative inset-0 flex">
                   <DialogContent>
                     <div className="px-6 pb-2 -mt-8 overflow-y-auto grow gap-y-5">
@@ -60,7 +64,7 @@ export function AddPatientButton({ accessionId }: { accessionId: string }) {
                             setPatientApi
                               .mutateAsync(dto)
                               .then(() => {
-                                setIsOpen(false);
+                                setAddPatientDialogIsOpen(false);
                               })
                               .catch((err) => {
                                 console.log(err);

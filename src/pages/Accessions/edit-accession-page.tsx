@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 import {
   EmptyPatientCard,
   PatientCard,
+  PatientCardProvider,
   PatientForCard,
 } from "../../domain/patients/components/patient-card/patient-card";
 
@@ -32,26 +33,29 @@ export function EditAccessionPage() {
 
       <div className="flex items-center justify-center w-full pt-3 md:block">
         <div className="space-y-10">
-          {accessionId && accession?.patient ? (
-            <PatientCard
-              accessionId={accessionId}
-              patientInfo={
-                {
-                  id: accession?.patient?.id,
-                  firstName: accession?.patient?.firstName,
-                  lastName: accession?.patient?.lastName,
-                  age: accession?.patient?.age,
-                  dateOfBirth: accession?.patient?.dateOfBirth,
-                  internalId: accession?.patient?.internalId,
-                  race: accession?.patient?.race,
-                  ethnicity: accession?.patient?.ethnicity,
-                  sex: accession?.patient?.sex,
-                } as PatientForCard
-              }
-            />
-          ) : (
-            <>{accessionId && <EmptyPatientCard accessionId={accessionId} />}</>
-          )}
+          <PatientCardProvider accessionId={accessionId}>
+            <>
+              {accessionId && accession?.patient ? (
+                <PatientCard
+                  patientInfo={
+                    {
+                      id: accession?.patient?.id,
+                      firstName: accession?.patient?.firstName,
+                      lastName: accession?.patient?.lastName,
+                      age: accession?.patient?.age,
+                      dateOfBirth: accession?.patient?.dateOfBirth,
+                      internalId: accession?.patient?.internalId,
+                      race: accession?.patient?.race,
+                      ethnicity: accession?.patient?.ethnicity,
+                      sex: accession?.patient?.sex,
+                    } as PatientForCard
+                  }
+                />
+              ) : (
+                <>{accessionId && <EmptyPatientCard />}</>
+              )}
+            </>
+          </PatientCardProvider>
         </div>
       </div>
     </div>
