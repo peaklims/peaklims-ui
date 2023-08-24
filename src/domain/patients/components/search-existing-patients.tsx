@@ -248,7 +248,10 @@ or accession insensitive contains */}
           variant={"outline"}
           onClick={() => {
             setSearchExistingPatientsDialogIsOpen(false);
-            setAddPatientDialogIsOpen(false);
+
+            setTimeout(() => {
+              setAddPatientDialogIsOpen(true);
+            }, 400);
           }}
         >
           Close and Add New Patient
