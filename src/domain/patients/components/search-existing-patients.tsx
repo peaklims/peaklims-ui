@@ -14,9 +14,11 @@ import {
   SetAccessionPatient,
   useSetAccessionPatient,
 } from "@/domain/accessions/apis/set-accession-patient";
+import { cn } from "@/lib/utils";
 import { PagedResponse } from "@/types/apis";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnSort } from "@tanstack/react-table";
+import { motion } from "framer-motion";
 import { FilterX, SearchIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -178,6 +180,13 @@ function SearchResults({
   const { accessionId, setSearchExistingPatientsDialogIsOpen } =
     usePatientCardContext();
   const setPatientApi = useSetAccessionPatient();
+  const [activePatientId, setActivePatientId] = useState<string | undefined>(
+    undefined
+  );
+  const detailSectionVariants = {
+    open: { opacity: 1, height: "100%" },
+    closed: { opacity: 0, height: "0%" },
+  };
   return (
     <div className="h-[20rem] space-y-3 md:h-[30rem] p-2 overflow-y-auto bg-slate-50 rounded-md shadow-md">
       {(filterValue?.length ?? 0) <= 0 ? (
@@ -196,7 +205,7 @@ function SearchResults({
                 const name =
                   `${patient.firstName} ${patient.lastName}`.trimEnd();
                 return (
-                  <div
+                  <motion.div
                     className="group flex min-h-[5rem] overflow-hidden rounded-lg border border-emerald-500 shadow-md md:max-w-lg"
                     key={patient.id}
                   >
@@ -211,7 +220,7 @@ function SearchResults({
                           </p>
                         </div>
                         <div className="text-sm sm:flex sm:items-end sm:justify-start">
-                          <div className="space-y-1 pt-0.5 flex-1">
+                          <motion.div className="space-y-1 pt-0.5 flex-1">
                             <p className="text-slate-600">
                               {patient?.age} year old {patient?.sex}
                             </p>
@@ -234,13 +243,19 @@ function SearchResults({
                                 {patient?.dateOfBirth?.toString()}
                               </p>
                             </div>
-                          </div>
-                          <div className="flex items-center justify-between pt-3 space-x-2 md:pt-0 md:justify-end md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
+                          </motion.div>
+                          <motion.div className="flex items-center justify-between pt-3 space-x-2 md:pt-0 md:justify-end md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
                             <Button
                               className="w-[48%]"
                               size="sm"
                               variant="outline"
-                              onClick={() => console.log("temp")}
+                              onClick={() => {
+                                setActivePatientId(
+                                  patient.id === activePatientId
+                                    ? undefined
+                                    : patient.id
+                                );
+                              }}
                             >
                               Details
                             </Button>
@@ -267,11 +282,45 @@ function SearchResults({
                             >
                               Assign
                             </Button>
-                          </div>
+                          </motion.div>
                         </div>
+                        <motion.div
+                          className={cn(
+                            patient.id !== activePatientId && "hidden",
+                            "pl-5 pt-3 space-y-2"
+                          )}
+                          variants={detailSectionVariants}
+                          initial="closed"
+                          animate={
+                            patient.id === activePatientId ? "open" : "closed"
+                          }
+                        >
+                          <div className="">
+                            <h3 className="font-medium">Accessions</h3>
+                            {patient?.accessions?.length <= 0 ? (
+                              <p className="text-xs text-slate-600">
+                                This patient has no accessions
+                              </p>
+                            ) : (
+                              <ul className="space-y-2">
+                                {patient?.accessions?.map((accession) => {
+                                  return (
+                                    <li key={accession.id} className="py-1">
+                                      <div className="pl-4 border-l-2 border-slate-900 ">
+                                        <p className="text-sm font-semibold text-slate-600/80">
+                                          {accession.accessionNumber}
+                                        </p>
+                                      </div>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            )}
+                          </div>
+                        </motion.div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </>
