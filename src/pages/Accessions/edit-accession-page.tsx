@@ -1,12 +1,12 @@
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
+import { PatientForCard } from "@/domain/patients/components/patient-cards/add-patient-button";
 import { useParams } from "@tanstack/react-router";
 import { Helmet } from "react-helmet";
 import {
   EmptyPatientCard,
   PatientCard,
   PatientCardProvider,
-  PatientForCard,
-} from "../../domain/patients/components/patient-card/patient-card";
+} from "../../domain/patients/components/patient-cards";
 
 export function EditAccessionPage() {
   const queryParams = useParams();
@@ -35,7 +35,7 @@ export function EditAccessionPage() {
         <div className="space-y-10">
           <PatientCardProvider accessionId={accessionId}>
             <>
-              {accessionId && accession?.patient ? (
+              {accession?.patient ? (
                 <PatientCard
                   patientInfo={
                     {
@@ -52,7 +52,7 @@ export function EditAccessionPage() {
                   }
                 />
               ) : (
-                <>{accessionId && <EmptyPatientCard />}</>
+                <EmptyPatientCard />
               )}
             </>
           </PatientCardProvider>

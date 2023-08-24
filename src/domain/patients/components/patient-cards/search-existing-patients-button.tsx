@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { usePatientCardContext } from "@/domain/patients/components/patient-cards";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { SearchIcon } from "lucide-react";
 import { SearchExistingPatients } from "../search-existing-patients";
-import { usePatientCardContext } from "./patient-card";
 
 export function SearchExistingPatientsButton() {
   const {

@@ -3,8 +3,8 @@ import { useRemoveAccessionPatient } from "@/domain/accessions/apis/remove-acces
 import {
   AddPatientButton,
   SearchExistingPatientsButton,
-} from "@/domain/patients/components/patient-card";
-import { createContext, useContext, useState } from "react";
+  usePatientCardContext,
+} from "@/domain/patients/components/patient-cards";
 
 export type PatientForCard = {
   id: string;
@@ -17,123 +17,6 @@ export type PatientForCard = {
   internalId: string;
   sex: string;
 };
-
-interface PatientCardContextResponse {
-  accessionId: string | undefined;
-  setAccessionId: React.Dispatch<React.SetStateAction<string | undefined>>;
-  addPatientDialogIsOpen: boolean;
-  setAddPatientDialogIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  searchExistingPatientsDialogIsOpen: boolean;
-  setSearchExistingPatientsDialogIsOpen: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
-}
-
-const PatientCardContext = createContext<PatientCardContextResponse>(
-  {} as PatientCardContextResponse
-);
-interface PatientCardProviderProps {
-  accessionId: string | undefined;
-  children: React.ReactNode;
-
-  props?: any;
-}
-
-export function PatientCardProvider({
-  accessionId: givenAccessionId,
-  props,
-  children,
-}: PatientCardProviderProps) {
-  const [accessionId, setAccessionId] = useState<string | undefined>(
-    givenAccessionId
-  );
-  const [addPatientDialogIsOpen, setAddPatientDialogIsOpen] = useState(false);
-  const [
-    searchExistingPatientsDialogIsOpen,
-    setSearchExistingPatientsDialogIsOpen,
-  ] = useState(false);
-
-  const value = {
-    accessionId,
-    setAccessionId,
-    addPatientDialogIsOpen,
-    setAddPatientDialogIsOpen,
-    searchExistingPatientsDialogIsOpen,
-    setSearchExistingPatientsDialogIsOpen,
-  };
-
-  return (
-    <PatientCardContext.Provider value={value} {...props}>
-      {children}
-    </PatientCardContext.Provider>
-  );
-}
-
-export function usePatientCardContext() {
-  const context = useContext(PatientCardContext);
-  if (Object.keys(context).length === 0)
-    throw new Error(
-      "usePatientCardContext must be used within a PatientCardProvider"
-    );
-  return context;
-}
-
-// export interface PatientCardStore {
-//   accessionId: string | undefined;
-//   setAccessionId: (accessionId: string | undefined) => void;
-//   addPatientDialogIsOpen: boolean;
-//   setAddPatientDialogIsOpen: (isOpen: boolean) => void;
-// }
-
-// export const usePatientCardStore = create<PatientCardStore>((set, get) => ({
-//   accessionId: undefined,
-//   setAccessionId: (accessionId) => set({ accessionId }),
-//   addPatientDialogIsOpen: false,
-//   setAddPatientDialogIsOpen: (isOpen: boolean) =>
-//     set({ addPatientDialogIsOpen: isOpen }),
-//   // pageNumber: 1,
-//   // setPageNumber: (page) => set({ pageNumber: page }),
-//   // pageSize: 10,
-//   // setPageSize: (size) => set({ pageSize: size }),
-//   // sorting: [],
-//   // setSorting: (sortOrUpdater) => {
-//   //   if (typeof sortOrUpdater === "function") {
-//   //     set((prevState) => ({ sorting: sortOrUpdater(prevState.sorting) }));
-//   //   } else {
-//   //     set({ sorting: sortOrUpdater });
-//   //   }
-//   // },
-//   // status: [],
-//   // addStatus: (status) =>
-//   //   set((prevState) => ({ status: [...prevState.status, status] })),
-//   // removeStatus: (status) =>
-//   //   set((prevState) => ({
-//   //     status: prevState.status.filter((s) => s !== status),
-//   //   })),
-//   // clearStatus: () => set({ status: [] }),
-//   // filterInput: null,
-//   // setFilterInput: (f) => set({ filterInput: f }),
-//   // isFiltered: {
-//   //   result: () => get().status.length > 0 || get().filterInput !== null,
-//   // },
-//   // resetFilters: () => set({ status: [], filterInput: null }),
-//   // queryKit: {
-//   //   filterValue: () => {
-//   //     const statusFilter = get()
-//   //       .status.map((status) => `status == "${status}"`)
-//   //       .join(" || ");
-//   //     const accessionNumberFilter = get().filterInput
-//   //       ? `accessionNumber @=* "${get().filterInput}"`
-//   //       : "";
-//   //     if (statusFilter && accessionNumberFilter) {
-//   //       return `${statusFilter} && ${accessionNumberFilter}`;
-//   //     }
-//   //     if (statusFilter.length > 0) return statusFilter;
-//   //     if (accessionNumberFilter.length > 0) return accessionNumberFilter;
-//   //     return "";
-//   //   },
-//   // },
-// }));
 
 export function PatientCard({ patientInfo }: { patientInfo: PatientForCard }) {
   const accessionId = usePatientCardContext().accessionId;

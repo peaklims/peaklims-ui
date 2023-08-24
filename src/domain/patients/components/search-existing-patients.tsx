@@ -14,6 +14,7 @@ import {
   SetAccessionPatient,
   useSetAccessionPatient,
 } from "@/domain/accessions/apis/set-accession-patient";
+import { usePatientCardContext } from "@/domain/patients/components/patient-cards";
 import { cn } from "@/lib/utils";
 import { PagedResponse } from "@/types/apis";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,7 +26,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useExistingPatientSearch } from "../apis/search-existing-patients";
 import { PatientSearchResultDto } from "../types";
-import { usePatientCardContext } from "./patient-card/patient-card";
 
 const filterFormSchema = z.object({
   filterInputValue: z.string().optional(),
@@ -33,110 +33,21 @@ const filterFormSchema = z.object({
 });
 
 export function SearchExistingPatients() {
-  const pageSize = 10;
-  const pageNumber = 1;
-  const sorting = [] as ColumnSort[];
-
+  const [filterValue, setFilterValue] = useState<string>("");
   const { setAddPatientDialogIsOpen, setSearchExistingPatientsDialogIsOpen } =
     usePatientCardContext();
 
-  const [filterValue, setFilterValue] = useState<string>("");
-
   const { data: searchResults, isLoading } = useExistingPatientSearch({
-    sortOrder: sorting,
-    pageSize,
-    pageNumber,
+    sortOrder: [] as ColumnSort[],
+    pageSize: 10,
+    pageNumber: 1,
     filters: filterValue,
     delayInMs: 450,
   });
-  const filterForm = useForm<z.infer<typeof filterFormSchema>>({
-    resolver: zodResolver(filterFormSchema),
-    defaultValues: {
-      filterInputValue: filterValue,
-      dateOfBirth: undefined,
-    },
-  });
 
-  const onSubmit = (data: z.infer<typeof filterFormSchema>) => {
-    const filterInputValue = data.filterInputValue;
-    if ((filterInputValue?.length ?? 0) <= 0) {
-      console.log("resetting filter");
-      setFilterValue("");
-      return;
-    }
-    setFilterValue(`FirstName @=* "${filterInputValue}" 
-      || LastName @=* "${filterInputValue}" 
-      || InternalId @=* "${filterInputValue}" 
-      || accessions.AccessionNumber @=* "${filterInputValue}"`);
-  };
-
-  // TODO as mutation or query? i think i should actually do a query with enabled using a `redoSearch` useState bool that will be set `true` onClick and then `false` after the query is done
   return (
     <div className="space-y-3">
-      <div className="flex pt-4 space-x-3">
-        <Form {...filterForm}>
-          <form
-            className="flex-1 space-y-3 md:space-y-0 md:space-x-3 md:flex md:items-end"
-            onSubmit={filterForm.handleSubmit(onSubmit)}
-          >
-            <FormField
-              control={filterForm.control}
-              name="filterInputValue"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Filter</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Search by name or identifiers"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* first name sounds like
-or last name sounds like 
-or full name sounds like
-or internal id insensitive contains
-or accession insensitive contains */}
-
-            <FormField
-              control={filterForm.control}
-              name="dateOfBirth"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date of Birth</FormLabel>
-                  <FormControl>
-                    <DatePicker {...field} buttonClassName="w-full" disabled />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="-space-x-px">
-              <Button
-                type="submit"
-                variant={"outline"}
-                className="w-1/2 rounded-r-none md:w-auto text-emerald-500 hover:text-emerald-600"
-              >
-                <SearchIcon className="w-5 h-5 " />
-              </Button>
-              <Button
-                variant="outline"
-                className="w-1/2 text-red-400 rounded-l-none md:w-auto hover:text-red-600"
-                onClick={() => {
-                  filterForm.reset();
-                  setFilterValue("");
-                }}
-                disabled={(filterValue?.length ?? 0) <= 0}
-              >
-                <FilterX className="w-5 h-5 " />
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
+      <FilterForm filterValue={filterValue} setFilterValue={setFilterValue} />
 
       <SearchResults
         filterValue={filterValue}
@@ -164,6 +75,101 @@ or accession insensitive contains */}
           Close and Add New Patient
         </Button>
       </div>
+    </div>
+  );
+}
+
+function FilterForm({
+  filterValue,
+  setFilterValue,
+}: {
+  filterValue: string;
+  setFilterValue: (value: string) => void;
+}) {
+  const filterForm = useForm<z.infer<typeof filterFormSchema>>({
+    resolver: zodResolver(filterFormSchema),
+    defaultValues: {
+      filterInputValue: filterValue,
+      dateOfBirth: undefined,
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof filterFormSchema>) => {
+    const filterInputValue = data.filterInputValue;
+    if ((filterInputValue?.length ?? 0) <= 0) {
+      console.log("resetting filter");
+      setFilterValue("");
+      return;
+    }
+    setFilterValue(`FirstName @=* "${filterInputValue}" 
+      || LastName @=* "${filterInputValue}" 
+      || InternalId @=* "${filterInputValue}" 
+      || accessions.AccessionNumber @=* "${filterInputValue}"`);
+  };
+  return (
+    <div className="flex pt-4 space-x-3">
+      <Form {...filterForm}>
+        <form
+          className="flex-1 space-y-3 md:space-y-0 md:space-x-3 md:flex md:items-end"
+          onSubmit={filterForm.handleSubmit(onSubmit)}
+        >
+          <FormField
+            control={filterForm.control}
+            name="filterInputValue"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Filter</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Search by name or identifiers"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* first name sounds like
+or last name sounds like 
+or full name sounds like
+or internal id insensitive contains
+or accession insensitive contains */}
+
+          <FormField
+            control={filterForm.control}
+            name="dateOfBirth"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date of Birth</FormLabel>
+                <FormControl>
+                  <DatePicker {...field} buttonClassName="w-full" disabled />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="-space-x-px">
+            <Button
+              type="submit"
+              variant={"outline"}
+              className="w-1/2 rounded-r-none md:w-auto text-emerald-500 hover:text-emerald-600"
+            >
+              <SearchIcon className="w-5 h-5 " />
+            </Button>
+            <Button
+              variant="outline"
+              className="w-1/2 text-red-400 rounded-l-none md:w-auto hover:text-red-600"
+              onClick={() => {
+                filterForm.reset();
+                setFilterValue("");
+              }}
+              disabled={(filterValue?.length ?? 0) <= 0}
+            >
+              <FilterX className="w-5 h-5 " />
+            </Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }

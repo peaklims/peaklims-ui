@@ -4,10 +4,10 @@ import {
   SetAccessionPatient,
   useSetAccessionPatient,
 } from "@/domain/accessions/apis/set-accession-patient";
+import { usePatientCardContext } from "@/domain/patients/components/patient-cards";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { PlusCircleIcon } from "lucide-react";
 import { PatientForm } from "../patient-form";
-import { usePatientCardContext } from "./patient-card";
 
 export type PatientForCard = {
   id: string;
