@@ -16,7 +16,6 @@ import {
   ChevronsUpDown,
 } from "lucide-react";
 import { useState } from "react";
-import { PageSizeOptions } from "./paginated-data-table";
 
 interface PaginationControlsProps {
   entityPlural: string;
@@ -25,8 +24,11 @@ interface PaginationControlsProps {
   pageSize: number;
   setPageSize: (size: number) => void;
   setPageNumber: (page: number) => void;
+  className?: string;
 }
 
+const PageSizeOptions = [1, 10, 20, 30, 40, 50] as const;
+// type PageSize = (typeof PageSizeOptions)[number];
 export function PaginationControls({
   entityPlural,
   pageNumber,
@@ -34,10 +36,14 @@ export function PaginationControls({
   pageSize,
   setPageSize,
   setPageNumber,
+  className,
 }: PaginationControlsProps) {
   return (
     <div
-      className="flex items-center justify-between px-3 py-2 bg-white dark:bg-slate-700 sm:rounded-b-lg"
+      className={cn(
+        "flex items-center justify-between px-3 py-2 bg-white dark:bg-slate-700 sm:rounded-b-lg",
+        className
+      )}
       aria-label={`Table navigation for ${entityPlural} table`}
     >
       <div className="flex items-center flex-1 space-x-5">
@@ -51,15 +57,17 @@ export function PaginationControls({
           </span>
         </span>
 
-        <div className="hidden w-32 sm:block">
-          <PaginationCombobox
-            value={pageSize.toString()}
-            onValueChange={(value) => {
-              setPageSize(Number(value));
-              setPageNumber(1);
-            }}
-          />
-        </div>
+        {pageSize !== undefined && (
+          <div className="hidden w-32 sm:block">
+            <PaginationCombobox
+              value={pageSize.toString()}
+              onValueChange={(value) => {
+                setPageSize(Number(value));
+                setPageNumber(1);
+              }}
+            />
+          </div>
+        )}
       </div>
 
       <div className="inline-flex items-center -space-x-[2px]">

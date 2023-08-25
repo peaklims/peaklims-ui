@@ -36,9 +36,6 @@ interface DataTableProps<TData, TValue> {
   skeletonRowCount?: number;
 }
 
-export const PageSizeOptions = [1, 10, 20, 30, 40, 50] as const;
-export type PageSizeNumber = (typeof PageSizeOptions)[number];
-
 export interface PaginatedTableStore {
   setPageNumber: (page: number) => void;
   pageNumber: number;
