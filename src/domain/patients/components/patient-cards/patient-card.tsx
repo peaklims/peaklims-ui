@@ -48,6 +48,9 @@ export function PatientCard({ patientInfo }: { patientInfo: PatientForCard }) {
     raceEth = ethnicity;
   }
 
+  const sexDisplay =
+    patientInfo?.sex === "Unknown" ? "(Sex Unknown)" : patientInfo?.sex;
+
   return (
     <BaseCard>
       <div className="flex items-stretch flex-1 px-4 py-3 bg-slate-50">
@@ -61,7 +64,7 @@ export function PatientCard({ patientInfo }: { patientInfo: PatientForCard }) {
           <div className="sm:flex sm:items-end sm:justify-start">
             <div className="space-y-1 pt-0.5 flex-1">
               <p className="text-slate-600">
-                {patientInfo?.age} year old {patientInfo?.sex}
+                {patientInfo?.age} year old {sexDisplay}
               </p>
               <div className="flex items-center justify-start space-x-1">
                 <svg

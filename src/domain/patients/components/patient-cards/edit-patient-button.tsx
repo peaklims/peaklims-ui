@@ -63,7 +63,7 @@ export function EditPatientButton({ patientId }: { patientId: string }) {
           </div>
 
           <DialogTrigger>
-            <Button size="sm" variant="outline" className="w-full">
+            <Button size="sm" variant="outline">
               Edit
             </Button>
           </DialogTrigger>

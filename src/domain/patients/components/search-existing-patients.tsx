@@ -203,6 +203,7 @@ export function SearchPatientResults({
     closed: { opacity: 0, height: "0%" },
   };
   const pagination = searchResults?.pagination;
+
   return (
     <div className="">
       <div className="h-[20rem] md:h-[30rem] bg-slate-50 rounded-t-md shadow-md overflow-y-auto">
@@ -222,6 +223,10 @@ export function SearchPatientResults({
                   {searchResults?.data.map((patient) => {
                     const name =
                       `${patient.firstName} ${patient.lastName}`.trimEnd();
+                    const sexDisplay =
+                      patient?.sex === "Unknown"
+                        ? "(Sex Unknown)"
+                        : patient?.sex;
                     return (
                       <motion.div
                         className="group flex min-h-[5rem] overflow-hidden rounded-lg border border-emerald-500 shadow-md md:max-w-lg"
@@ -240,7 +245,7 @@ export function SearchPatientResults({
                             <div className="text-sm sm:flex sm:items-end sm:justify-start">
                               <motion.div className="space-y-1 pt-0.5 flex-1">
                                 <p className="text-slate-600">
-                                  {patient?.age} year old {patient?.sex}
+                                  {patient?.age} year old {sexDisplay}
                                 </p>
                                 <div className="flex items-center justify-start space-x-1">
                                   <svg
