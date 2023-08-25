@@ -38,6 +38,9 @@ export function PaginationControls({
   setPageNumber,
   className,
 }: PaginationControlsProps) {
+  const pageInfo = `${pageNumber} ${
+    apiPagination?.totalPages ? `of ${apiPagination?.totalPages}` : null
+  }`;
   return (
     <div
       className={cn(
@@ -50,10 +53,7 @@ export function PaginationControls({
         <span className="flex text-sm font-normal text-slate-500 dark:text-slate-400 min-w-[4rem]">
           <div>Page</div>
           <span className="pl-1 font-semibold text-slate-900 dark:text-white">
-            {pageNumber}{" "}
-            {apiPagination?.totalPages
-              ? `of ${apiPagination?.totalPages}`
-              : null}
+            {pageInfo}
           </span>
         </span>
 
