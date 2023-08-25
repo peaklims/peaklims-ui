@@ -21,3 +21,25 @@ export type PatientSearchResultDto = {
     accessionNumber: string;
   }[];
 };
+
+export type PatientDto = {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  age?: number;
+  dateOfBirth?: Date;
+  internalId: string;
+  sex: string;
+  race?: string;
+  ethnicity?: string;
+};
+
+export type PatientForUpdateDto = {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  dateOfBirth?: Date | undefined;
+  sex: string;
+  race?: string;
+  ethnicity?: string;
+};

@@ -15,6 +15,9 @@ import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
+import { parse } from "date-fns";
+import { useEffect } from "react";
+import { useGetPatient } from "../apis/get-patient";
 import { ethnicitiesDropdown } from "../types/ethnicities";
 import { racesDropdown } from "../types/races";
 import { sexesDropdown } from "../types/sexes";
@@ -34,11 +37,16 @@ export const patientFormSchema = z.object({
   ethnicity: z.string(),
 });
 
+export const FormMode = ["Add", "Edit"] as const;
 export function PatientForm({
   onSubmit,
+  patientId,
 }: {
   onSubmit: (values: z.infer<typeof patientFormSchema>) => void;
+  patientId?: string | undefined;
 }) {
+  const { data: patientData } = useGetPatient(patientId);
+
   const patientForm = useForm<z.infer<typeof patientFormSchema>>({
     resolver: zodResolver(patientFormSchema),
     defaultValues: {
@@ -50,6 +58,27 @@ export function PatientForm({
       ethnicity: "Not Given",
     },
   });
+
+  useEffect(() => {
+    if (patientData === undefined) {
+      return;
+    }
+
+    const parsedDate = parse(
+      patientData?.dateOfBirth?.toString() ?? "",
+      "yyyy-MM-dd",
+      new Date()
+    );
+    patientForm.reset({
+      ...patientForm.getValues(),
+      firstName: patientData?.firstName ?? "",
+      lastName: patientData?.lastName ?? "",
+      sex: patientData?.sex ?? "",
+      dateOfBirth: patientData?.dateOfBirth ? parsedDate : undefined,
+      race: patientData?.race ?? "Not Given",
+      ethnicity: patientData?.ethnicity ?? "Not Given",
+    });
+  }, [patientForm, patientData]);
 
   return (
     <Form {...patientForm}>

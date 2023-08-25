@@ -5,6 +5,7 @@ import {
   SearchExistingPatientsButton,
   usePatientCardContext,
 } from "@/domain/patients/components/patient-cards";
+import { EditPatientButton } from "./edit-patient-button";
 
 export type PatientForCard = {
   id: string;
@@ -27,16 +28,25 @@ export function PatientCard({ patientInfo }: { patientInfo: PatientForCard }) {
     });
   }
 
-  const firstName =
-    patientInfo && patientInfo.firstName ? patientInfo.firstName : "";
-  const lastName =
-    patientInfo && patientInfo.lastName ? patientInfo.lastName : "";
+  const firstName = patientInfo?.firstName ?? "";
+  const lastName = patientInfo?.lastName ?? "";
   const name = [firstName, lastName].join(" ").trim();
 
-  const race = patientInfo && patientInfo.race ? patientInfo.race : "";
+  const race =
+    patientInfo?.race === "Unknown" ? `Unknown Race` : patientInfo?.race;
   const ethnicity =
-    patientInfo && patientInfo.ethnicity ? patientInfo.ethnicity : "";
-  const raceEth = [race, ethnicity].join(" ").trim();
+    patientInfo?.ethnicity === "Unknown"
+      ? `Unknown Ethnicity`
+      : patientInfo?.ethnicity;
+  let raceEth = "";
+  const notGiven = "Not Given";
+  if (race && ethnicity && race !== notGiven && ethnicity !== notGiven) {
+    raceEth = `${race} (${ethnicity})`;
+  } else if (race && race !== notGiven) {
+    raceEth = race;
+  } else if (ethnicity && ethnicity !== notGiven) {
+    raceEth = ethnicity;
+  }
 
   return (
     <BaseCard>
@@ -75,14 +85,7 @@ export function PatientCard({ patientInfo }: { patientInfo: PatientForCard }) {
               <p className="text-xs font-medium text-slate-600">{raceEth}</p>
             </div>
             <div className="flex items-center justify-between pt-3 space-x-2 md:pt-0 md:justify-end md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
-              <Button
-                className="w-[48%]"
-                size="sm"
-                variant="outline"
-                onClick={() => console.log("edit")}
-              >
-                Edit
-              </Button>
+              <EditPatientButton patientId={patientInfo.id} />
               <Button
                 className="w-[48%]"
                 size="sm"
