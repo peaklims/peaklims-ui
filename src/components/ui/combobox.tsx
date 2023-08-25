@@ -37,11 +37,11 @@ export function Combobox({
   onChange?: (value: string) => void;
 }) {
   const [open, setOpen] = React.useState(false);
-  const [internalValue, setInternalValue] = React.useState(value);
 
   const selectedItem = items.find((item) =>
-    caseInsensitiveEquals(item.value, internalValue)
+    caseInsensitiveEquals(item.value, value)
   );
+
   const displayText =
     (selectedItem?.label?.length ?? 0) > 0 ? selectedItem!.label : buttonText;
 
@@ -76,13 +76,8 @@ export function Combobox({
               <CommandItem
                 key={item.value}
                 onSelect={(currentValue) => {
-                  setInternalValue(
-                    currentValue === internalValue ? "" : currentValue
-                  );
                   if (onChange)
-                    onChange(
-                      currentValue === internalValue ? "" : currentValue
-                    );
+                    onChange(currentValue === value ? "" : currentValue);
                   setOpen(false);
                 }}
                 className={item.label.length === 0 ? "hidden" : undefined}
