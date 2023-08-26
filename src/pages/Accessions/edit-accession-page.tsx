@@ -5,6 +5,8 @@ import {
   VerticalTabsTrigger,
 } from "@/components/ui/vertical-tabs";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
+import AccessionStatusBadge from "@/domain/accessions/components/status-badge";
+import { AccessionStatus } from "@/domain/accessions/types";
 import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-accession-patient";
 import { useParams } from "@tanstack/react-router";
 import { Helmet } from "react-helmet";
@@ -24,13 +26,12 @@ export function EditAccessionPage() {
       </Helmet>
 
       <div className="flex items-center justify-start w-full space-x-4">
-        <h1 className="text-4xl font-bold tracking-tight scroll-m-20">
-          Edit Accession
+        <h1 className="flex items-center justify-start text-4xl font-bold tracking-tight scroll-m-20">
+          Edit Accession{" "}
+          <span className="pl-2 text-2xl">({accession?.accessionNumber})</span>
         </h1>
         {accession && (
-          <p className="max-w-[12rem] rounded-lg border border-slate-400 bg-gradient-to-r from-slate-200 to-slate-300/80 px-2 py-1 font-bold text-sm text-slate-900 shadow-md">
-            {accession?.accessionNumber}
-          </p>
+          <AccessionStatusBadge status={accession?.status as AccessionStatus} />
         )}
       </div>
 
