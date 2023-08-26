@@ -5,7 +5,7 @@ import {
   PatientCardProvider,
 } from "@/domain/patients/components/patient-cards";
 import { PatientForCard } from "@/domain/patients/components/patient-cards/add-patient-button";
-import { LoadingPatientCard } from "./patient-cards/patient-card";
+import { LoadingPatientCard } from "./patient-cards/patient-cards";
 
 export function ManageAccessionPatientCard({
   accession,
