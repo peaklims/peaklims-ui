@@ -18,11 +18,15 @@ export function DatePicker({
   onChange,
   buttonClassName,
   disabled,
+  fromYear = 1920,
+  toYear = 2030,
 }: {
   value?: Date | undefined;
   onChange?: (...event: any[]) => void;
   buttonClassName?: string;
   disabled?: boolean;
+  fromYear?: number;
+  toYear?: number;
 }) {
   const [date, setDate] = useState<Date>();
   value ??= date;
@@ -52,6 +56,9 @@ export function DatePicker({
           selected={value}
           onSelect={onChange}
           initialFocus
+          captionLayout="dropdown"
+          fromYear={fromYear}
+          toYear={toYear}
         />
       </PopoverContent>
     </Popover>

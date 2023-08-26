@@ -122,7 +122,11 @@ export function PatientForm({
                   <FormItem>
                     <FormLabel required={true}>Date of Birth</FormLabel>
                     <FormControl>
-                      <DatePicker {...field} buttonClassName="w-full" />
+                      <DatePicker
+                        {...field}
+                        buttonClassName="w-full"
+                        toYear={new Date().getFullYear()}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
