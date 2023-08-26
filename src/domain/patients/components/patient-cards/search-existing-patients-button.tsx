@@ -28,7 +28,7 @@ export function SearchExistingPatientsButton() {
             </DialogContent>
           </div>
 
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button size="sm" variant="outline">
               <SearchIcon className="w-5 h-5" />
             </Button>

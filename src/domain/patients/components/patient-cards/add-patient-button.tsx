@@ -67,7 +67,7 @@ export function AddPatientButton() {
             </DialogContent>
           </div>
 
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button size="sm" variant="outline">
               <PlusCircleIcon className="w-5 h-5" />
             </Button>
