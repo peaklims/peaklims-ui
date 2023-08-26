@@ -1,5 +1,6 @@
 "use client";
 
+import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAddAccession } from "@/domain/accessions/apis/add-accession";
@@ -37,11 +38,11 @@ export function AccessionWorklistToolbar() {
         });
       })
       .then(() => {
-        // Notifications.success("Accession created successfully");
+        Notification.success("Accession created successfully");
       })
       .catch((e) => {
-        // Notifications.error("There was an error creating the Accession");
-        // console.error(e);
+        Notification.error("There was an error creating the Accession");
+        console.error(e);
       });
   }
 

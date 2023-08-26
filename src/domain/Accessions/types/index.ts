@@ -11,6 +11,7 @@ export type AccessionWorklistDto = {
   id: string;
   accessionNumber: string;
   status: string;
+  organizationName: string;
   patient: {
     firstName?: string;
     lastName?: string;

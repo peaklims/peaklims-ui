@@ -1,3 +1,4 @@
+import { Notification } from "@/components/notifications";
 import AuthLayout from "@/layouts/auth-layout";
 import { ReactQueryDevtools, TanStackRouterDevtools } from "@/lib/dev-tools";
 import { siteConfig } from "@/lib/site-config";
@@ -45,6 +46,7 @@ const appRoute = new RootRoute({
 
         <div className="h-full min-h-screen font-sans antialiased scroll-smooth debug-screens [font-feature-settings:'ss01'] ">
           <Outlet />
+          <Notification />
           <div className="hidden md:block">
             <TanStackRouterDevtools
               position="top-right"
