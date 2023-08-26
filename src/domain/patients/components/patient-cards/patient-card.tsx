@@ -1,3 +1,4 @@
+import { LoadingSpinner } from "@/components/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { useRemoveAccessionPatient } from "@/domain/accessions/apis/remove-accession-patient";
 import {
@@ -142,6 +143,16 @@ export function EmptyPatientCard() {
             <AddPatientButton />
           </div>
         </div>
+      </div>
+    </BaseCard>
+  );
+}
+
+export function LoadingPatientCard() {
+  return (
+    <BaseCard>
+      <div className="flex items-center justify-center flex-1 px-4 py-3 bg-slate-50">
+        <LoadingSpinner />
       </div>
     </BaseCard>
   );
