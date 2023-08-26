@@ -1,7 +1,6 @@
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -22,11 +21,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AccessionWorklistToolbar } from "@/domain/accessions/components/worklist/accession-worklist-toolbar";
+import { AccessionWorklistToolbar } from "@/domain/accessions/features/worklist/accession-worklist-toolbar";
 import { Pagination } from "@/types/apis";
 import { RegisteredRoutesInfo, useNavigate } from "@tanstack/react-router";
-import { create } from "zustand";
-import { PaginationControls } from "./pagination";
+import { PaginationControls } from "../../../../components/data-table/pagination";
+import { useAccessioningWorklistTableStore } from "./accession-worklist.store";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,78 +35,7 @@ interface DataTableProps<TData, TValue> {
   skeletonRowCount?: number;
 }
 
-export interface PaginatedTableStore {
-  setPageNumber: (page: number) => void;
-  pageNumber: number;
-  pageSize: number;
-  setPageSize: (size: number) => void;
-  sorting: SortingState;
-  setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
-  initialPageSize: number;
-  isFiltered: { result: () => boolean };
-  resetFilters: () => void;
-  queryKit: {
-    filterValue: () => string;
-  };
-}
-
-export interface AccessioningWorklistTableStore extends PaginatedTableStore {
-  status: string[];
-  addStatus: (status: string) => void;
-  removeStatus: (status: string) => void;
-  clearStatus: () => void;
-  filterInput: string | null;
-  setFilterInput: (f: string | null) => void;
-}
-
-export const useAccessioningWorklistTableStore =
-  create<AccessioningWorklistTableStore>((set, get) => ({
-    initialPageSize: 10,
-    pageNumber: 1,
-    setPageNumber: (page) => set({ pageNumber: page }),
-    pageSize: 10,
-    setPageSize: (size) => set({ pageSize: size }),
-    sorting: [],
-    setSorting: (sortOrUpdater) => {
-      if (typeof sortOrUpdater === "function") {
-        set((prevState) => ({ sorting: sortOrUpdater(prevState.sorting) }));
-      } else {
-        set({ sorting: sortOrUpdater });
-      }
-    },
-    status: [],
-    addStatus: (status) =>
-      set((prevState) => ({ status: [...prevState.status, status] })),
-    removeStatus: (status) =>
-      set((prevState) => ({
-        status: prevState.status.filter((s) => s !== status),
-      })),
-    clearStatus: () => set({ status: [] }),
-    filterInput: null,
-    setFilterInput: (f) => set({ filterInput: f }),
-    isFiltered: {
-      result: () => get().status.length > 0 || get().filterInput !== null,
-    },
-    resetFilters: () => set({ status: [], filterInput: null }),
-    queryKit: {
-      filterValue: () => {
-        const statusFilter = get()
-          .status.map((status) => `status == "${status}"`)
-          .join(" || ");
-        const accessionNumberFilter = get().filterInput
-          ? `accessionNumber @=* "${get().filterInput}"`
-          : "";
-        if (statusFilter && accessionNumberFilter) {
-          return `${statusFilter} && ${accessionNumberFilter}`;
-        }
-        if (statusFilter.length > 0) return statusFilter;
-        if (accessionNumberFilter.length > 0) return accessionNumberFilter;
-        return "";
-      },
-    },
-  }));
-
-export function PaginatedDataTable<TData, TValue>({
+export function AccessionWorklist<TData, TValue>({
   columns,
   data,
   pagination,

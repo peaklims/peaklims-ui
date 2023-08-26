@@ -1,10 +1,8 @@
-import {
-  PaginatedDataTable,
-  useAccessioningWorklistTableStore,
-} from "@/components/data-table/paginated-data-table";
 import { useAccessioningWorklist } from "@/domain/accessions/apis/get-accession-worklist";
+import { AccessionWorklist } from "@/domain/accessions/features/worklist/accession-worklist";
+import { useAccessioningWorklistTableStore } from "@/domain/accessions/features/worklist/accession-worklist.store";
 import { Helmet } from "react-helmet";
-import { columns } from "../../domain/accessions/components/worklist/accession-worklist-columns";
+import { columns } from "../../domain/accessions/features/worklist/accession-worklist-columns";
 
 export function AccessionWorklistPage() {
   return (
@@ -34,7 +32,7 @@ function AccessioningWorklist() {
     delayInMs: 450,
   });
   return (
-    <PaginatedDataTable
+    <AccessionWorklist
       columns={columns}
       data={data?.data ?? []}
       pagination={data?.pagination}

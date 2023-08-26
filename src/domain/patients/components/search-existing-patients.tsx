@@ -26,6 +26,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useExistingPatientSearch } from "../apis/search-existing-patients";
+import { getFullName, getSexDisplay } from "../patient.services";
 import { PatientSearchResultDto } from "../types";
 
 const filterFormSchema = z.object({
@@ -221,12 +222,11 @@ export function SearchPatientResults({
               ) : (
                 <>
                   {searchResults?.data.map((patient) => {
-                    const name =
-                      `${patient.firstName} ${patient.lastName}`.trimEnd();
-                    const sexDisplay =
-                      patient?.sex === "Unknown"
-                        ? "(Sex Unknown)"
-                        : patient?.sex;
+                    const name = getFullName(
+                      patient?.firstName as string,
+                      patient?.lastName as string
+                    );
+                    const sexDisplay = getSexDisplay(patient?.sex);
                     return (
                       <motion.div
                         className="group flex min-h-[5rem] overflow-hidden rounded-lg border border-emerald-500 shadow-md md:max-w-lg"

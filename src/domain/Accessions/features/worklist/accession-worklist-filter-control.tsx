@@ -18,8 +18,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { useAccessioningWorklistTableStore } from "@/domain/accessions/features/worklist/accession-worklist.store";
 import { cn } from "@/lib/utils";
-import { useAccessioningWorklistTableStore } from "./paginated-data-table";
 
 interface FilterControl {
   title?: string;

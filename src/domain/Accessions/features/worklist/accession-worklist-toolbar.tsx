@@ -1,10 +1,10 @@
 "use client";
 
-import { FilterControl } from "@/components/data-table/filter-control";
-import { useAccessioningWorklistTableStore } from "@/components/data-table/paginated-data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAddAccession } from "@/domain/accessions/apis/add-accession";
+import { FilterControl } from "@/domain/accessions/features/worklist/accession-worklist-filter-control";
+import { useAccessioningWorklistTableStore } from "@/domain/accessions/features/worklist/accession-worklist.store";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { RegisteredRoutesInfo, useNavigate } from "@tanstack/react-router";
 import { CircleIcon, PlusCircle, TimerIcon, XCircle } from "lucide-react";

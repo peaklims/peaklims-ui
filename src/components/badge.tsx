@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 export type BadgeVariant =
   | "amber"
   | "red"
@@ -34,14 +36,25 @@ const badgeVariants: Record<BadgeVariant, string> = {
 interface BadgeProps {
   text: string;
   variant: BadgeVariant;
+  className?: string;
+  props?: React.HTMLProps<HTMLSpanElement>;
 }
 
-export const Badge: React.FC<BadgeProps> = ({ text, variant }) => {
+export const Badge: React.FC<BadgeProps> = ({
+  text,
+  variant,
+  className,
+  props,
+}) => {
   const variantClasses = badgeVariants[variant] || badgeVariants["gray"];
 
   return (
     <span
-      className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-xs font-medium rounded-md ${variantClasses}`}
+      className={cn(
+        `inline-flex ring-inset ring-1 items-center px-2 py-1 text-xs font-medium rounded-md ${variantClasses}`,
+        className
+      )}
+      {...props}
     >
       {text}
     </span>

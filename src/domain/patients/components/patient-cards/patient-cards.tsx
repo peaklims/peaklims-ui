@@ -6,6 +6,10 @@ import {
   SearchExistingPatientsButton,
   usePatientCardContext,
 } from "@/domain/patients/components/patient-cards";
+import {
+  getDisplayRaceEthnicityCombo,
+  getFullName,
+} from "@/domain/patients/patient.services";
 import { EditPatientButton } from "./edit-patient-button";
 
 export type PatientForCard = {
@@ -31,23 +35,11 @@ export function PatientCard({ patientInfo }: { patientInfo: PatientForCard }) {
 
   const firstName = patientInfo?.firstName ?? "";
   const lastName = patientInfo?.lastName ?? "";
-  const name = [firstName, lastName].join(" ").trim();
-
-  const race =
-    patientInfo?.race === "Unknown" ? `Unknown Race` : patientInfo?.race;
-  const ethnicity =
-    patientInfo?.ethnicity === "Unknown"
-      ? `Unknown Ethnicity`
-      : patientInfo?.ethnicity;
-  let raceEth = "";
-  const notGiven = "Not Given";
-  if (race && ethnicity && race !== notGiven && ethnicity !== notGiven) {
-    raceEth = `${race} (${ethnicity})`;
-  } else if (race && race !== notGiven) {
-    raceEth = race;
-  } else if (ethnicity && ethnicity !== notGiven) {
-    raceEth = ethnicity;
-  }
+  const name = getFullName(firstName, lastName);
+  const raceEth = getDisplayRaceEthnicityCombo(
+    patientInfo?.race,
+    patientInfo?.ethnicity
+  );
 
   const sexDisplay =
     patientInfo?.sex === "Unknown" ? "(Sex Unknown)" : patientInfo?.sex;

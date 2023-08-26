@@ -4,10 +4,14 @@ import { AccessionStatus } from "../types";
 
 interface AccessionStatusBadgeProps {
   status: AccessionStatus;
+  className?: string;
+  props?: React.HTMLProps<HTMLSpanElement>;
 }
 
 const AccessionStatusBadge: React.FC<AccessionStatusBadgeProps> = ({
   status,
+  className,
+  props,
 }) => {
   let variant: BadgeVariant;
 
@@ -46,7 +50,9 @@ const AccessionStatusBadge: React.FC<AccessionStatusBadgeProps> = ({
       variant = "gray";
   }
 
-  return <Badge text={status} variant={variant} />;
+  return (
+    <Badge text={status} variant={variant} className={className} {...props} />
+  );
 };
 
 export default AccessionStatusBadge;

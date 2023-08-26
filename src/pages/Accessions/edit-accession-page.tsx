@@ -5,7 +5,7 @@ import {
   VerticalTabsTrigger,
 } from "@/components/ui/vertical-tabs";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
-import AccessionStatusBadge from "@/domain/accessions/components/status-badge";
+import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
 import { AccessionStatus } from "@/domain/accessions/types";
 import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-accession-patient";
 import { useParams } from "@tanstack/react-router";
