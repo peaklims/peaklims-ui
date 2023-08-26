@@ -58,8 +58,17 @@ export const useAccessioningWorklist = ({
   });
   const hasArtificialDelay = delayInMs > 0;
 
-  return useQuery(AccessionKeys.list(queryParams ?? ""), () =>
-    getAccessions({ queryString: queryParams, hasArtificialDelay, delayInMs })
+  return useQuery(
+    AccessionKeys.list(queryParams ?? ""),
+    () =>
+      getAccessions({
+        queryString: queryParams,
+        hasArtificialDelay,
+        delayInMs,
+      }),
+    {
+      cacheTime: 1000 * 60 * 0.125,
+    }
   );
 };
 

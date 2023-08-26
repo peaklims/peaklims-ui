@@ -2,7 +2,7 @@ import {
   PaginatedDataTable,
   useAccessioningWorklistTableStore,
 } from "@/components/data-table/paginated-data-table";
-import { useAccessioningWorklist } from "@/domain/accessions/apis/get-accession-list";
+import { useAccessioningWorklist } from "@/domain/accessions/apis/get-accession-worklist";
 import { Helmet } from "react-helmet";
 import { columns } from "../../domain/accessions/components/worklist/accession-worklist-columns";
 
