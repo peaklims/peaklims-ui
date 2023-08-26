@@ -9,6 +9,7 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { RegisteredRoutesInfo, useNavigate } from "@tanstack/react-router";
 import { CircleIcon, PlusCircle, TimerIcon, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AccessionStatus } from "../../types";
 
 export function AccessionWorklistToolbar() {
   const { filterInput, setFilterInput, isFiltered, resetFilters } =
@@ -94,4 +95,44 @@ const statuses = [
     label: "Ready For Testing",
     icon: TimerIcon,
   },
-];
+  {
+    value: "Testing",
+    label: "Testing",
+    icon: TimerIcon,
+  },
+  {
+    value: "Testing Complete",
+    label: "Testing Complete",
+    icon: TimerIcon,
+  },
+  {
+    value: "Report Pending",
+    label: "Report Pending",
+    icon: TimerIcon,
+  },
+  {
+    value: "Report Complete",
+    label: "Report Complete",
+    icon: TimerIcon,
+  },
+  {
+    value: "Completed",
+    label: "Completed",
+    icon: TimerIcon,
+  },
+  {
+    value: "Abandoned",
+    label: "Abandoned",
+    icon: TimerIcon,
+  },
+  {
+    value: "Cancelled",
+    label: "Cancelled",
+    icon: TimerIcon,
+  },
+  {
+    value: "Qns",
+    label: "QNS",
+    icon: TimerIcon,
+  },
+] as { value: AccessionStatus; label: string; icon: any }[];

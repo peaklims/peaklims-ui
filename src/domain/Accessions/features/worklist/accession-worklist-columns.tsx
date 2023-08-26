@@ -5,7 +5,7 @@ import {
   AccessionStatus,
   AccessionWorklistDto,
 } from "@/domain/accessions/types";
-import { getFullName } from "@/domain/patients/patient.services";
+import { getFullName, getSexDisplay } from "@/domain/patients/patient.services";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../../../components/data-table/data-table-column-header";
 
@@ -55,14 +55,21 @@ export const columns: ColumnDef<AccessionWorklistDto>[] = [
       const patient = row.getValue("patient") as {
         firstName: string;
         lastName: string;
+        age: number | null | undefined;
+        sex: string;
       };
       const name = getFullName(patient?.firstName, patient?.lastName);
       const hasName = name.length > 0;
-      // const sexDisplay = getSexDisplay(patient?.sex);
+      const sexDisplay = getSexDisplay(patient?.sex);
 
       return (
-        <div className="">
+        <div className="flex flex-col space-y-1">
           <p>{hasName ? name : "—"}</p>
+          {(patient?.age ?? -1) >= 0 ? (
+            <p className="text-xs text-slate-700">
+              {patient?.age} year old {sexDisplay}
+            </p>
+          ) : null}
         </div>
       );
     },
