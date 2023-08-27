@@ -47,6 +47,13 @@ export function Combobox({
   const displayText =
     (selectedItem?.label?.length ?? 0) > 0 ? selectedItem!.label : buttonText;
 
+  const filterByLabel = (value: string, search: string) => {
+    const originalItem = items.find((item) => item.value === value);
+    if (originalItem && originalItem.label.toLowerCase().includes(search))
+      return 1;
+    return 0;
+  };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -74,7 +81,7 @@ export function Combobox({
         className={cn("w-48 p-0", dropdownProps?.className)}
         asChild
       >
-        <Command className="">
+        <Command filter={filterByLabel}>
           <CommandInput placeholder="Search item..." />
           <CommandEmpty>{emptyMessage}</CommandEmpty>
           <CommandGroup {...dropdownProps}>
