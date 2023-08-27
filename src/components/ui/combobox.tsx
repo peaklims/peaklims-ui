@@ -38,9 +38,11 @@ export function Combobox({
 }) {
   const [open, setOpen] = React.useState(false);
 
-  const selectedItem = items.find((item) =>
-    caseInsensitiveEquals(item.value, value)
-  );
+  const selectedItem = items?.find((item) => {
+    if (value === undefined) return undefined;
+
+    return caseInsensitiveEquals(item.value, value);
+  });
 
   const displayText =
     (selectedItem?.label?.length ?? 0) > 0 ? selectedItem!.label : buttonText;
@@ -52,8 +54,9 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          {...buttonProps}
           className={cn(
-            "w-full block hover:bg-transparent ",
+            "w-full block hover:bg-transparent",
             buttonProps?.className
           )}
         >
@@ -67,32 +70,37 @@ export function Combobox({
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn("w-48 p-0", dropdownProps?.className)}>
-        <Command>
+      <PopoverContent
+        className={cn("w-48 p-0", dropdownProps?.className)}
+        asChild
+      >
+        <Command className="">
           <CommandInput placeholder="Search item..." />
           <CommandEmpty>{emptyMessage}</CommandEmpty>
-          <CommandGroup>
-            {items.map((item) => (
-              <CommandItem
-                key={item.value}
-                onSelect={(currentValue) => {
-                  if (onChange)
-                    onChange(currentValue === value ? "" : currentValue);
-                  setOpen(false);
-                }}
-                className={item.label.length === 0 ? "hidden" : undefined}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    caseInsensitiveEquals(value, item.value)
-                      ? "opacity-100"
-                      : "opacity-0"
-                  )}
-                />
-                {item.label}
-              </CommandItem>
-            ))}
+          <CommandGroup {...dropdownProps}>
+            {items != undefined &&
+              items.map((item) => (
+                <CommandItem
+                  key={item.value}
+                  value={item.value}
+                  onSelect={(currentValue) => {
+                    if (onChange)
+                      onChange(currentValue === value ? "" : currentValue);
+                    setOpen(false);
+                  }}
+                  className={item.label.length === 0 ? "hidden" : undefined}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      caseInsensitiveEquals(value, item.value)
+                        ? "opacity-100"
+                        : "opacity-0"
+                    )}
+                  />
+                  {item.label}
+                </CommandItem>
+              ))}
           </CommandGroup>
         </Command>
       </PopoverContent>

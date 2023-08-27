@@ -12,7 +12,7 @@ const VerticalTabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "max-h-[20rem] sm:max-h-full flex flex-col items-center justify-start rounded-md sm:rounded-l-md sm:rounded-r-none bg-muted p-2 text-muted-foreground overflow-y-auto",
+      "max-h-[20rem] sm:w-[16rem] sm:max-h-full flex flex-col items-center justify-start rounded-md sm:rounded-l-md sm:rounded-r-none bg-muted px-4 py-2 text-muted-foreground overflow-y-auto space-y-2",
       className
     )}
     {...props}

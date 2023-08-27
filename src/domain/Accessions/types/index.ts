@@ -23,17 +23,20 @@ export type EditableAccessionDto = {
   id: string;
   accessionNumber: string;
   status: string;
-  patient: {
-    id: string;
-    firstName?: string;
-    lastName?: string;
-    age?: number;
-    dateOfBirth?: Date;
-    race?: string;
-    ethnicity?: string;
-    internalId: string;
-    sex: string;
-  };
+  organizationId: string | undefined;
+  patient:
+    | {
+        id: string;
+        firstName?: string;
+        lastName?: string;
+        age?: number;
+        dateOfBirth?: Date;
+        race?: string;
+        ethnicity?: string;
+        internalId: string;
+        sex: string;
+      }
+    | undefined;
 };
 
 export type AccessionDto = {

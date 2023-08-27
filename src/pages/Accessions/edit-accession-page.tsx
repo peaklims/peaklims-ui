@@ -7,6 +7,7 @@ import {
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
 import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
 import { AccessionStatus } from "@/domain/accessions/types";
+import { AccessionOrganizationForm } from "@/domain/organizations/features/manage-accession-org";
 import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-accession-patient";
 import { useParams } from "@tanstack/react-router";
 import { Helmet } from "react-helmet";
@@ -46,7 +47,10 @@ export function EditAccessionPage() {
               <>
                 <h2 className="text-3xl">Accession Details</h2>
                 <div className="pt-3">
-                  <OrganizationManagement accessionId={accessionId} />
+                  <AccessionDetails
+                    accessionId={accessionId}
+                    organizationId={accession?.organizationId}
+                  />
                 </div>
               </>
             ) : null}
@@ -57,14 +61,20 @@ export function EditAccessionPage() {
   );
 }
 
-function OrganizationManagement({ accessionId }: { accessionId: string }) {
+function AccessionDetails({
+  accessionId,
+  organizationId,
+}: {
+  accessionId: string | undefined;
+  organizationId: string | undefined;
+}) {
   return (
     <VerticalTabs
       defaultValue="organization"
       className="sm:flex"
       orientation="vertical"
     >
-      <VerticalTabsList>
+      <VerticalTabsList className="shadow-lg">
         <VerticalTabsTrigger value="organization">
           Organization
         </VerticalTabsTrigger>
@@ -79,12 +89,15 @@ function OrganizationManagement({ accessionId }: { accessionId: string }) {
       </VerticalTabsList>
       <VerticalTabsContent
         value="organization"
-        className="h-[50rem] overflow-auto px-6 py-4 bg-rose-200"
+        className="h-[50rem] overflow-auto px-6 py-4 bg-gray-50 shadow-lg"
       >
         <h3 className="text-xl font-semibold tracking-tight">
           Organization Details
         </h3>
-        <p>Make changes to your org here.</p>
+        <AccessionOrganizationForm
+          accessionId={accessionId}
+          organizationId={organizationId}
+        />
       </VerticalTabsContent>
       <VerticalTabsContent
         value="samples"
