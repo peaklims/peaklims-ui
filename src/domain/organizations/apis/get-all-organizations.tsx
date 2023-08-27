@@ -22,6 +22,7 @@ export const getAllOrganizationsForDropdown = async () => {
       organizations.map((organization) => ({
         label: organization.name,
         value: organization.id,
+        disabled: organization.status === "Inactive",
       }))
     );
 };

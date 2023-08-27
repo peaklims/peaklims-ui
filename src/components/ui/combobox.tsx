@@ -28,7 +28,7 @@ export function Combobox({
   value,
   onChange,
 }: {
-  items: { label: string; value: string }[];
+  items: { label: string; value: string; disabled?: boolean }[];
   emptyMessage?: string;
   buttonText?: string;
   dropdownProps?: React.ComponentProps<typeof PopoverContent>;
@@ -88,7 +88,11 @@ export function Combobox({
                       onChange(currentValue === value ? "" : currentValue);
                     setOpen(false);
                   }}
-                  className={item.label.length === 0 ? "hidden" : undefined}
+                  className={cn(
+                    item.label.length === 0 ? "hidden" : undefined,
+                    item.disabled ? "opacity-25 cursor-not-allowed" : undefined
+                  )}
+                  disabled={item?.disabled ?? false}
                 >
                   <Check
                     className={cn(

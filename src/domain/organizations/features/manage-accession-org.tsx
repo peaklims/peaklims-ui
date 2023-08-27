@@ -30,6 +30,10 @@ export function AccessionOrganizationForm({
   const { data: orgs, isLoading: orgsAreLoading } =
     useGetAllOrganizationsForDropdown();
 
+  const onlyActiveOrgsThatAreNotSelected = orgs?.filter(
+    (org) => !org.disabled || org.value === organizationId
+  );
+
   const organizationForm = useForm<OrgFormData>({
     resolver: zodResolver(orgFormSchema),
     defaultValues: {
@@ -61,7 +65,13 @@ export function AccessionOrganizationForm({
                 <FormControl>
                   <Combobox
                     {...field}
-                    items={orgs as { value: string; label: string }[]}
+                    items={
+                      onlyActiveOrgsThatAreNotSelected as {
+                        value: string;
+                        label: string;
+                        disabled?: boolean;
+                      }[]
+                    }
                     buttonProps={{
                       className: "w-[25rem]",
                       disabled: orgsAreLoading,
