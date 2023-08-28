@@ -50,6 +50,7 @@ export function EditAccessionPage() {
                   <AccessionDetails
                     accessionId={accessionId}
                     organizationId={accession?.organizationId}
+                    accessionContacts={accession.accessionContacts}
                   />
                 </div>
               </>
@@ -64,9 +65,11 @@ export function EditAccessionPage() {
 function AccessionDetails({
   accessionId,
   organizationId,
+  accessionContacts,
 }: {
   accessionId: string | undefined;
   organizationId: string | undefined;
+  accessionContacts: any;
 }) {
   return (
     <VerticalTabs
@@ -95,6 +98,7 @@ function AccessionDetails({
           Organization Details
         </h3>
         <AccessionOrganizationForm
+          accessionContacts={accessionContacts}
           accessionId={accessionId}
           organizationId={organizationId}
         />

@@ -4,6 +4,7 @@ const OrganizationKeys = {
   list: (queryParams: string) =>
     [...OrganizationKeys.lists(), { queryParams }] as const,
   full: () => [...OrganizationKeys.lists(), "full"] as const,
+  fullDropdown: () => [...OrganizationKeys.full(), "dropdown"] as const,
   details: () => [...OrganizationKeys.all, "detail"] as const,
   detail: (OrganizationId: string) =>
     [...OrganizationKeys.details(), OrganizationId] as const,

@@ -12,7 +12,7 @@ const VerticalTabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "max-h-[20rem] sm:w-[16rem] sm:max-h-full flex flex-col items-center justify-start rounded-md sm:rounded-l-md sm:rounded-r-none bg-muted px-4 py-2 text-muted-foreground overflow-y-auto space-y-2",
+      "max-h-[20rem] sm:w-[16rem] sm:max-h-full flex flex-col border-emerald-500 border border-r-0 items-center justify-start rounded-md sm:rounded-l-md sm:rounded-r-none bg-muted px-4 py-2 text-muted-foreground overflow-y-auto space-y-2",
       className
     )}
     {...props}
@@ -42,7 +42,7 @@ const VerticalTabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "w-full ring-offset-background rounded-md sm:rounded-r-md sm:rounded-l-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "w-full ring-offset-background rounded-md border-emerald-500 border border-l-0 sm:rounded-r-md sm:rounded-l-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className
     )}
     {...props}

@@ -29,7 +29,7 @@ export const getAllOrganizationsForDropdown = async () => {
 
 export const useGetAllOrganizationsForDropdown = () => {
   return useQuery(
-    OrganizationKeys.full(),
+    OrganizationKeys.fullDropdown(),
     () => getAllOrganizationsForDropdown(),
     {}
   );
