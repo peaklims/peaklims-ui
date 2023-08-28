@@ -10,7 +10,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useAddAccessionContact } from "@/domain/accession-contacts/apis/add-accession-contact";
-// import { useGetContactsForAnAccession } from "@/domain/accession-contacts/apis/get-contacts-for-accession";
 import { useRemoveAccessionContact } from "@/domain/accession-contacts/apis/remove-accession-contact";
 import { useSetAccessionOrganization } from "@/domain/accessions/apis/set-accession-org";
 import { AccessionContactDto } from "@/domain/accessions/types";
@@ -61,20 +60,6 @@ export function AccessionOrganizationForm({
     });
   };
 
-  // const { data: accessionContacts } = useGetContactsForAnAccession(accessionId);
-  const { data: orgContacts } = useGetContactsByOrganization(
-    organizationId ?? ""
-  );
-  const accessionContactIds = new Set(
-    accessionContacts?.map((contact) => contact.organizationContactId)
-  );
-  const filteredOrgContacts = orgContacts?.filter(
-    (orgContact) => !accessionContactIds.has(orgContact.id)
-  );
-
-  const addAccessionContactApi = useAddAccessionContact();
-  const removeAccessionContactApi = useRemoveAccessionContact();
-
   return (
     <div className="pt-3">
       <Form {...organizationForm}>
@@ -116,126 +101,166 @@ export function AccessionOrganizationForm({
       <div className="flex flex-col items-center justify-start w-full pt-3 space-y-12 sm:space-x-6 sm:flex-row sm:space-y-0">
         <div className="space-y-1 h-[20rem] sm:h-[36rem] w-full">
           <h4 className="text-lg font-medium">Organization Contacts</h4>
-          <div className="w-full h-full p-3 border rounded-md shadow-md bg-slate-50">
-            {filteredOrgContacts !== undefined &&
-            (filteredOrgContacts?.length ?? 0) > 0 ? (
-              <div className="flex flex-col items-start w-full h-full space-y-2 ">
-                {filteredOrgContacts.map((contact) => {
-                  const name = [contact.firstName, contact.lastName]
-                    .join(" ")
-                    .trim();
-                  return (
-                    // TODO make this a component
-                    <div className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0">
-                      <div className="flex items-center justify-start flex-1 pr-2">
-                        <div className="">
-                          <p className="font-medium">{name}</p>
-                          <p className="text-sm">{contact.email}</p>
-                          {contact.npi.length > 0 ? (
-                            <p className="text-sm text-slate-400">
-                              <span>#</span>
-                              {contact.npi}
-                            </p>
-                          ) : null}
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-center w-full h-full sm:w-auto">
-                        <Button
-                          variant="outline"
-                          className="flex items-center justify-center w-full sm:w-auto"
-                          onClick={() => {
-                            addAccessionContactApi
-                              .mutateAsync({
-                                accessionId: accessionId ?? "",
-                                organizationContactId: contact.id,
-                              })
-                              .catch((err) => {
-                                Notification.error(
-                                  "There was an error adding this contact to the Accession"
-                                );
-                                console.error(err);
-                              });
-                          }}
-                        >
-                          <MailPlus className="w-4 h-4 shrink-0" />
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center w-full h-full">
-                <p className="text-center">
-                  {accessionContacts?.length ?? 0 > 0
-                    ? "There are no more organization contacts to assign"
-                    : "This organization does not have any assignable contacts"}
-                </p>
-              </div>
-            )}
-          </div>
+          <OrganizationContacts
+            accessionContacts={accessionContacts}
+            organizationId={organizationId}
+            accessionId={accessionId ?? ""}
+          />
         </div>
 
         <div className="space-y-1 h-[20rem] sm:h-[36rem] w-full">
           <h4 className="text-lg font-medium">Accession Contacts</h4>
-          <div className="w-full h-full p-3 border rounded-md shadow-md bg-slate-50">
-            {accessionContacts !== undefined &&
-            (accessionContacts?.length ?? 0) > 0 ? (
-              <div className="flex flex-col items-start w-full h-full space-y-2 ">
-                {accessionContacts.map((contact) => {
-                  const name = [contact.firstName, contact.lastName]
-                    .join(" ")
-                    .trim();
-                  return (
-                    // TODO make this a component
-                    <div className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0">
-                      <div className="flex items-center justify-start flex-1 pr-2">
-                        <div className="">
-                          <p className="font-medium">{name}</p>
-                          <p className="text-sm">{contact.targetValue}</p>
-                          {contact.npi?.length ?? 0 > 0 ? (
-                            <p className="text-sm text-slate-400">
-                              <span>#</span>
-                              {contact.npi}
-                            </p>
-                          ) : null}
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-center w-full h-full sm:w-auto">
-                        <Button
-                          variant="outline"
-                          className="flex items-center justify-center w-full sm:w-auto"
-                          onClick={() => {
-                            removeAccessionContactApi
-                              .mutateAsync({
-                                accessionId: accessionId ?? "",
-                                accessionContactId: contact.id,
-                              })
-                              .catch((err) => {
-                                Notification.error(
-                                  "There was an error removing this contact from the Accession"
-                                );
-                                console.error(err);
-                              });
-                          }}
-                        >
-                          <MailMinus className="w-4 h-4 shrink-0" />
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center w-full h-full">
-                <p className="text-center">
-                  No one has been assigned as a contact for this accession yet
-                </p>
-              </div>
-            )}
-          </div>
+          <AccessionContacts
+            accessionContacts={accessionContacts}
+            accessionId={accessionId ?? ""}
+          />
         </div>
       </div>
+    </div>
+  );
+}
+
+function OrganizationContacts({
+  accessionContacts,
+  organizationId,
+  accessionId,
+}: {
+  accessionContacts: AccessionContactDto[] | undefined;
+  organizationId: string | undefined;
+  accessionId: string;
+}) {
+  const { data: orgContacts } = useGetContactsByOrganization(
+    organizationId ?? ""
+  );
+  const accessionContactIds = new Set(
+    accessionContacts?.map((contact) => contact.organizationContactId)
+  );
+  const filteredOrgContacts = orgContacts?.filter(
+    (orgContact) => !accessionContactIds.has(orgContact.id)
+  );
+
+  const addAccessionContactApi = useAddAccessionContact();
+  return (
+    <div className="w-full h-full p-3 border rounded-md shadow-md bg-slate-50">
+      {filteredOrgContacts !== undefined &&
+      (filteredOrgContacts?.length ?? 0) > 0 ? (
+        <div className="flex flex-col items-start w-full h-full space-y-2 ">
+          {filteredOrgContacts.map((contact) => {
+            const name = [contact.firstName, contact.lastName].join(" ").trim();
+            return (
+              <div className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0">
+                <div className="flex items-center justify-start flex-1 pr-2">
+                  <div className="">
+                    <p className="font-medium">{name}</p>
+                    <p className="text-sm">{contact.email}</p>
+                    {contact.npi.length > 0 ? (
+                      <p className="text-sm text-slate-400">
+                        <span>#</span>
+                        {contact.npi}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="flex items-center justify-center w-full h-full sm:w-auto">
+                  <Button
+                    variant="outline"
+                    className="flex items-center justify-center w-full sm:w-auto"
+                    onClick={() => {
+                      addAccessionContactApi
+                        .mutateAsync({
+                          accessionId: accessionId ?? "",
+                          organizationContactId: contact.id,
+                        })
+                        .catch((err) => {
+                          Notification.error(
+                            "There was an error adding this contact to the Accession"
+                          );
+                          console.error(err);
+                        });
+                    }}
+                  >
+                    <MailPlus className="w-4 h-4 shrink-0" />
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center w-full h-full">
+          <p className="text-center">
+            {accessionContacts?.length ?? 0 > 0
+              ? "There are no more organization contacts to assign"
+              : "This organization does not have any assignable contacts"}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AccessionContacts({
+  accessionContacts,
+  accessionId,
+}: {
+  accessionContacts: AccessionContactDto[] | undefined;
+  accessionId: string;
+}) {
+  const removeAccessionContactApi = useRemoveAccessionContact();
+
+  return (
+    <div className="w-full h-full p-3 border rounded-md shadow-md bg-slate-50">
+      {accessionContacts !== undefined &&
+      (accessionContacts?.length ?? 0) > 0 ? (
+        <div className="flex flex-col items-start w-full h-full space-y-2 ">
+          {accessionContacts.map((contact) => {
+            const name = [contact.firstName, contact.lastName].join(" ").trim();
+            return (
+              <div className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0">
+                <div className="flex items-center justify-start flex-1 pr-2">
+                  <div className="">
+                    <p className="font-medium">{name}</p>
+                    <p className="text-sm">{contact.targetValue}</p>
+                    {contact.npi?.length ?? 0 > 0 ? (
+                      <p className="text-sm text-slate-400">
+                        <span>#</span>
+                        {contact.npi}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="flex items-center justify-center w-full h-full sm:w-auto">
+                  <Button
+                    variant="outline"
+                    className="flex items-center justify-center w-full sm:w-auto"
+                    onClick={() => {
+                      removeAccessionContactApi
+                        .mutateAsync({
+                          accessionId: accessionId ?? "",
+                          accessionContactId: contact.id,
+                        })
+                        .catch((err) => {
+                          Notification.error(
+                            "There was an error removing this contact from the Accession"
+                          );
+                          console.error(err);
+                        });
+                    }}
+                  >
+                    <MailMinus className="w-4 h-4 shrink-0" />
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center w-full h-full">
+          <p className="text-center">
+            No one has been assigned as a contact for this accession yet
+          </p>
+        </div>
+      )}
     </div>
   );
 }
