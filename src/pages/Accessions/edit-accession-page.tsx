@@ -6,7 +6,10 @@ import {
 } from "@/components/ui/vertical-tabs";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
 import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
-import { AccessionStatus } from "@/domain/accessions/types";
+import {
+  AccessionContactDto,
+  AccessionStatus,
+} from "@/domain/accessions/types";
 import { AccessionOrganizationForm } from "@/domain/organizations/features/manage-accession-org";
 import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-accession-patient";
 import { useParams } from "@tanstack/react-router";
@@ -69,15 +72,15 @@ function AccessionDetails({
 }: {
   accessionId: string | undefined;
   organizationId: string | undefined;
-  accessionContacts: any;
+  accessionContacts: AccessionContactDto[] | undefined;
 }) {
   return (
     <VerticalTabs
       defaultValue="organization"
-      className="sm:flex"
+      className=""
       orientation="vertical"
     >
-      <VerticalTabsList className="shadow-lg">
+      <VerticalTabsList className="shadow-md">
         <VerticalTabsTrigger value="organization">
           Organization
         </VerticalTabsTrigger>
@@ -92,7 +95,7 @@ function AccessionDetails({
       </VerticalTabsList>
       <VerticalTabsContent
         value="organization"
-        className="h-[50rem] overflow-auto px-6 py-4 bg-gray-50 shadow-lg"
+        className="h-[50rem] overflow-auto px-6 py-4 shadow-md"
       >
         <h3 className="text-xl font-semibold tracking-tight">
           Organization Details

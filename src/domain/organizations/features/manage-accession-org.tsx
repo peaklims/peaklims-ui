@@ -113,8 +113,8 @@ export function AccessionOrganizationForm({
         </form>
       </Form>
 
-      <div className="flex items-center justify-start w-full pt-3 space-x-6">
-        <div className="space-y-1 h-[36rem] w-full">
+      <div className="flex flex-col items-center justify-start w-full pt-3 space-y-12 sm:space-x-6 sm:flex-row sm:space-y-0">
+        <div className="space-y-1 h-[20rem] sm:h-[36rem] w-full">
           <h4 className="text-lg font-medium">Organization Contacts</h4>
           <div className="w-full h-full p-3 border rounded-md shadow-md bg-slate-50">
             {filteredOrgContacts !== undefined &&
@@ -126,8 +126,8 @@ export function AccessionOrganizationForm({
                     .trim();
                   return (
                     // TODO make this a component
-                    <div className="flex w-full px-3 py-2 bg-white rounded-md shadow-md">
-                      <div className="flex items-center justify-start flex-1">
+                    <div className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0">
+                      <div className="flex items-center justify-start flex-1 pr-2">
                         <div className="">
                           <p className="font-medium">{name}</p>
                           <p className="text-sm">{contact.email}</p>
@@ -139,10 +139,10 @@ export function AccessionOrganizationForm({
                           ) : null}
                         </div>
                       </div>
-                      <div className="flex items-center justify-center h-full">
+                      <div className="flex items-center justify-center w-full h-full sm:w-auto">
                         <Button
                           variant="outline"
-                          className="flex items-center justify-center"
+                          className="flex items-center justify-center w-full sm:w-auto"
                           onClick={() => {
                             addAccessionContactApi
                               .mutateAsync({
@@ -176,7 +176,7 @@ export function AccessionOrganizationForm({
           </div>
         </div>
 
-        <div className="space-y-1 h-[36rem] w-full">
+        <div className="space-y-1 h-[20rem] sm:h-[36rem] w-full">
           <h4 className="text-lg font-medium">Accession Contacts</h4>
           <div className="w-full h-full p-3 border rounded-md shadow-md bg-slate-50">
             {accessionContacts !== undefined &&
@@ -188,8 +188,8 @@ export function AccessionOrganizationForm({
                     .trim();
                   return (
                     // TODO make this a component
-                    <div className="flex w-full px-3 py-2 bg-white rounded-md shadow-md">
-                      <div className="flex items-center justify-start flex-1">
+                    <div className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0">
+                      <div className="flex items-center justify-start flex-1 pr-2">
                         <div className="">
                           <p className="font-medium">{name}</p>
                           <p className="text-sm">{contact.targetValue}</p>
@@ -201,10 +201,10 @@ export function AccessionOrganizationForm({
                           ) : null}
                         </div>
                       </div>
-                      <div className="flex items-center justify-center h-full">
+                      <div className="flex items-center justify-center w-full h-full sm:w-auto">
                         <Button
                           variant="outline"
-                          className="flex items-center justify-center"
+                          className="flex items-center justify-center w-full sm:w-auto"
                           onClick={() => {
                             removeAccessionContactApi
                               .mutateAsync({
