@@ -15,7 +15,7 @@ export const useGetContactsByOrganization = (organizationId: string) => {
     OrganizationContactKeys.byOrg(organizationId),
     () => getContactsByOrganization(organizationId),
     {
-      enabled: organizationId !== null && organizationId !== undefined,
+      enabled: (organizationId.length ?? 0) > 0,
     }
   );
 };
