@@ -189,7 +189,7 @@ function SkeletonRows<TData, TValue>(
             (_, cellIndex) => (
               <TableCell
                 key={`row${cellIndex}col${rowIndex}`}
-                colSpan={columns.length}
+                colSpan={1}
                 className="px-6 py-3"
               >
                 <div
