@@ -3,7 +3,7 @@ export type SampleDto = {
   sampleNumber: string;
   status: string;
   type: string;
-  collectionDate: string;
+  collectionDate: Date;
   receivedDate: Date | undefined | null;
   collectionSite: string | undefined | null;
   containerId: string | undefined | null;
