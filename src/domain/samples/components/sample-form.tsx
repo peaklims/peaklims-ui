@@ -18,6 +18,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { parse } from "date-fns";
 import { useEffect } from "react";
 import { useGetSample } from "../apis/get-sample";
+import { sampleTypesDropdown } from "../types/sample-types";
 
 export const sampleFormSchema = z.object({
   type: z.string().nonempty("Sample type is required"),
@@ -96,7 +97,7 @@ export function SampleForm({
               <FormItem>
                 <FormLabel required={true}>Sample Type</FormLabel>
                 <FormControl>
-                  <Combobox items={[]} {...field} />
+                  <Combobox items={sampleTypesDropdown} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

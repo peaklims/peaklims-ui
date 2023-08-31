@@ -1,9 +1,12 @@
+import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
+import { useAddSample } from "../apis/add-sample";
+import { SampleForCreationDto } from "../types/index";
 import { SampleForm } from "./sample-form";
 
 export function ManageAccessionSamples({
@@ -43,6 +46,7 @@ export function AddSampleButton({
   patientId: string | undefined;
 }) {
   const [sampleFormIsOpen, setSampleFormIsOpen] = useState(false);
+  const addSampleApi = useAddSample();
   return (
     <>
       <div className="transition-opacity">
@@ -56,25 +60,23 @@ export function AddSampleButton({
                 <div className="pt-6">
                   <SampleForm
                     onSubmit={(value) => {
-                      // const dto = {
-                      //   accessionId,
-                      //   patientForCreation: {
-                      //     firstName: value.firstName,
-                      //     lastName: value.lastName,
-                      //     dateOfBirth: value.dateOfBirth,
-                      //     sex: value.sex,
-                      //     race: value.race,
-                      //     ethnicity: value.ethnicity,
-                      //   },
-                      // } as SetAccessionSample;
-                      // setSampleApi
-                      //   .mutateAsync(dto)
-                      //   .then(() => {
-                      //     setSampleFormIsOpen(false);
-                      //   })
-                      //   .catch((err) => {
-                      //     console.log(err);
-                      //   });
+                      if (patientId === undefined) return;
+
+                      const dto = {
+                        type: value.type,
+                        collectionDate: value.collectionDate,
+                        receivedDate: value.receivedDate,
+                        patientId: patientId,
+                      } as SampleForCreationDto;
+                      addSampleApi
+                        .mutateAsync({ data: dto })
+                        .then(() => {
+                          setSampleFormIsOpen(false);
+                        })
+                        .catch((err) => {
+                          Notification.error("Error adding sample");
+                          console.log(err);
+                        });
                     }}
                   />
                 </div>

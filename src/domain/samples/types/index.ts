@@ -9,3 +9,12 @@ export type SampleDto = {
   containerId: string | undefined | null;
   patientId: string;
 };
+
+export type SampleForCreationDto = {
+  type: string;
+  quantity?: number | undefined | null;
+  collectionDate?: Date | null;
+  receivedDate?: Date | null;
+  collectionSite?: string | undefined | null;
+  containerId?: string | undefined | null;
+};
