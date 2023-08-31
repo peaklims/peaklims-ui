@@ -1,7 +1,6 @@
 import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
@@ -11,19 +10,36 @@ import { SampleForm } from "./sample-form";
 
 export function ManageAccessionSamples({
   patientId,
+  samples,
 }: {
   patientId: string | undefined;
+  samples: SampleDto[] | undefined;
 }) {
-  const { data: samples } = useGetPatientSamples({
-    patientId: patientId ?? "",
-  });
-  console.log("samples", samples);
   return (
-    <div className="flex items-center justify-between w-full">
-      <h3 className="text-xl font-semibold tracking-tight">
-        Manage Patient Samples
-      </h3>
-      <AddSampleButton patientId={patientId} />
+    <div className="">
+      <div className="flex items-center justify-between w-full">
+        <h3 className="text-xl font-semibold tracking-tight">
+          Manage Patient Samples
+        </h3>
+        <AddSampleButton patientId={patientId} />
+      </div>
+
+      <div className="space-y-4">
+        {(samples?.length ?? 0) > 0 ? (
+          <>
+            {samples!.map((sample) => (
+              <div key={sample.id} className="">
+                <p>{sample.sampleNumber}</p>
+                <p>Sample Type: {sample.type}</p>
+                <p>Collection Date: {sample.collectionDate}</p>
+                <p>Received Date: {sample.receivedDate}</p>
+              </div>
+            ))}
+          </>
+        ) : (
+          <div>No samples have been added for this patient</div>
+        )}
+      </div>
     </div>
   );
 }

@@ -27,23 +27,38 @@ export const addSample = async (data: SampleForCreationDto) => {
   return peakLimsApi.post(`/samples`, data).then((response) => response.data);
 };
 
+type SampleMutationContext = {
+  patientId: string;
+};
+
 export interface AddProps {
   data: SampleForCreationDto;
 }
 
 export function useAddSample(
-  options?: UseMutationOptions<void, AxiosError, AddProps>
+  options?: UseMutationOptions<
+    void,
+    AxiosError,
+    AddProps,
+    SampleMutationContext
+  >
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation(
+  return useMutation<void, AxiosError, AddProps, SampleMutationContext>(
     ({ data: sampleData }: AddProps) => addSample(sampleData),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries(SampleKeys.lists());
-        queryClient.invalidateQueries(AccessionKeys.forEdits());
-        queryClient.invalidateQueries(SampleKeys.details());
-        // queryClient.invalidateQueries(SampleKeys.detail(patientId));
+      onMutate: (variables) => {
+        return { patientId: variables.data.patientId };
+      },
+      onSuccess: (_, __, context: SampleMutationContext | undefined) => {
+        if (context) {
+          queryClient.invalidateQueries(SampleKeys.lists());
+          queryClient.invalidateQueries(AccessionKeys.forEdits());
+          queryClient.invalidateQueries(
+            SampleKeys.byPatient(context.patientId)
+          );
+        }
       },
       ...options,
     }

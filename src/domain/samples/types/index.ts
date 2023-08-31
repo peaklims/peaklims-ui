@@ -17,4 +17,5 @@ export type SampleForCreationDto = {
   receivedDate?: Date | null;
   collectionSite?: string | undefined | null;
   containerId?: string | undefined | null;
+  patientId: string;
 };

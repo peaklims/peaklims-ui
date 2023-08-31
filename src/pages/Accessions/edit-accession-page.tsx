@@ -12,6 +12,7 @@ import {
 } from "@/domain/accessions/types";
 import { AccessionOrganizationForm } from "@/domain/organizations/features/manage-accession-org";
 import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-accession-patient";
+import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { ManageAccessionSamples } from "@/domain/samples/components/manage-accession-samples";
 import { useParams } from "@tanstack/react-router";
 import { Paperclip } from "lucide-react";
@@ -79,6 +80,9 @@ function AccessionDetails({
   accessionContacts: AccessionContactDto[] | undefined;
   patientId: string | undefined;
 }) {
+  const { data: samples } = useGetPatientSamples({
+    patientId: patientId ?? "",
+  });
   return (
     <VerticalTabs
       defaultValue="organization"
@@ -191,7 +195,7 @@ function AccessionDetails({
         value="samples"
         className="h-[50rem] overflow-auto px-6 py-4 shadow-md border"
       >
-        <ManageAccessionSamples patientId={patientId} />
+        <ManageAccessionSamples patientId={patientId} samples={samples} />
       </VerticalTabsContent>
       <VerticalTabsContent
         value="panels-and-tests"
