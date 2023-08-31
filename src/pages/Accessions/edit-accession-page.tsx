@@ -26,7 +26,7 @@ export function EditAccessionPage() {
   const accessionNumberTitle = accessionNumber ? ` - ${accessionNumber}` : "";
 
   return (
-    <div className="">
+    <div className="max-w-7xl">
       <Helmet>
         <title>Edit Accession {accessionNumberTitle}</title>
       </Helmet>
