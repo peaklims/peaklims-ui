@@ -10,6 +10,7 @@ import {
   AccessionContactDto,
   AccessionStatus,
 } from "@/domain/accessions/types";
+import { useGetAllOrganizationsForDropdown } from "@/domain/organizations/apis/get-all-organizations";
 import { AccessionOrganizationForm } from "@/domain/organizations/features/manage-accession-org";
 import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-accession-patient";
 import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
@@ -83,6 +84,8 @@ function AccessionDetails({
   const { data: samples } = useGetPatientSamples({
     patientId: patientId ?? "",
   });
+  const { data: orgs, isLoading: orgsAreLoading } =
+    useGetAllOrganizationsForDropdown();
   return (
     <VerticalTabs
       defaultValue="organization"
@@ -189,6 +192,8 @@ function AccessionDetails({
           accessionContacts={accessionContacts}
           accessionId={accessionId}
           organizationId={organizationId}
+          orgs={orgs}
+          orgsAreLoading={orgsAreLoading}
         />
       </VerticalTabsContent>
       <VerticalTabsContent

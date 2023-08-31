@@ -13,7 +13,6 @@ import { useAddAccessionContact } from "@/domain/accession-contacts/apis/add-acc
 import { useRemoveAccessionContact } from "@/domain/accession-contacts/apis/remove-accession-contact";
 import { useSetAccessionOrganization } from "@/domain/accessions/apis/set-accession-org";
 import { AccessionContactDto } from "@/domain/accessions/types";
-import { useGetAllOrganizationsForDropdown } from "@/domain/organizations/apis/get-all-organizations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MailMinus, MailPlus } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -30,14 +29,21 @@ export function AccessionOrganizationForm({
   accessionId,
   organizationId,
   accessionContacts,
+  orgs,
+  orgsAreLoading,
 }: {
   accessionId: string | undefined;
   organizationId: string | undefined;
   accessionContacts: AccessionContactDto[] | undefined;
+  orgs:
+    | {
+        value: string;
+        label: string;
+        disabled?: boolean;
+      }[]
+    | undefined;
+  orgsAreLoading: boolean;
 }) {
-  const { data: orgs, isLoading: orgsAreLoading } =
-    useGetAllOrganizationsForDropdown();
-
   const onlyActiveOrgsThatAreNotSelected = orgs?.filter(
     (org) => !org.disabled || org.value === organizationId
   );

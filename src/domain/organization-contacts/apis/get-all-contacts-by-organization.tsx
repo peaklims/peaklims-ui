@@ -16,6 +16,7 @@ export const useGetContactsByOrganization = (organizationId: string) => {
     () => getContactsByOrganization(organizationId),
     {
       enabled: (organizationId.length ?? 0) > 0,
+      cacheTime: 2 * 60 * 1000,
     }
   );
 };
