@@ -43,7 +43,7 @@ export function EditAccessionPage() {
 
       <div className="flex items-center justify-center w-full pt-3 md:block">
         <div className="space-y-10">
-          <div>
+          <div className="flex items-center justify-center w-full sm:justify-start">
             <h2 className="sr-only">Accession Patient</h2>
             <ManageAccessionPatientCard accession={accession} />
           </div>
