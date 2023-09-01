@@ -154,7 +154,10 @@ function OrganizationContacts({
           {filteredOrgContacts.map((contact) => {
             const name = [contact.firstName, contact.lastName].join(" ").trim();
             return (
-              <div className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0">
+              <div
+                key={contact.id}
+                className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0"
+              >
                 <div className="flex items-center justify-start flex-1 pr-2">
                   <div className="">
                     <p className="font-medium">{name}</p>
@@ -222,7 +225,10 @@ function AccessionContacts({
           {accessionContacts.map((contact) => {
             const name = [contact.firstName, contact.lastName].join(" ").trim();
             return (
-              <div className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0">
+              <div
+                key={contact.id}
+                className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0"
+              >
                 <div className="flex items-center justify-start flex-1 pr-2">
                   <div className="">
                     <p className="font-medium">{name}</p>
