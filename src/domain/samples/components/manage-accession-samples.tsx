@@ -5,8 +5,10 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { useAddSample } from "../apis/add-sample";
-import { SampleForCreationDto } from "../types/index";
+import { SampleDto, SampleForCreationDto } from "../types/index";
 import { SampleForm } from "./sample-form";
+import { PatientSamples } from "./worklist/patient-samples";
+import { columns } from "./worklist/patient-samples-columns";
 
 export function ManageAccessionSamples({
   patientId,
@@ -24,37 +26,16 @@ export function ManageAccessionSamples({
         <AddSampleButton patientId={patientId} />
       </div>
 
-      <div className="space-y-4">
-        {(samples?.length ?? 0) > 0 ? (
-          <>
-            {samples!.map((sample) => (
-              <div key={sample.id} className="">
-                <p>{sample.sampleNumber}</p>
-                <p>Sample Type: {sample.type}</p>
-                <p>Collection Date: {sample.collectionDate}</p>
-                <p>Received Date: {sample.receivedDate}</p>
-              </div>
-            ))}
-          </>
-        ) : (
-          <div>No samples have been added for this patient</div>
-        )}
+      <div className="pt-3">
+        <PatientSamples
+          columns={columns}
+          data={samples ?? []}
+          isLoading={false}
+        />
       </div>
     </div>
   );
 }
-
-export type SampleForCard = {
-  id: string;
-  firstName?: string;
-  lastName?: string;
-  age?: number;
-  dateOfBirth?: Date;
-  race?: string;
-  ethnicity?: string;
-  internalId: string;
-  sex: string;
-};
 
 export function AddSampleButton({
   patientId,
@@ -83,6 +64,7 @@ export function AddSampleButton({
                         collectionDate: value.collectionDate,
                         receivedDate: value.receivedDate,
                         patientId: patientId,
+                        collectionSite: value.collectionSite,
                       } as SampleForCreationDto;
                       addSampleApi
                         .mutateAsync({ data: dto })

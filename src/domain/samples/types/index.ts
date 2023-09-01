@@ -3,7 +3,7 @@ export type SampleDto = {
   sampleNumber: string;
   status: string;
   type: string;
-  collectionDate: Date;
+  collectionDate: Date | undefined | null;
   receivedDate: Date | undefined | null;
   collectionSite: string | undefined | null;
   containerId: string | undefined | null;
@@ -19,3 +19,5 @@ export type SampleForCreationDto = {
   containerId?: string | undefined | null;
   patientId: string;
 };
+
+export type SampleStatus = "Disposed" | "Received" | "Rejected";
