@@ -1,12 +1,19 @@
 "use client";
 
+import { TrashButton } from "@/components/data-table/TrashButton";
 import { cn } from "@/lib/utils";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../../../components/data-table/data-table-column-header";
 import { SampleDto, SampleStatus } from "../../types";
 import SampleStatusBadge from "../status-badge";
 
-export const columns: ColumnDef<SampleDto>[] = [
+type ColumnsWithDeleteCallback = ColumnDef<SampleDto> & {
+  onDeleteAction?: (row: Row<SampleDto>) => void;
+};
+
+export const createColumns = (
+  onDeleteAction: (row: Row<SampleDto>) => void
+): ColumnsWithDeleteCallback[] => [
   {
     accessorKey: "id",
     header: "Id",
@@ -93,6 +100,26 @@ export const columns: ColumnDef<SampleDto>[] = [
     cell: ({ row }) => {
       const receivedDate = row.getValue("receivedDate") as string;
       return (receivedDate?.length ?? 0) > 0 ? <p>{receivedDate}</p> : "—";
+    },
+  },
+  {
+    accessorKey: "actions",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} canSort={false} />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center w-full">
+          {/* {canDeleteUser.hasPermission && ( */}
+          <TrashButton
+            onClick={(e) => {
+              onDeleteAction(row);
+              e.stopPropagation();
+            }}
+          />
+          {/* )} */}
+        </div>
+      );
     },
   },
 ];

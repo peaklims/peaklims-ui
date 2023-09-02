@@ -2,13 +2,15 @@ import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { Row } from "@tanstack/react-table";
 import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { useAddSample } from "../apis/add-sample";
+import { useDeleteSample } from "../apis/delete-sample";
 import { SampleDto, SampleForCreationDto } from "../types/index";
 import { SampleForm } from "./sample-form";
 import { PatientSamples } from "./worklist/patient-samples";
-import { columns } from "./worklist/patient-samples-columns";
+import { createColumns } from "./worklist/patient-samples-columns";
 
 export function ManageAccessionSamples({
   patientId,
@@ -17,6 +19,27 @@ export function ManageAccessionSamples({
   patientId: string | undefined;
   samples: SampleDto[] | undefined;
 }) {
+  const deleteSampleApi = useDeleteSample();
+  function deleteSample({ sampleId }: { sampleId: string }) {
+    if (patientId === undefined) {
+      Notification.error("Invalid patientId");
+      return;
+    }
+
+    deleteSampleApi.mutateAsync({ sampleId, patientId }).catch((e) => {
+      Notification.error("There was an error deleting the Sample");
+      console.error(e);
+    });
+  }
+  const onDeleteAction = (row: Row<SampleDto>) => {
+    // TODO are you sure modal
+    // openDeleteModal({
+    //   onConfirm: () => deleteSample(row.getValue()),
+    // });
+    deleteSample({ sampleId: row.getValue("id") });
+  };
+  const columns = createColumns(onDeleteAction);
+
   return (
     <div className="">
       <div className="flex items-center justify-between w-full">

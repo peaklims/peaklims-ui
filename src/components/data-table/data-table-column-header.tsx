@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
-  title: string;
+  title?: string | undefined;
   canSort?: boolean;
 }
 
@@ -23,7 +23,7 @@ export function DataTableColumnHeader<TData, TValue>({
 
   return (
     <div className={cn("flex items-center space-x-1", className)}>
-      <span>{title}</span>
+      {(title?.length ?? 0) > 0 ? <span>{title}</span> : null}
       {canSort && (
         <Button
           variant="ghost"
