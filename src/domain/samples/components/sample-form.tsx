@@ -34,6 +34,7 @@ export const sampleFormSchema = z.object({
       message: "Collection date must not be in the future.",
     })
     .optional(),
+  externalId: z.string().optional(),
   collectionSite: z.string().optional(),
 });
 
@@ -54,6 +55,7 @@ export function SampleForm({
       receivedDate: undefined,
       collectionDate: undefined,
       collectionSite: "",
+      externalId: "",
     },
   });
 
@@ -76,6 +78,7 @@ export function SampleForm({
       ...sampleForm.getValues(),
       type: sampleData?.type ?? "",
       collectionSite: sampleData?.collectionSite ?? "",
+      externalId: sampleData?.externalId ?? "",
       receivedDate: sampleData?.receivedDate ? parsedDateReceived : undefined,
       collectionDate: sampleData?.collectionDate
         ? parsedDateCollected
@@ -103,6 +106,21 @@ export function SampleForm({
               </FormItem>
             )}
           />
+          <div className="col-span-1">
+            <FormField
+              control={sampleForm.control}
+              name="externalId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required={false}>External Id</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className="grid w-full grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-4">
             <div className="col-span-1">
               <FormField

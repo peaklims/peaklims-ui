@@ -88,6 +88,7 @@ export function AddSampleButton({
                         receivedDate: value.receivedDate,
                         patientId: patientId,
                         collectionSite: value.collectionSite,
+                        externalId: value.externalId,
                       } as SampleForCreationDto;
                       addSampleApi
                         .mutateAsync({ data: dto })

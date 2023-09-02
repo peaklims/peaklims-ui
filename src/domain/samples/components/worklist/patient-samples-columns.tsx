@@ -1,6 +1,6 @@
 "use client";
 
-import { TrashButton } from "@/components/data-table/TrashButton";
+import { TrashButton } from "@/components/data-table/trash-button";
 import { cn } from "@/lib/utils";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../../../components/data-table/data-table-column-header";
@@ -17,6 +17,10 @@ export const createColumns = (
   {
     accessorKey: "id",
     header: "Id",
+  },
+  {
+    accessorKey: "externalId",
+    header: "externalId",
   },
   {
     accessorKey: "collectionSite",
@@ -38,9 +42,15 @@ export const createColumns = (
     cell: ({ row }) => {
       const sampleNumber = row.getValue("sampleNumber") as string;
       const status = row.getValue("status");
+      const externalId = row.getValue("externalId") as string;
       return (
         <div className="space-x-3">
-          <p className="inline-flex">{sampleNumber}</p>
+          <div className="inline-flex flex-col">
+            <p className="block ">{sampleNumber}</p>
+            {(externalId?.length ?? 0) > 0 && (
+              <p className="block text-xs text-slate-700">{externalId}</p>
+            )}
+          </div>
 
           <SampleStatusBadge
             status={status as SampleStatus}
