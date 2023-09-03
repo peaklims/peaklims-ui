@@ -117,9 +117,10 @@ export const createColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader column={column} canSort={false} />
     ),
+    // meta: { thClassName: "w-16" },
     cell: ({ row }) => {
       return (
-        <div className="flex items-center justify-center w-full">
+        <div className="flex items-center justify-center w-8">
           {/* {canDeleteUser.hasPermission && ( */}
           <TrashButton
             onClick={(e) => {
