@@ -124,6 +124,7 @@ export function AccessionWorklist<TData, TValue>({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
+                      className="group"
                       onRowClick={() => {
                         navigate({
                           to: `/accessions/${row.getValue(

@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { usePatientCardContext } from "@/domain/patients/components/patient-cards";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import { useUpdatePatient } from "../../apis/update-patient";
 import { PatientForUpdateDto } from "../../types/index";
 import { PatientForm } from "../patient-form";
@@ -38,14 +42,7 @@ export function EditPatientButton({ patientId }: { patientId: string }) {
                 <PatientForm
                   patientId={patientId}
                   onSubmit={(value) => {
-                    const dto = {
-                      firstName: value.firstName,
-                      lastName: value.lastName,
-                      dateOfBirth: value.dateOfBirth,
-                      sex: value.sex,
-                      race: value.race,
-                      ethnicity: value.ethnicity,
-                    } as PatientForUpdateDto;
+                    const dto = { ...value } as PatientForUpdateDto;
                     updatePatientApi
                       .mutateAsync({ data: dto, id: patientId })
                       .then(() => {

@@ -44,12 +44,7 @@ export function AddPatientButton() {
                       const dto = {
                         accessionId,
                         patientForCreation: {
-                          firstName: value.firstName,
-                          lastName: value.lastName,
-                          dateOfBirth: value.dateOfBirth,
-                          sex: value.sex,
-                          race: value.race,
-                          ethnicity: value.ethnicity,
+                          ...value,
                         },
                       } as SetAccessionPatient;
                       setPatientApi
