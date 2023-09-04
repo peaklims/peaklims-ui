@@ -164,7 +164,7 @@ or accession insensitive contains */}
             </Button>
             <Button
               variant="outline"
-              className="w-1/2 text-red-400 rounded-l-none md:w-auto hover:text-red-600"
+              className="w-1/2 rounded-l-none text-rose-400 md:w-auto hover:text-rose-600"
               onClick={() => {
                 filterForm.reset();
                 setFilterValue("");
