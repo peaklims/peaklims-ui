@@ -1,8 +1,17 @@
 "use client";
 
-import { TrashButton } from "@/components/data-table/trash-button";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { ColumnDef, Row } from "@tanstack/react-table";
+import { PencilIcon, Trash2Icon } from "lucide-react";
 import { DataTableColumnHeader } from "../../../../components/data-table/data-table-column-header";
 import { SampleDto, SampleStatus } from "../../types";
 import SampleStatusBadge from "../status-badge";
@@ -117,18 +126,80 @@ export const createColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader column={column} canSort={false} />
     ),
-    // meta: { thClassName: "w-16" },
+    meta: { thClassName: "w-20" },
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-center w-8">
           {/* {canDeleteUser.hasPermission && ( */}
-          <TrashButton
+          {/* <TrashButton
             onClick={(e) => {
               onDeleteAction(row);
               e.stopPropagation();
             }}
-          />
+          /> */}
           {/* )} */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                className={cn(
+                  "inline-flex items-center px-2 py-2 text-sm font-medium leading-5 transition duration-100 ease-in bg-white rounded-full hover:shadow",
+                  "hover:bg-slate-100 hover:text-slate-800 hover:outline-none text-slate-700",
+                  "sm:p-3 dark:hover:shadow dark:shadow-slate-400 dark:hover:shadow-slate-300"
+                  // "sm:opacity-0 sm:group-hover:opacity-100"
+                )}
+              >
+                {/* https://iconbuddy.app/ion/ellipsis-horizontal-sharp */}
+                <svg
+                  className="w-4 h-4"
+                  width={512}
+                  height={512}
+                  viewBox="0 0 512 512"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx={256} cy={256} r={48} fill="currentColor" />
+                  <circle cx={416} cy={256} r={48} fill="currentColor" />
+                  <circle cx={96} cy={256} r={48} fill="currentColor" />
+                </svg>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" side="right">
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onClick={() => {
+                    alert(`Edit Sample ${row.getValue("id")}`);
+                  }}
+                >
+                  <PencilIcon className="w-4 h-4" />
+                  <span className="pl-2">Edit Sample</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              {/* <DropdownMenuLabel>Manage Sample</DropdownMenuLabel>
+              <DropdownMenuSeparator /> */}
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  asChild
+                  onClick={(e) => {
+                    onDeleteAction(row);
+                    e.stopPropagation();
+                  }}
+                >
+                  <div
+                    className={cn(
+                      "hover:bg-rose-200 hover:text-rose-800 hover:outline-none",
+                      "focus:bg-rose-200 focus:text-rose-800 focus:outline-none",
+                      "dark:border-slate-900 dark:bg-slate-800 dark:text-white dark:hover:bg-rose-800 dark:hover:text-rose-300 dark:hover:outline-none",
+                      "dark:hover:shadow dark:shadow-rose-400 dark:hover:shadow-rose-300",
+                      "flex items-center justify-start space-x-2 w-full"
+                    )}
+                  >
+                    <Trash2Icon className="w-4 h-4" />
+                    <span className="pl-2">Delete Sample</span>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       );
     },
