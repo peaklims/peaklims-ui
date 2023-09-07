@@ -98,6 +98,9 @@ dependencies:
   react-hot-toast:
     specifier: ^2.4.1
     version: 2.4.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0)
+  react-imask:
+    specifier: ^7.1.3
+    version: 7.1.3(react@18.2.0)
   tailwind-merge:
     specifier: ^1.14.0
     version: 1.14.0
@@ -174,6 +177,14 @@ packages:
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
+
+  /@babel/runtime-corejs3@7.22.15:
+    resolution: {integrity: sha512-SAj8oKi8UogVi6eXQXKNPu8qZ78Yzy7zawrlTr0M+IuW/g8Qe9gVDhGcF9h1S69OyACpYoLxEzpjs1M15sI5wQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      core-js-pure: 3.32.1
+      regenerator-runtime: 0.14.0
+    dev: false
 
   /@babel/runtime@7.22.10:
     resolution: {integrity: sha512-21t/fkKLMZI4pqP2wlmsQAWnYW1PDyKyyUV4vCi+B25ydmdaYTKXPwCj0BzSUnZf4seIiYvSA3jcZ3gdsMFkLQ==}
@@ -2141,6 +2152,11 @@ packages:
       is-what: 4.1.15
     dev: false
 
+  /core-js-pure@3.32.1:
+    resolution: {integrity: sha512-f52QZwkFVDPf7UEQZGHKx6NYxsxmVGJe5DIvbzOdRMJlmT6yv0KDjR8rmy3ngr/t5wU54c7Sp/qIJH0ppbhVpQ==}
+    requiresBuild: true
+    dev: false
+
   /cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
@@ -2571,6 +2587,13 @@ packages:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}
     engines: {node: '>= 4'}
     dev: true
+
+  /imask@7.1.3:
+    resolution: {integrity: sha512-jZCqTI5Jgukhl2ff+znBQd8BiHOTlnFYCIgggzHYDdoJsHmSSWr1BaejcYBxsjy4ZIs8Rm0HhbOxQcobcdESRQ==}
+    engines: {npm: '>=4.0.0'}
+    dependencies:
+      '@babel/runtime-corejs3': 7.22.15
+    dev: false
 
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
@@ -3012,6 +3035,17 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
       - csstype
+    dev: false
+
+  /react-imask@7.1.3(react@18.2.0):
+    resolution: {integrity: sha512-anCnzdkqpDzNwe7ot76kQSvmnz4Sw7AW/QFjjLh3B87HVNv9e2oHC+1m9hQKSIui2Tqm7w68ooMgDFsCQlDMyg==}
+    engines: {npm: '>=4.0.0'}
+    peerDependencies:
+      react: '>=0.14.0'
+    dependencies:
+      imask: 7.1.3
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:

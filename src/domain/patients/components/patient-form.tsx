@@ -1,4 +1,3 @@
-import { DatePicker } from "@/components/ui/date-picker";
 import {
   Form,
   FormControl,
@@ -13,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
+import { DateInput } from "@/components/date-input";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { parse } from "date-fns";
@@ -122,7 +122,7 @@ export function PatientForm({
                   <FormItem>
                     <FormLabel required={true}>Date of Birth</FormLabel>
                     <FormControl>
-                      <DatePicker
+                      <DateInput
                         {...field}
                         buttonClassName="w-full"
                         toYear={new Date().getFullYear()}
