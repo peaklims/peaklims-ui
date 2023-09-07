@@ -1,5 +1,5 @@
 import { OrganizationContactDto } from "@/domain/organization-contacts/types";
-import { peakLimsApi } from "@/services/apiClient";
+import { peakLimsApi } from "@/services/api-client";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { OrganizationContactKeys } from "./organization-contact.keys";

@@ -1,5 +1,5 @@
 // import { generateSieveSortOrder } from "@/utils/sorting";
-import { peakLimsApi } from "@/services/apiClient";
+import { peakLimsApi } from "@/services/api-client";
 import { toDateOnly } from "@/utils/dates";
 import {
   UseMutationOptions,

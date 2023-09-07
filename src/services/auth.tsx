@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { peakLimsBff } from "./apiClient";
+import { peakLimsBff } from "./api-client";
 
 const claimsApiKeys = {
   claims: ["claims"],

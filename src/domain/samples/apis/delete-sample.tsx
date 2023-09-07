@@ -1,5 +1,5 @@
 import { AccessionKeys } from "@/domain/accessions/apis/accession.keys";
-import { peakLimsApi } from "@/services/apiClient";
+import { peakLimsApi } from "@/services/api-client";
 import {
   useMutation,
   UseMutationOptions,

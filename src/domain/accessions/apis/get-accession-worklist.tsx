@@ -1,6 +1,6 @@
 import { PagedResponse, Pagination } from "@/types/apis";
 // import { generateSieveSortOrder } from "@/utils/sorting";
-import { peakLimsApi } from "@/services/apiClient";
+import { peakLimsApi } from "@/services/api-client";
 import { useQuery } from "@tanstack/react-query";
 import { SortingState } from "@tanstack/react-table";
 import { AxiosResponse } from "axios";
