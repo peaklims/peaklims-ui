@@ -6,10 +6,10 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { DataTableColumnHeader } from "../../../../components/data-table/data-table-column-header";
@@ -163,6 +163,9 @@ export const createColumns = (
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" side="right">
+              <DropdownMenuLabel className="py-1 text-xs font-medium text-center">
+                {row.getValue("sampleNumber")}
+              </DropdownMenuLabel>
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => {
@@ -173,7 +176,7 @@ export const createColumns = (
                   <span className="pl-2">Edit Sample</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <DropdownMenuSeparator />
+              {/* <DropdownMenuSeparator /> */}
               {/* <DropdownMenuLabel>Manage Sample</DropdownMenuLabel>
               <DropdownMenuSeparator /> */}
               <DropdownMenuGroup>

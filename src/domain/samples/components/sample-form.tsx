@@ -1,4 +1,4 @@
-import { DatePicker } from "@/components/ui/date-picker";
+import { DateInput } from "@/components/date-input";
 import {
   Form,
   FormControl,
@@ -15,6 +15,7 @@ import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
+import { useGetAllContainersForDropdown } from "@/domain/containers/apis/get-all-containers";
 import { parse } from "date-fns";
 import { useEffect } from "react";
 import { useGetSample } from "../apis/get-sample";
@@ -36,6 +37,7 @@ export const sampleFormSchema = z.object({
     .optional(),
   externalId: z.string().optional(),
   collectionSite: z.string().optional(),
+  containerId: z.string().optional(),
 });
 
 export const FormMode = ["Add", "Edit"] as const;
@@ -56,6 +58,7 @@ export function SampleForm({
       collectionDate: undefined,
       collectionSite: "",
       externalId: "",
+      containerId: "",
     },
   });
 
@@ -80,11 +83,19 @@ export function SampleForm({
       collectionSite: sampleData?.collectionSite ?? "",
       externalId: sampleData?.externalId ?? "",
       receivedDate: sampleData?.receivedDate ? parsedDateReceived : undefined,
+      containerId: sampleData?.containerId ?? "",
       collectionDate: sampleData?.collectionDate
         ? parsedDateCollected
         : undefined,
     });
   }, [sampleForm, sampleData]);
+
+  const containerId = sampleForm.getValues("containerId");
+  const { data: containers, isLoading: containersAreLoading } =
+    useGetAllContainersForDropdown();
+  const onlyActiveContainersThatAreNotSelected = containers?.filter(
+    (container) => !container.disabled || container.value === containerId
+  );
 
   return (
     <Form {...sampleForm}>
@@ -125,12 +136,44 @@ export function SampleForm({
             <div className="col-span-1">
               <FormField
                 control={sampleForm.control}
+                name="containerId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required={false}>Container</FormLabel>
+                    <FormControl>
+                      <Combobox
+                        {...field}
+                        items={
+                          onlyActiveContainersThatAreNotSelected as {
+                            value: string;
+                            label: string;
+                            disabled?: boolean;
+                          }[]
+                        }
+                        buttonProps={{
+                          // className: "w-[25rem]",
+                          disabled: containersAreLoading,
+                        }}
+                        dropdownProps={{ className: "w-[16rem] sm:w-[20rem]" }}
+                        onChange={(e) => {
+                          field.onChange(e);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="col-span-1">
+              <FormField
+                control={sampleForm.control}
                 name="receivedDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required={false}>Date Received</FormLabel>
                     <FormControl>
-                      <DatePicker
+                      <DateInput
                         {...field}
                         buttonClassName="w-full"
                         toYear={new Date().getFullYear()}
@@ -149,7 +192,7 @@ export function SampleForm({
                   <FormItem>
                     <FormLabel required={false}>Collection Date</FormLabel>
                     <FormControl>
-                      <DatePicker
+                      <DateInput
                         {...field}
                         buttonClassName="w-full"
                         toYear={new Date().getFullYear()}
