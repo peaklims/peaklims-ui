@@ -67,6 +67,7 @@ export function DateInput({
         <Calendar
           mode="single"
           selected={value}
+          defaultMonth={value ?? new Date()}
           onSelect={onChange}
           initialFocus
           captionLayout="dropdown"
