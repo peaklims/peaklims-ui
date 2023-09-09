@@ -11,6 +11,7 @@ import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { useAddSample } from "../apis/add-sample";
 import { useDeleteSample } from "../apis/delete-sample";
+import { useDisposeSample } from "../apis/dispose-sample";
 import { SampleDto, SampleForCreationDto } from "../types/index";
 import { SampleForm } from "./sample-form";
 import { PatientSamples } from "./worklist/patient-samples";
@@ -42,7 +43,26 @@ export function ManageAccessionSamples({
     // });
     deleteSample({ sampleId: row.getValue("id") });
   };
-  const columns = createColumns(onDeleteAction);
+  const disposeSampleApi = useDisposeSample();
+  function disposeSample({ sampleId }: { sampleId: string }) {
+    if (patientId === undefined) {
+      Notification.error("Invalid patientId");
+      return;
+    }
+
+    disposeSampleApi.mutateAsync({ sampleId, patientId }).catch((e) => {
+      Notification.error("There was an error disposing the Sample");
+      console.error(e);
+    });
+  }
+  const onDisposeAction = (row: Row<SampleDto>) => {
+    // TODO are you sure modal
+    // openDeleteModal({
+    //   onConfirm: () => deleteSample(row.getValue()),
+    // });
+    disposeSample({ sampleId: row.getValue("id") });
+  };
+  const columns = createColumns(onDeleteAction, onDisposeAction);
 
   return (
     <div className="">

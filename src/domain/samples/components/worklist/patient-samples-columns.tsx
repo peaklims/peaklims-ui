@@ -11,17 +11,18 @@ import {
 import { cn } from "@/lib/utils";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef, Row } from "@tanstack/react-table";
-import { PencilIcon, Trash2Icon } from "lucide-react";
 import { DataTableColumnHeader } from "../../../../components/data-table/data-table-column-header";
 import { SampleDto, SampleStatus } from "../../types";
 import SampleStatusBadge from "../status-badge";
 
 type ColumnsWithDeleteCallback = ColumnDef<SampleDto> & {
   onDeleteAction?: (row: Row<SampleDto>) => void;
+  onDisposeAction?: (row: Row<SampleDto>) => void;
 };
 
 export const createColumns = (
-  onDeleteAction: (row: Row<SampleDto>) => void
+  onDeleteAction: (row: Row<SampleDto>) => void,
+  onDisposeAction: (row: Row<SampleDto>) => void
 ): ColumnsWithDeleteCallback[] => [
   {
     accessorKey: "id",
@@ -184,14 +185,24 @@ export const createColumns = (
                     alert(`Edit Sample ${row.getValue("id")}`);
                   }}
                 >
-                  <PencilIcon className="w-4 h-4" />
-                  <span className="pl-2">Edit Sample</span>
+                  <p>Edit Sample</p>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               {/* <DropdownMenuSeparator /> */}
               {/* <DropdownMenuLabel>Manage Sample</DropdownMenuLabel>
               <DropdownMenuSeparator /> */}
               <DropdownMenuGroup>
+                {row.getValue("status") !== "Disposed" && (
+                  <DropdownMenuItem
+                    asChild
+                    onClick={(e) => {
+                      onDisposeAction(row);
+                      e.stopPropagation();
+                    }}
+                  >
+                    <p>Dispose Sample</p>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem
                   asChild
                   onClick={(e) => {
@@ -199,18 +210,17 @@ export const createColumns = (
                     e.stopPropagation();
                   }}
                 >
-                  <div
+                  <p
                     className={cn(
-                      "hover:bg-rose-200 hover:text-rose-800 hover:outline-none",
-                      "focus:bg-rose-200 focus:text-rose-800 focus:outline-none",
+                      "hover:bg-rose-200 hover:text-rose-700 hover:outline-none",
+                      "focus:bg-rose-200 focus:text-rose-700 focus:outline-none",
                       "dark:border-slate-900 dark:bg-slate-800 dark:text-white dark:hover:bg-rose-800 dark:hover:text-rose-300 dark:hover:outline-none",
                       "dark:hover:shadow dark:shadow-rose-400 dark:hover:shadow-rose-300",
-                      "flex items-center justify-start space-x-2 w-full"
+                      "flex items-center justify-start space-x-2 w-full text-rose-500"
                     )}
                   >
-                    <Trash2Icon className="w-4 h-4" />
-                    <span className="pl-2">Delete Sample</span>
-                  </div>
+                    Delete Sample
+                  </p>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
