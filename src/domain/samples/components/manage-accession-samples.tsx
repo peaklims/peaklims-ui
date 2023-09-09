@@ -1,7 +1,11 @@
 import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { DialogTitle } from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Row } from "@tanstack/react-table";
 import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
