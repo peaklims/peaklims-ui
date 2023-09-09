@@ -8,6 +8,7 @@ export type SampleDto = {
   receivedDate: Date | undefined | null;
   collectionSite: string | undefined | null;
   containerId: string | undefined | null;
+  containerType: string | undefined | null;
   patientId: string;
 };
 

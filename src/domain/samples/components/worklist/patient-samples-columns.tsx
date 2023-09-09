@@ -32,6 +32,10 @@ export const createColumns = (
     header: "externalId",
   },
   {
+    accessorKey: "containerType",
+    header: "containerType",
+  },
+  {
     accessorKey: "collectionSite",
     header: "CollectionSite",
   },
@@ -76,7 +80,15 @@ export const createColumns = (
     ),
     cell: ({ row }) => {
       const type = row.getValue("type") as string;
-      return (type?.length ?? 0) > 0 ? <p>{type}</p> : "—";
+      const containerType = row.getValue("containerType") as string;
+      return (
+        <div className="flex flex-col">
+          <p>{(type?.length ?? 0) > 0 ? <p>{type}</p> : "—"}</p>
+          {containerType ? (
+            <p className="text-xs text-slate-700">{containerType}</p>
+          ) : null}
+        </div>
+      );
     },
   },
   {

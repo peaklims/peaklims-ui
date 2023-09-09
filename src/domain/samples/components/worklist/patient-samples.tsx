@@ -42,6 +42,7 @@ export function PatientSamples<TData, TValue>({
     collectionDate: false,
     status: false,
     externalId: false,
+    containerType: false,
   });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
