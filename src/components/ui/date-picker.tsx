@@ -5,12 +5,8 @@ import { Calendar as CalendarIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import { useState } from "react";
 
 export function DatePicker({
@@ -33,8 +29,8 @@ export function DatePicker({
   onChange ??= setDate;
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <Popover placement="bottom">
+      <PopoverTrigger>
         <Button
           variant={"outline"}
           disabled={disabled}

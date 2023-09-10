@@ -11,13 +11,9 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { caseInsensitiveEquals } from "@/utils/strings";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 
 export function Combobox({
   items,
@@ -55,8 +51,13 @@ export function Combobox({
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+    <Popover
+      placement="bottom"
+      isOpen={open}
+      onOpenChange={setOpen}
+      triggerScaleOnOpen={false}
+    >
+      <PopoverTrigger>
         <Button
           variant="outline"
           role="combobox"
@@ -77,10 +78,7 @@ export function Combobox({
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className={cn("w-48 p-0", dropdownProps?.className)}
-        asChild
-      >
+      <PopoverContent className={cn("w-48 p-0", dropdownProps?.className)}>
         <Command filter={filterByLabel}>
           <CommandInput placeholder="Search item..." />
           <CommandEmpty>{emptyMessage}</CommandEmpty>

@@ -1,14 +1,9 @@
 "use client";
 
-import { format, isValid, parse } from "date-fns";
-
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
+import { format, isValid, parse } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { IMaskInput } from "react-imask";
@@ -32,7 +27,7 @@ export function DateInput({
   onChange ??= setDate;
 
   return (
-    <Popover>
+    <Popover placement="bottom">
       <div className="relative flex items-center">
         <IMaskInput
           mask="0000-00-00"
@@ -56,7 +51,7 @@ export function DateInput({
           )}
           placeholder="Pick a date"
         />
-        <PopoverTrigger asChild>
+        <PopoverTrigger>
           <button className="absolute right-4">
             <CalendarIcon className="w-4 h-4 mr-2 hover:opacity-70" />
           </button>

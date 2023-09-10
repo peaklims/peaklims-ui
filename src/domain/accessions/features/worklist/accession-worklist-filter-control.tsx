@@ -12,14 +12,10 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { useAccessioningWorklistTableStore } from "@/domain/accessions/features/worklist/accession-worklist.store";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 
 interface FilterControl {
   title?: string;
@@ -37,8 +33,12 @@ export function FilterControl({ title, options }: FilterControl) {
   const [popoverIsOpen, setPopoverIsOpen] = React.useState(false);
 
   return (
-    <Popover open={popoverIsOpen} onOpenChange={setPopoverIsOpen}>
-      <PopoverTrigger asChild>
+    <Popover
+      placement="bottom"
+      isOpen={popoverIsOpen}
+      onOpenChange={setPopoverIsOpen}
+    >
+      <PopoverTrigger>
         <Button variant="outline" size="sm" className="border-dashed">
           <PlusCircleIcon className="w-4 h-4 mr-2" />
           {title}

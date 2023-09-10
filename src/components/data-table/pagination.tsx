@@ -1,12 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Pagination } from "@/types/apis";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import {
   ArrowLeftToLine,
   ArrowRightFromLine,
@@ -137,8 +133,13 @@ function PaginationCombobox({
     label: `Show ${selectedPageSize}`,
   }));
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+    <Popover
+      placement="bottom"
+      isOpen={open}
+      onOpenChange={setOpen}
+      triggerScaleOnOpen={false}
+    >
+      <PopoverTrigger>
         <Button
           variant="outline"
           role="combobox"
