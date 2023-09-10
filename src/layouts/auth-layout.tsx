@@ -1,3 +1,4 @@
+import logo from "@/assets/logo.svg";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -89,8 +90,9 @@ function MobileMenu() {
             <div className="flex items-center h-16 shrink-0">
               <img
                 className="w-auto h-8"
-                src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
-                alt="Your Company"
+                // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
+                src={logo}
+                alt="Peak LIMS"
               />
             </div>
             <nav className="flex flex-col flex-1">
@@ -192,8 +194,9 @@ function DesktopMenu({
         <div className="flex items-center h-16 shrink-0">
           <img
             className="w-auto h-8"
-            src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
-            alt="Your Company"
+            // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
+            src={logo}
+            alt="Peak LIMS"
           />
         </div>
         <nav className="flex flex-col flex-1">
