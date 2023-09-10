@@ -52,9 +52,9 @@ export function DateInput({
           placeholder="Pick a date"
         />
         <PopoverTrigger>
-          <button className="absolute right-4">
+          <div className="absolute right-4">
             <CalendarIcon className="w-4 h-4 mr-2 hover:opacity-70" />
-          </button>
+          </div>
         </PopoverTrigger>
       </div>
 

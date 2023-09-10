@@ -18,11 +18,13 @@ import SampleStatusBadge from "../status-badge";
 type ColumnsWithDeleteCallback = ColumnDef<SampleDto> & {
   onDeleteAction?: (row: Row<SampleDto>) => void;
   onDisposeAction?: (row: Row<SampleDto>) => void;
+  onEditAction?: (row: Row<SampleDto>) => void;
 };
 
 export const createColumns = (
   onDeleteAction: (row: Row<SampleDto>) => void,
-  onDisposeAction: (row: Row<SampleDto>) => void
+  onDisposeAction: (row: Row<SampleDto>) => void,
+  onEditAction: (row: Row<SampleDto>) => void
 ): ColumnsWithDeleteCallback[] => [
   {
     accessorKey: "id",
@@ -182,7 +184,8 @@ export const createColumns = (
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => {
-                    alert(`Edit Sample ${row.getValue("id")}`);
+                    // alert(`Edit Sample ${row.getValue("id")}`);
+                    onEditAction(row);
                   }}
                 >
                   <p>Edit Sample</p>

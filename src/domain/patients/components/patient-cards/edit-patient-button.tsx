@@ -1,11 +1,6 @@
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { usePatientCardContext } from "@/domain/patients/components/patient-cards";
+import { Modal, ModalContent, ModalHeader } from "@nextui-org/react";
 import { useUpdatePatient } from "../../apis/update-patient";
 import { PatientForUpdateDto } from "../../types/index";
 import { PatientForm } from "../patient-form";
@@ -28,42 +23,43 @@ export function EditPatientButton({ patientId }: { patientId: string }) {
   const updatePatientApi = useUpdatePatient();
   return (
     <>
-      <Dialog
-        open={addPatientDialogIsOpen}
+      <Modal
+        className="w-full max-w-3xl"
+        isOpen={addPatientDialogIsOpen}
         onOpenChange={setAddPatientDialogIsOpen}
       >
         <div className="relative inset-0 flex">
-          <DialogContent>
-            <div className="px-6 pb-2 -mt-8 overflow-y-auto grow gap-y-5">
-              <DialogTitle className="text-2xl font-semibold scroll-m-20">
-                Edit Patient
-              </DialogTitle>
-              <div className="pt-6">
-                <PatientForm
-                  patientId={patientId}
-                  onSubmit={(value) => {
-                    const dto = { ...value } as PatientForUpdateDto;
-                    updatePatientApi
-                      .mutateAsync({ data: dto, id: patientId })
-                      .then(() => {
-                        setAddPatientDialogIsOpen(false);
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
-                  }}
-                />
-              </div>
+          <ModalContent>
+            <ModalHeader className="text-2xl font-semibold scroll-m-20">
+              Edit Patient
+            </ModalHeader>
+            <div className="px-6 pb-6 overflow-y-auto grow">
+              <PatientForm
+                patientId={patientId}
+                onSubmit={(value) => {
+                  const dto = { ...value } as PatientForUpdateDto;
+                  updatePatientApi
+                    .mutateAsync({ data: dto, id: patientId })
+                    .then(() => {
+                      setAddPatientDialogIsOpen(false);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }}
+              />
             </div>
-          </DialogContent>
+          </ModalContent>
         </div>
-
-        <DialogTrigger asChild>
-          <Button size="sm" variant="outline" className="w-[48%] sm:w-full">
-            Edit
-          </Button>
-        </DialogTrigger>
-      </Dialog>
+      </Modal>
+      <Button
+        size="sm"
+        variant="outline"
+        className="w-[48%] sm:w-full"
+        onClick={() => setAddPatientDialogIsOpen(true)}
+      >
+        Edit
+      </Button>
     </>
   );
 }

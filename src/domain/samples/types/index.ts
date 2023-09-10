@@ -23,4 +23,14 @@ export type SampleForCreationDto = {
   patientId: string;
 };
 
+export type SampleForUpdateDto = {
+  type: string;
+  quantity?: number | undefined | null;
+  externalId?: string | null;
+  collectionDate?: Date | null;
+  receivedDate?: Date | null;
+  collectionSite?: string | undefined | null;
+  containerId?: string | undefined | null;
+};
+
 export type SampleStatus = "Disposed" | "Received" | "Rejected";

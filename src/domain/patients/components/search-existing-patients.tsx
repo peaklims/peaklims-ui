@@ -113,7 +113,7 @@ function FilterForm({
       || accessions.AccessionNumber @=* "${filterInputValue}"`);
   };
   return (
-    <div className="flex pt-4 space-x-3">
+    <div className="flex space-x-3">
       <Form {...filterForm}>
         <form
           className="flex-1 space-y-3 md:space-y-0 md:space-x-3 md:flex md:items-end"

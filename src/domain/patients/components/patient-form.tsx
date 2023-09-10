@@ -94,7 +94,7 @@ export function PatientForm({
               <FormItem>
                 <FormLabel required={true}>First Name</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} autoFocus />
                 </FormControl>
                 <FormMessage />
               </FormItem>

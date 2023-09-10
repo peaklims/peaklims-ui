@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   SetAccessionPatient,
   useSetAccessionPatient,
 } from "@/domain/accessions/apis/set-accession-patient";
 import { usePatientCardContext } from "@/domain/patients/components/patient-cards";
-import { DialogTitle } from "@radix-ui/react-dialog";
+import { Modal, ModalContent, ModalHeader } from "@nextui-org/react";
 import { PlusCircleIcon } from "lucide-react";
 import { PatientForm } from "../patient-form";
 
@@ -27,48 +26,46 @@ export function AddPatientButton() {
   const setPatientApi = useSetAccessionPatient();
   return (
     <>
-      <div className="transition-opacity">
-        <Dialog
-          open={addPatientDialogIsOpen}
-          onOpenChange={setAddPatientDialogIsOpen}
-        >
-          <div className="relative inset-0 flex">
-            <DialogContent>
-              <div className="px-6 pb-2 -mt-8 overflow-y-auto grow gap-y-5">
-                <DialogTitle className="text-2xl font-semibold scroll-m-20">
-                  Add a Patient
-                </DialogTitle>
-                <div className="pt-6">
-                  <PatientForm
-                    onSubmit={(value) => {
-                      const dto = {
-                        accessionId,
-                        patientForCreation: {
-                          ...value,
-                        },
-                      } as SetAccessionPatient;
-                      setPatientApi
-                        .mutateAsync(dto)
-                        .then(() => {
-                          setAddPatientDialogIsOpen(false);
-                        })
-                        .catch((err) => {
-                          console.log(err);
-                        });
-                    }}
-                  />
-                </div>
-              </div>
-            </DialogContent>
+      <Modal
+        size="3xl"
+        isOpen={addPatientDialogIsOpen}
+        onOpenChange={setAddPatientDialogIsOpen}
+      >
+        <ModalContent>
+          <ModalHeader className="text-2xl font-semibold scroll-m-20">
+            Add a Patient
+          </ModalHeader>
+          <div className="px-6 pb-2 overflow-y-auto grow gap-y-5">
+            <div className="pt-6">
+              <PatientForm
+                onSubmit={(value) => {
+                  const dto = {
+                    accessionId,
+                    patientForCreation: {
+                      ...value,
+                    },
+                  } as SetAccessionPatient;
+                  setPatientApi
+                    .mutateAsync(dto)
+                    .then(() => {
+                      setAddPatientDialogIsOpen(false);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }}
+              />
+            </div>
           </div>
-
-          <DialogTrigger asChild>
-            <Button size="sm" variant="outline">
-              <PlusCircleIcon className="w-5 h-5" />
-            </Button>
-          </DialogTrigger>
-        </Dialog>
-      </div>
+        </ModalContent>
+      </Modal>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => setAddPatientDialogIsOpen(true)}
+      >
+        <PlusCircleIcon className="w-5 h-5" />
+      </Button>
     </>
   );
 }

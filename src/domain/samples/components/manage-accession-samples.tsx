@@ -2,12 +2,11 @@ import { ConfirmModal } from "@/components/confirm-modal";
 import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { useDisclosure } from "@nextui-org/react";
+  Modal,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
 import { Row } from "@tanstack/react-table";
 import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
@@ -68,7 +67,13 @@ export function ManageAccessionSamples({
     onDisposeModalOpen();
     setSampleIdToEdit(row.getValue("id"));
   };
-  const columns = createColumns(onDeleteAction, onDisposeAction);
+
+  const onEditAction = (row: Row<SampleDto>) => {
+    setSampleIdToEdit(row.getValue("id"));
+    alert(`Edit ${row.getValue("id")}`);
+  };
+
+  const columns = createColumns(onDeleteAction, onDisposeAction, onEditAction);
 
   const [sampleIdToEdit, setSampleIdToEdit] = useState<string | undefined>(
     undefined
@@ -133,46 +138,48 @@ export function AddSampleButton({
   const addSampleApi = useAddSample();
   return (
     <>
-      <div className="transition-opacity">
-        <Dialog open={sampleFormIsOpen} onOpenChange={setSampleFormIsOpen}>
-          <div className="relative inset-0 flex">
-            <DialogContent>
-              <div className="px-6 pb-2 -mt-8 overflow-y-auto grow gap-y-5">
-                <DialogTitle className="text-2xl font-semibold scroll-m-20">
-                  Add a Sample
-                </DialogTitle>
-                <div className="pt-6">
-                  <SampleForm
-                    onSubmit={(value) => {
-                      if (patientId === undefined) return;
+      <Modal
+        className="w-full max-w-3xl"
+        isOpen={sampleFormIsOpen}
+        onOpenChange={setSampleFormIsOpen}
+      >
+        <div className="relative inset-0 flex">
+          <ModalContent>
+            <ModalHeader className="text-2xl font-semibold scroll-m-20">
+              Add a Sample
+            </ModalHeader>
+            <div className="px-6 pb-2 overflow-y-auto grow gap-y-5">
+              <SampleForm
+                onSubmit={(value) => {
+                  if (patientId === undefined) return;
 
-                      const dto = {
-                        ...value,
-                        patientId: patientId,
-                      } as SampleForCreationDto;
-                      addSampleApi
-                        .mutateAsync({ data: dto })
-                        .then(() => {
-                          setSampleFormIsOpen(false);
-                        })
-                        .catch((err) => {
-                          Notification.error("Error adding sample");
-                          console.log(err);
-                        });
-                    }}
-                  />
-                </div>
-              </div>
-            </DialogContent>
-          </div>
-
-          <DialogTrigger asChild>
-            <Button size="sm" variant="outline" aria-description="Add a Sample">
-              <PlusCircleIcon className="w-5 h-5" />
-            </Button>
-          </DialogTrigger>
-        </Dialog>
-      </div>
+                  const dto = {
+                    ...value,
+                    patientId: patientId,
+                  } as SampleForCreationDto;
+                  addSampleApi
+                    .mutateAsync({ data: dto })
+                    .then(() => {
+                      setSampleFormIsOpen(false);
+                    })
+                    .catch((err) => {
+                      Notification.error("Error adding sample");
+                      console.log(err);
+                    });
+                }}
+              />
+            </div>
+          </ModalContent>
+        </div>
+      </Modal>
+      <Button
+        size="sm"
+        variant="outline"
+        aria-description="Add a Sample"
+        onClick={() => setSampleFormIsOpen(true)}
+      >
+        <PlusCircleIcon className="w-5 h-5" />
+      </Button>
     </>
   );
 }
