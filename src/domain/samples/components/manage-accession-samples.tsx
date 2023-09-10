@@ -1,3 +1,4 @@
+import { ConfirmModal } from "@/components/confirm-modal";
 import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
 import {
@@ -6,6 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useDisclosure } from "@nextui-org/react";
 import { Row } from "@tanstack/react-table";
 import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
@@ -55,14 +57,20 @@ export function ManageAccessionSamples({
       console.error(e);
     });
   }
+  const {
+    isOpen: disposeModalIsOpen,
+    onOpen: onDisposeModalOpen,
+    onOpenChange: onDisposeModalOpenChange,
+  } = useDisclosure();
   const onDisposeAction = (row: Row<SampleDto>) => {
-    // TODO are you sure modal
-    // openDeleteModal({
-    //   onConfirm: () => deleteSample(row.getValue()),
-    // });
-    disposeSample({ sampleId: row.getValue("id") });
+    onDisposeModalOpen();
+    setSampleIdToEdit(row.getValue("id"));
   };
   const columns = createColumns(onDeleteAction, onDisposeAction);
+
+  const [sampleIdToEdit, setSampleIdToEdit] = useState<string | undefined>(
+    undefined
+  );
 
   return (
     <div className="">
@@ -80,6 +88,21 @@ export function ManageAccessionSamples({
           isLoading={false}
         />
       </div>
+      <ConfirmModal
+        content={<p>Are you sure you want to dispose this sample?</p>}
+        labels={{
+          confirm: "Dispose",
+          cancel: "Cancel",
+        }}
+        confirmationType="danger"
+        onConfirm={() => {
+          disposeSample({ sampleId: sampleIdToEdit! });
+        }}
+        onCancel={() => {}}
+        isOpen={disposeModalIsOpen}
+        onOpenChange={onDisposeModalOpenChange}
+        title="Dispose Sample?"
+      />
     </div>
   );
 }
