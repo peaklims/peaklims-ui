@@ -38,12 +38,14 @@ export function ManageAccessionSamples({
       console.error(e);
     });
   }
+  const {
+    isOpen: deleteModalIsOpen,
+    onOpen: onDeleteModalOpen,
+    onOpenChange: onDeleteModalOpenChange,
+  } = useDisclosure();
   const onDeleteAction = (row: Row<SampleDto>) => {
-    // TODO are you sure modal
-    // openDeleteModal({
-    //   onConfirm: () => deleteSample(row.getValue()),
-    // });
-    deleteSample({ sampleId: row.getValue("id") });
+    onDeleteModalOpen();
+    setSampleIdToEdit(row.getValue("id"));
   };
   const disposeSampleApi = useDisposeSample();
   function disposeSample({ sampleId }: { sampleId: string }) {
@@ -102,6 +104,21 @@ export function ManageAccessionSamples({
         isOpen={disposeModalIsOpen}
         onOpenChange={onDisposeModalOpenChange}
         title="Dispose Sample?"
+      />
+      <ConfirmModal
+        content={<p>Are you sure you want to delete this sample?</p>}
+        labels={{
+          confirm: "Delete",
+          cancel: "Cancel",
+        }}
+        confirmationType="danger"
+        onConfirm={() => {
+          deleteSample({ sampleId: sampleIdToEdit! });
+        }}
+        onCancel={() => {}}
+        isOpen={deleteModalIsOpen}
+        onOpenChange={onDeleteModalOpenChange}
+        title="Delete Sample?"
       />
     </div>
   );
