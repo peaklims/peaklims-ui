@@ -84,10 +84,11 @@ function AccessionDetails({
   return (
     <>
       <Tabs
-        aria-label="Options"
+        aria-label="Accession Details"
         color="primary"
         variant="underlined"
         classNames={{
+          tab: "py-7",
           panel:
             "shadow-lg rounded-lg px-6 py-4 h-[56rem] sm:h-[48rem] border-t-2 -mt-1.5",
         }}
