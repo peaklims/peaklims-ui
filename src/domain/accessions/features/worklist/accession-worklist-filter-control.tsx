@@ -36,7 +36,7 @@ export function FilterControl({ title, options }: FilterControl) {
     <Popover
       placement="bottom"
       isOpen={popoverIsOpen}
-      onOpenChange={setPopoverIsOpen}
+      onOpenChange={(open) => setPopoverIsOpen(open)}
     >
       <PopoverTrigger>
         <Button variant="outline" size="sm" className="border-dashed">
@@ -77,7 +77,7 @@ export function FilterControl({ title, options }: FilterControl) {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[15rem] p-0" align="start">
+      <PopoverContent className="w-[15rem] p-0">
         <Command>
           <CommandInput placeholder={title} />
           <CommandList>

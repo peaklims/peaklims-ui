@@ -101,6 +101,8 @@ function FilterForm({
     },
   });
 
+  const filterInputValue = filterForm.watch("filterInputValue");
+
   const onSubmit = (data: z.infer<typeof filterFormSchema>) => {
     const filterInputValue = data.filterInputValue;
     if ((filterInputValue?.length ?? 0) <= 0) {
@@ -159,6 +161,7 @@ or accession insensitive contains */}
               type="submit"
               variant={"outline"}
               className="w-1/2 rounded-r-none md:w-auto text-emerald-500 hover:text-emerald-600"
+              disabled={(filterInputValue?.length ?? 0) <= 0}
             >
               <SearchIcon className="w-5 h-5 " />
             </Button>
