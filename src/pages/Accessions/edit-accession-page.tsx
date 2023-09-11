@@ -180,7 +180,7 @@ function AccessionDetails({
             </div>
           }
         >
-          <div className="h-[50rem] overflow-auto px-6 py-4 bg-rose-400">
+          <div className="h-full px-6 py-4 overflow-auto bg-rose-400">
             Change your panels and tests here.
           </div>
         </Tab>
@@ -193,7 +193,7 @@ function AccessionDetails({
             </div>
           }
         >
-          <div className="h-[50rem] overflow-auto px-6 py-4 bg-rose-500">
+          <div className="h-full px-6 py-4 overflow-auto bg-rose-500">
             Change your attachments here.
           </div>
         </Tab>
@@ -226,7 +226,7 @@ function AccessionDetails({
             </div>
           }
         >
-          <div className="h-[50rem] overflow-auto px-6 py-4 bg-rose-600">
+          <div className="h-full px-6 py-4 overflow-auto bg-rose-600">
             Change your comments here.
           </div>
         </Tab>
