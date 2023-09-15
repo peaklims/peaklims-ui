@@ -15,34 +15,28 @@ export const columns: ColumnDef<AccessionWorklistDto>[] = [
     header: "Id",
   },
   {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+  },
+  {
     accessorKey: "accessionNumber",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Accession Number" />
     ),
     cell: ({ row }) => {
       const accessionNumber = row.getValue("accessionNumber") as string;
-      // const accessionStatus = row.getValue("status");
-      return (
-        <div className="space-x-3">
-          <p className="inline-flex">{accessionNumber}</p>
-
-          {/* <AccessionStatusBadge
-            status={accessionStatus as AccessionStatus}
-            className="hidden sm:inline-flex"
-          /> */}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => {
       const accessionStatus = row.getValue("status");
       return (
-        <AccessionStatusBadge status={accessionStatus as AccessionStatus} />
+        <div className="flex space-x-3">
+          <p className="inline-flex">{accessionNumber}</p>
+
+          <AccessionStatusBadge
+            status={accessionStatus as AccessionStatus}
+            className="inline-flex"
+          />
+        </div>
       );
     },
   },

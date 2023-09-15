@@ -45,6 +45,7 @@ export function AccessionWorklist<TData, TValue>({
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     id: false,
+    status: false,
   });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
