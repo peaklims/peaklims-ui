@@ -9,9 +9,12 @@ import { AccessionOrganizationForm } from "@/domain/organizations/features/manag
 import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-accession-patient";
 import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { ManageAccessionSamples } from "@/domain/samples/components/manage-accession-samples";
+import { useGetOrderables } from "@/domain/test-orders/apis/get-orderables";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "@tanstack/react-router";
-import { Paperclip } from "lucide-react";
+import { motion } from "framer-motion";
+import { ChevronRightIcon, Paperclip } from "lucide-react";
+import { useState } from "react";
 import { Helmet } from "react-helmet";
 
 export function EditAccessionPage() {
@@ -81,6 +84,14 @@ function AccessionDetails({
   });
   const { data: orgs, isLoading: orgsAreLoading } =
     useGetAllOrganizationsForDropdown();
+  const { data: orderables } = useGetOrderables();
+  const [showPanelTestsId, setShowPanelTestsId] = useState<string | undefined>(
+    undefined
+  );
+  const detailSectionVariants = {
+    open: { opacity: 1, height: "100%" },
+    closed: { opacity: 0, height: "0%" },
+  };
   return (
     <>
       <Tabs
@@ -180,8 +191,113 @@ function AccessionDetails({
             </div>
           }
         >
-          <div className="h-full px-6 py-4 overflow-auto bg-rose-400">
-            Change your panels and tests here.
+          <div className="h-full px-6 py-4 space-y-4 overflow-auto">
+            <div className="space-y-2">
+              <h3 className="font-medium">Panels</h3>
+              {orderables &&
+                orderables?.panels?.map((panel) => {
+                  return (
+                    <div
+                      key={panel.id}
+                      className="flex px-4 py-4 border rounded-lg shadow-md"
+                    >
+                      <button
+                        className={"flex items-center h-full px-2 py-1 "}
+                        onClick={() =>
+                          setShowPanelTestsId(
+                            panel.id === showPanelTestsId ? undefined : panel.id
+                          )
+                        }
+                      >
+                        <motion.div
+                          initial={false}
+                          animate={{
+                            rotate: panel.id === showPanelTestsId ? 90 : 0,
+                          }}
+                        >
+                          <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
+                        </motion.div>
+                      </button>
+                      <div className="flex flex-col space-y-2">
+                        <p className="space-x-2 text-lg font-semibold tracking-tight">
+                          <span
+                            className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
+                          >
+                            {panel.panelCode}
+                          </span>
+                          <span className="">{panel.panelName}</span>
+                        </p>
+                        <div className="flex flex-col pl-8 space-y-3">
+                          {/* <div className="h-6">
+                            <button
+                              className={cn(
+                                "hidden w-auto min-w-0 py-1 font-medium group-hover:inline-flex hover:underline text-sky-500 hover:text-sky-600",
+                                panel.id === showPanelTestsId && "inline-flex"
+                              )}
+                              onClick={() =>
+                                setShowPanelTestsId(
+                                  panel.id === showPanelTestsId
+                                    ? undefined
+                                    : panel.id
+                                )
+                              }
+                            >
+                              {panel.id === showPanelTestsId
+                                ? `Hide Tests`
+                                : `Show Tests`}
+                            </button>
+                          </div> */}
+                          {panel.id === showPanelTestsId &&
+                            panel.tests?.map((test, k) => {
+                              return (
+                                <motion.div
+                                  key={k}
+                                  className="flex flex-col pl-2 space-y-2 border-indigo-600 border-l-3"
+                                  variants={detailSectionVariants}
+                                  initial="closed"
+                                  animate={
+                                    panel.id === showPanelTestsId
+                                      ? "open"
+                                      : "closed"
+                                  }
+                                >
+                                  <h5 className="text-base font-semibold tracking-tight">
+                                    <p className="block">{test.testName}</p>
+                                    <p className="block text-sm text-gray-400">
+                                      [{test.testCode}]
+                                    </p>
+                                  </h5>
+                                </motion.div>
+                              );
+                            })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="font-medium">Tests</h3>
+              {orderables &&
+                orderables?.tests?.map((test) => {
+                  return (
+                    <div
+                      key={test.id}
+                      className="flex flex-col px-4 py-4 space-y-2 border rounded-lg shadow-md"
+                    >
+                      <h4 className="space-x-2 text-lg font-semibold tracking-tight">
+                        <span
+                          className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
+                        >
+                          {test.testCode}
+                        </span>
+                        <span className="">{test.testName}</span>
+                      </h4>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         </Tab>
         <Tab

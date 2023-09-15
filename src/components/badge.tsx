@@ -22,7 +22,7 @@ const badgeVariants: Record<BadgeVariant, string> = {
   gray: "text-gray-600 bg-gray-50 ring-gray-500/10",
   yellow: "text-yellow-800 bg-yellow-50 ring-yellow-600/20",
   blue: "text-blue-700 bg-blue-50 ring-blue-700/10",
-  indigo: "text-indigo-700 bg-indigo-50 ring-indigo-700/10",
+  indigo: "text-indigo-600 bg-indigo-50 ring-indigo-600/10",
   sky: "text-sky-700 bg-sky-50 ring-sky-700/10",
   rose: "text-rose-700 bg-rose-50 ring-rose-700/10",
   pink: "text-pink-700 bg-pink-50 ring-pink-700/10",
