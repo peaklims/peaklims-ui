@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
 import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
 import {
@@ -52,7 +53,7 @@ export function EditAccessionPage() {
             {accession?.patient?.id ? (
               <>
                 <h2 className="text-3xl">Accession Details</h2>
-                <div className="pt-3">
+                <div className="pt-0">
                   <AccessionDetails
                     accessionId={accessionId}
                     organizationId={accession?.organizationId}
@@ -175,12 +176,7 @@ function AccessionDetails({
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-5 h-5"
               >
-                <g
-                  fill="none"
-                  stroke="currentColor"
-                  // strokeWidth="round"
-                  strokeWidth="4"
-                >
+                <g fill="none" stroke="currentColor" strokeWidth="4">
                   <rect width="30" height="36" x="9" y="8" rx="2" />
                   <path
                     strokeLinecap="round"
@@ -192,14 +188,17 @@ function AccessionDetails({
             </div>
           }
         >
-          <div className="w-[47%] h-full px-6 py-4 space-y-5 overflow-auto">
+          <div className="w-[47%] h-full space-y-2">
             <h3 className="text-xl font-semibold tracking-tight">
               Orderable Panels and Tests
             </h3>
-            <div className="h-full p-4 space-y-5 border rounded-lg">
-              <div className="space-y-2">
+
+            <Input placeholder="Search" />
+
+            <div className="h-full space-y-10 overflow-auto">
+              <div className="space-y-2  h-[38%]">
                 <h4 className="font-medium">Panels</h4>
-                <div className="space-y-2">
+                <div className="h-full p-4 space-y-2 overflow-auto bg-white border rounded-lg shadow">
                   {orderables &&
                     orderables?.panels?.map((panel) => {
                       return (
@@ -230,7 +229,7 @@ function AccessionDetails({
                                 >
                                   <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
                                 </motion.div>
-                                <h4 className="flex items-start space-x-2 text-lg font-semibold tracking-tight">
+                                <h4 className="flex items-start space-x-2 font-medium">
                                   <span
                                     className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
                                   >
@@ -268,9 +267,9 @@ function AccessionDetails({
                                     }
                                   >
                                     <div className="flex flex-col pl-2 space-y-2 border-indigo-600 border-l-3">
-                                      <h5 className="text-base font-semibold tracking-tight">
+                                      <h5 className="text-sm font-semibold tracking-tight">
                                         <p className="block">{test.testName}</p>
-                                        <p className="block text-sm text-gray-400">
+                                        <p className="block text-xs text-gray-400">
                                           [{test.testCode}]
                                         </p>
                                       </h5>
@@ -285,41 +284,43 @@ function AccessionDetails({
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="h-[38%] space-y-2">
                 <h4 className="font-medium">Tests</h4>
-                {orderables &&
-                  orderables?.tests?.map((test) => {
-                    return (
-                      <div
-                        key={test.id}
-                        className="flex flex-col px-3 py-3 space-y-2 border rounded-lg shadow-md"
-                      >
-                        <div className="flex items-center justify-between flex-1">
-                          <h4 className="flex items-start space-x-2 text-lg font-semibold tracking-tight">
-                            <span
-                              className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
-                            >
-                              {test.testCode}
-                            </span>
-                            <span className="hidden sm:inline-flex">
-                              {test.testName}
-                            </span>
-                          </h4>
+                <div className="h-full p-4 space-y-5 overflow-auto bg-white border rounded-lg shadow">
+                  {orderables &&
+                    orderables?.tests?.map((test) => {
+                      return (
+                        <div
+                          key={test.id}
+                          className="flex flex-col px-3 py-3 space-y-2 border rounded-lg shadow-md"
+                        >
+                          <div className="flex items-center justify-between flex-1">
+                            <h4 className="flex items-start space-x-2 font-medium">
+                              <span
+                                className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
+                              >
+                                {test.testCode}
+                              </span>
+                              <span className="hidden sm:inline-flex">
+                                {test.testName}
+                              </span>
+                            </h4>
 
-                          <Button
-                            className="max-w-[8rem] w-[48%] md:max-w-[5rem]"
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              alert(`do things to ${test.testName}`)
-                            }
-                          >
-                            Assign
-                          </Button>
+                            <Button
+                              className="max-w-[8rem] w-[48%] md:max-w-[5rem]"
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                alert(`do things to ${test.testName}`)
+                              }
+                            >
+                              Assign
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                </div>
               </div>
             </div>
           </div>
