@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
 import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
 import {
@@ -191,112 +192,135 @@ function AccessionDetails({
             </div>
           }
         >
-          <div className="h-full px-6 py-4 space-y-4 overflow-auto">
-            <div className="space-y-2">
-              <h3 className="font-medium">Panels</h3>
-              {orderables &&
-                orderables?.panels?.map((panel) => {
-                  return (
-                    <div
-                      key={panel.id}
-                      className="flex px-4 py-4 border rounded-lg shadow-md"
-                    >
-                      <button
-                        className={"flex items-center h-full px-2 py-1 "}
-                        onClick={() =>
-                          setShowPanelTestsId(
-                            panel.id === showPanelTestsId ? undefined : panel.id
-                          )
-                        }
-                      >
-                        <motion.div
-                          initial={false}
-                          animate={{
-                            rotate: panel.id === showPanelTestsId ? 90 : 0,
-                          }}
+          <div className="w-[47%] h-full px-6 py-4 space-y-5 overflow-auto">
+            <h3 className="text-xl font-semibold tracking-tight">
+              Orderable Panels and Tests
+            </h3>
+            <div className="h-full p-4 space-y-5 border rounded-lg">
+              <div className="space-y-2">
+                <h4 className="font-medium">Panels</h4>
+                <div className="space-y-2">
+                  {orderables &&
+                    orderables?.panels?.map((panel) => {
+                      return (
+                        <div
+                          key={panel.id}
+                          className="flex items-center py-3 pl-1 pr-3 border rounded-lg shadow-md"
                         >
-                          <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
-                        </motion.div>
-                      </button>
-                      <div className="flex flex-col space-y-2">
-                        <p className="space-x-2 text-lg font-semibold tracking-tight">
-                          <span
-                            className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
-                          >
-                            {panel.panelCode}
-                          </span>
-                          <span className="">{panel.panelName}</span>
-                        </p>
-                        <div className="flex flex-col pl-8 space-y-3">
-                          {/* <div className="h-6">
-                            <button
-                              className={cn(
-                                "hidden w-auto min-w-0 py-1 font-medium group-hover:inline-flex hover:underline text-sky-500 hover:text-sky-600",
-                                panel.id === showPanelTestsId && "inline-flex"
-                              )}
-                              onClick={() =>
-                                setShowPanelTestsId(
-                                  panel.id === showPanelTestsId
-                                    ? undefined
-                                    : panel.id
-                                )
-                              }
-                            >
-                              {panel.id === showPanelTestsId
-                                ? `Hide Tests`
-                                : `Show Tests`}
-                            </button>
-                          </div> */}
-                          {panel.id === showPanelTestsId &&
-                            panel.tests?.map((test, k) => {
-                              return (
-                                <motion.div
-                                  key={k}
-                                  className="flex flex-col pl-2 space-y-2 border-indigo-600 border-l-3"
-                                  variants={detailSectionVariants}
-                                  initial="closed"
-                                  animate={
+                          <div className="flex flex-col w-full">
+                            <div className="flex items-center justify-between w-full">
+                              <button
+                                className={
+                                  "flex items-center h-full px-2 py-1 space-x-2"
+                                }
+                                onClick={() =>
+                                  setShowPanelTestsId(
                                     panel.id === showPanelTestsId
-                                      ? "open"
-                                      : "closed"
-                                  }
+                                      ? undefined
+                                      : panel.id
+                                  )
+                                }
+                              >
+                                <motion.div
+                                  initial={false}
+                                  animate={{
+                                    rotate:
+                                      panel.id === showPanelTestsId ? 90 : 0,
+                                  }}
                                 >
-                                  <h5 className="text-base font-semibold tracking-tight">
-                                    <p className="block">{test.testName}</p>
-                                    <p className="block text-sm text-gray-400">
-                                      [{test.testCode}]
-                                    </p>
-                                  </h5>
+                                  <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
                                 </motion.div>
-                              );
-                            })}
+                                <h4 className="flex items-start space-x-2 text-lg font-semibold tracking-tight">
+                                  <span
+                                    className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
+                                  >
+                                    {panel.panelCode}
+                                  </span>
+                                  <span className="hidden sm:inline-flex">
+                                    {panel.panelName}
+                                  </span>
+                                </h4>
+                              </button>
+
+                              <Button
+                                className="max-w-[8rem] w-[48%] md:max-w-[5rem]"
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  alert(`do things to ${panel.panelName}`)
+                                }
+                              >
+                                Assign
+                              </Button>
+                            </div>
+                            {panel.id === showPanelTestsId &&
+                              panel.tests?.map((test, k) => {
+                                return (
+                                  <motion.div
+                                    className="flex flex-col pt-2 pl-12 space-y-3"
+                                    key={k}
+                                    variants={detailSectionVariants}
+                                    initial="closed"
+                                    animate={
+                                      panel.id === showPanelTestsId
+                                        ? "open"
+                                        : "closed"
+                                    }
+                                  >
+                                    <div className="flex flex-col pl-2 space-y-2 border-indigo-600 border-l-3">
+                                      <h5 className="text-base font-semibold tracking-tight">
+                                        <p className="block">{test.testName}</p>
+                                        <p className="block text-sm text-gray-400">
+                                          [{test.testCode}]
+                                        </p>
+                                      </h5>
+                                    </div>
+                                  </motion.div>
+                                );
+                              })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="font-medium">Tests</h4>
+                {orderables &&
+                  orderables?.tests?.map((test) => {
+                    return (
+                      <div
+                        key={test.id}
+                        className="flex flex-col px-3 py-3 space-y-2 border rounded-lg shadow-md"
+                      >
+                        <div className="flex items-center justify-between flex-1">
+                          <h4 className="flex items-start space-x-2 text-lg font-semibold tracking-tight">
+                            <span
+                              className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
+                            >
+                              {test.testCode}
+                            </span>
+                            <span className="hidden sm:inline-flex">
+                              {test.testName}
+                            </span>
+                          </h4>
+
+                          <Button
+                            className="max-w-[8rem] w-[48%] md:max-w-[5rem]"
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              alert(`do things to ${test.testName}`)
+                            }
+                          >
+                            Assign
+                          </Button>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="font-medium">Tests</h3>
-              {orderables &&
-                orderables?.tests?.map((test) => {
-                  return (
-                    <div
-                      key={test.id}
-                      className="flex flex-col px-4 py-4 space-y-2 border rounded-lg shadow-md"
-                    >
-                      <h4 className="space-x-2 text-lg font-semibold tracking-tight">
-                        <span
-                          className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
-                        >
-                          {test.testCode}
-                        </span>
-                        <span className="">{test.testName}</span>
-                      </h4>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+              </div>
             </div>
           </div>
         </Tab>
