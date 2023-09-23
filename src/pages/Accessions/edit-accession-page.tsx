@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
 import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
 import {
@@ -12,11 +10,10 @@ import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-
 import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { ManageAccessionSamples } from "@/domain/samples/components/manage-accession-samples";
 import { useGetOrderables } from "@/domain/test-orders/apis/get-orderables";
+import ManageAccessionTestOrders from "@/domain/test-orders/features/manage-accession-test-orders";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { ChevronRightIcon, Paperclip } from "lucide-react";
-import { useState } from "react";
+import { Paperclip } from "lucide-react";
 import { Helmet } from "react-helmet";
 
 export function EditAccessionPage() {
@@ -87,13 +84,6 @@ function AccessionDetails({
   const { data: orgs, isLoading: orgsAreLoading } =
     useGetAllOrganizationsForDropdown();
   const { data: orderables } = useGetOrderables();
-  const [showPanelTestsId, setShowPanelTestsId] = useState<string | undefined>(
-    undefined
-  );
-  const detailSectionVariants = {
-    open: { opacity: 1, height: "100%" },
-    closed: { opacity: 0, height: "0%" },
-  };
   return (
     <>
       <Tabs
@@ -188,142 +178,7 @@ function AccessionDetails({
             </div>
           }
         >
-          <div className="w-[47%] h-full space-y-2">
-            <h3 className="text-xl font-semibold tracking-tight">
-              Orderable Panels and Tests
-            </h3>
-
-            <Input placeholder="Search" />
-
-            <div className="h-full space-y-10 overflow-auto">
-              <div className="space-y-2  h-[38%]">
-                <h4 className="font-medium">Panels</h4>
-                <div className="h-full p-4 space-y-2 overflow-auto bg-white border rounded-lg shadow">
-                  {orderables &&
-                    orderables?.panels?.map((panel) => {
-                      return (
-                        <div
-                          key={panel.id}
-                          className="flex items-center py-3 pl-1 pr-3 border rounded-lg shadow-md"
-                        >
-                          <div className="flex flex-col w-full">
-                            <div className="flex items-center justify-between w-full">
-                              <button
-                                className={
-                                  "flex items-center h-full px-2 py-1 space-x-2"
-                                }
-                                onClick={() =>
-                                  setShowPanelTestsId(
-                                    panel.id === showPanelTestsId
-                                      ? undefined
-                                      : panel.id
-                                  )
-                                }
-                              >
-                                <motion.div
-                                  initial={false}
-                                  animate={{
-                                    rotate:
-                                      panel.id === showPanelTestsId ? 90 : 0,
-                                  }}
-                                >
-                                  <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
-                                </motion.div>
-                                <h4 className="flex items-start space-x-2 font-medium">
-                                  <span
-                                    className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
-                                  >
-                                    {panel.panelCode}
-                                  </span>
-                                  <span className="hidden sm:inline-flex">
-                                    {panel.panelName}
-                                  </span>
-                                </h4>
-                              </button>
-
-                              <Button
-                                className="max-w-[8rem] w-[48%] md:max-w-[5rem]"
-                                size="sm"
-                                variant="outline"
-                                onClick={() =>
-                                  alert(`do things to ${panel.panelName}`)
-                                }
-                              >
-                                Assign
-                              </Button>
-                            </div>
-                            {panel.id === showPanelTestsId &&
-                              panel.tests?.map((test, k) => {
-                                return (
-                                  <motion.div
-                                    className="flex flex-col pt-2 pl-12 space-y-3"
-                                    key={k}
-                                    variants={detailSectionVariants}
-                                    initial="closed"
-                                    animate={
-                                      panel.id === showPanelTestsId
-                                        ? "open"
-                                        : "closed"
-                                    }
-                                  >
-                                    <div className="flex flex-col pl-2 space-y-2 border-indigo-600 border-l-3">
-                                      <h5 className="text-sm font-semibold tracking-tight">
-                                        <p className="block">{test.testName}</p>
-                                        <p className="block text-xs text-gray-400">
-                                          [{test.testCode}]
-                                        </p>
-                                      </h5>
-                                    </div>
-                                  </motion.div>
-                                );
-                              })}
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
-
-              <div className="h-[38%] space-y-2">
-                <h4 className="font-medium">Tests</h4>
-                <div className="h-full p-4 space-y-5 overflow-auto bg-white border rounded-lg shadow">
-                  {orderables &&
-                    orderables?.tests?.map((test) => {
-                      return (
-                        <div
-                          key={test.id}
-                          className="flex flex-col px-3 py-3 space-y-2 border rounded-lg shadow-md"
-                        >
-                          <div className="flex items-center justify-between flex-1">
-                            <h4 className="flex items-start space-x-2 font-medium">
-                              <span
-                                className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
-                              >
-                                {test.testCode}
-                              </span>
-                              <span className="hidden sm:inline-flex">
-                                {test.testName}
-                              </span>
-                            </h4>
-
-                            <Button
-                              className="max-w-[8rem] w-[48%] md:max-w-[5rem]"
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                alert(`do things to ${test.testName}`)
-                              }
-                            >
-                              Assign
-                            </Button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
-            </div>
-          </div>
+          <ManageAccessionTestOrders orderables={orderables} />
         </Tab>
         <Tab
           key="attachments"
