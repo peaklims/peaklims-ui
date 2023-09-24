@@ -32,7 +32,7 @@ function OrdersPlaced({
   orderables: OrderablePanelsAndTestsDto | undefined;
 }) {
   return (
-    <div className="w-full h-full col-span-1 space-y-2">
+    <div className="w-full h-full col-span-1 space-y-4">
       <h3 className="text-xl font-semibold tracking-tight">Selected Orders</h3>
 
       <div className="p-4 space-y-10 overflow-auto bg-white border rounded-lg shadow ">
