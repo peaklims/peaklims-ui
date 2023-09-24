@@ -1,4 +1,4 @@
-interface OrderableTest {
+export interface OrderableTest {
   id: string;
   testCode: string;
   testName: string;
@@ -9,7 +9,7 @@ interface OrderableTest {
   status: string;
 }
 
-interface OrderablePanel {
+export interface OrderablePanel {
   id: string;
   panelCode: string;
   panelName: string;
@@ -19,7 +19,23 @@ interface OrderablePanel {
   tests: OrderableTest[];
 }
 
-interface OrderablePanelsAndTestsDto {
+export interface OrderablePanelsAndTestsDto {
   panels: OrderablePanel[];
   tests: OrderableTest[];
 }
+
+export interface TestOrderForCreationDto {
+  testId?: string;
+  panelId?: string;
+}
+
+export type TestOrderDto = {
+  id: string;
+  status: string;
+  dueDate?: Date | null;
+  tatSnapshot?: number;
+  cancellationReason?: string;
+  cancellationComments?: string;
+  panelId?: string;
+  testId?: string;
+};

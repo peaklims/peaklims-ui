@@ -9,7 +9,7 @@ import { AccessionOrganizationForm } from "@/domain/organizations/features/manag
 import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-accession-patient";
 import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { ManageAccessionSamples } from "@/domain/samples/components/manage-accession-samples";
-import { useGetOrderables } from "@/domain/test-orders/apis/get-orderables";
+import { useGetOrderables } from "@/domain/test-orders/apis/get-orderables.api";
 import ManageAccessionTestOrders from "@/domain/test-orders/features/manage-accession-test-orders";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "@tanstack/react-router";
@@ -25,7 +25,7 @@ export function EditAccessionPage() {
   const accessionNumberTitle = accessionNumber ? ` - ${accessionNumber}` : "";
 
   return (
-    <div className="md:max-w-7xl">
+    <div className="">
       <Helmet>
         <title>Edit Accession {accessionNumberTitle}</title>
       </Helmet>
@@ -50,14 +50,12 @@ export function EditAccessionPage() {
             {accession?.patient?.id ? (
               <>
                 <h2 className="text-3xl">Accession Details</h2>
-                <div className="pt-0">
-                  <AccessionDetails
-                    accessionId={accessionId}
-                    organizationId={accession?.organizationId}
-                    accessionContacts={accession.accessionContacts}
-                    patientId={accession?.patient?.id}
-                  />
-                </div>
+                <AccessionDetails
+                  accessionId={accessionId}
+                  organizationId={accession?.organizationId}
+                  accessionContacts={accession.accessionContacts}
+                  patientId={accession?.patient?.id}
+                />
               </>
             ) : null}
           </div>
@@ -93,7 +91,7 @@ function AccessionDetails({
         classNames={{
           tab: "py-7",
           panel:
-            "shadow-lg rounded-lg px-6 py-4 h-[56rem] sm:h-[48rem] border-t-2 -mt-1.5",
+            "shadow-lg rounded-lg px-6 py-4 h-full min-h-[56-rem] min-h-[48rem] border-t-2 -mt-1.5", // h-[56rem] sm:h-[48rem]
         }}
         radius="lg"
       >
@@ -178,7 +176,12 @@ function AccessionDetails({
             </div>
           }
         >
-          <ManageAccessionTestOrders orderables={orderables} />
+          {accessionId && (
+            <ManageAccessionTestOrders
+              orderables={orderables}
+              accessionId={accessionId}
+            />
+          )}
         </Tab>
         <Tab
           key="attachments"
