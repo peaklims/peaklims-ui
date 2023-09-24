@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -51,6 +52,7 @@ function Orderables({
   accessionId: string;
 }) {
   const [liveSearchInput, setLiveSearchInput] = useState<string>("");
+  const [debouncedSearchInput] = useDebouncedValue(liveSearchInput, 400);
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLiveSearchInput(event.target.value);
@@ -72,8 +74,8 @@ function Orderables({
         const code =
           item.type === "panel" ? item.data.panelCode : item.data.testCode;
         return (
-          name.toLowerCase().includes(liveSearchInput.toLowerCase()) ||
-          code.toLowerCase().includes(liveSearchInput.toLowerCase())
+          name.toLowerCase().includes(debouncedSearchInput.toLowerCase()) ||
+          code.toLowerCase().includes(debouncedSearchInput.toLowerCase())
         );
       })
       .sort((a, b) => {
@@ -81,7 +83,7 @@ function Orderables({
         const nameB = b.type === "panel" ? b.data.panelName : b.data.testName;
         return nameA.localeCompare(nameB);
       });
-  }, [orderables, liveSearchInput]);
+  }, [orderables, debouncedSearchInput]);
 
   return (
     <div className="w-full h-full col-span-1 space-y-4">
