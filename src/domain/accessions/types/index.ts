@@ -38,6 +38,21 @@ export type EditableAccessionDto = {
       }
     | undefined;
   accessionContacts: AccessionContactDto[];
+  testOrders: TestOrderDto[];
+};
+
+export type TestOrderDto = {
+  id: string;
+  testId: string;
+  testName: string;
+  panelId: string;
+  panelName: string;
+  status: string;
+  dueDate: Date | null;
+  tat: number | null;
+  cancellationReason: string | null;
+  cancellationComments: string | null;
+  isPartOfPanel: boolean;
 };
 
 export type AccessionContactDto = {

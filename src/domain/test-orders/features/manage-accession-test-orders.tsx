@@ -1,10 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TestOrderDto } from "@/domain/accessions/types";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { useAddTestOrderForTest } from "../apis/add-test-order.api";
+import {
+  useAddTestOrderForPanel,
+  useAddTestOrderForTest,
+} from "../apis/add-test-order.api";
 import {
   OrderablePanel,
   OrderablePanelsAndTestsDto,
@@ -14,22 +18,26 @@ import {
 function ManageAccessionTestOrders({
   orderables,
   accessionId,
+  testOrders,
 }: {
   orderables: OrderablePanelsAndTestsDto | undefined;
   accessionId: string;
+  testOrders: TestOrderDto[] | undefined;
 }) {
   return (
     <div className="flex h-full space-x-12">
       <Orderables orderables={orderables} accessionId={accessionId} />
-      <OrdersPlaced orderables={orderables} />
+      <OrdersPlaced testOrders={testOrders} />
     </div>
   );
 }
 
 function OrdersPlaced({
-  orderables,
+  testOrders,
+  accessionId,
 }: {
-  orderables: OrderablePanelsAndTestsDto | undefined;
+  testOrders: TestOrderDto[] | undefined;
+  accessionId: string;
 }) {
   return (
     <div className="w-full h-full col-span-1 space-y-4">

@@ -3,6 +3,7 @@ import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
 import {
   AccessionContactDto,
   AccessionStatus,
+  TestOrderDto,
 } from "@/domain/accessions/types";
 import { useGetAllOrganizationsForDropdown } from "@/domain/organizations/apis/get-all-organizations";
 import { AccessionOrganizationForm } from "@/domain/organizations/features/manage-accession-org";
@@ -55,6 +56,7 @@ export function EditAccessionPage() {
                   organizationId={accession?.organizationId}
                   accessionContacts={accession.accessionContacts}
                   patientId={accession?.patient?.id}
+                  testOrders={accession.testOrders}
                 />
               </>
             ) : null}
@@ -70,11 +72,13 @@ function AccessionDetails({
   organizationId,
   accessionContacts,
   patientId,
+  testOrders,
 }: {
   accessionId: string | undefined;
   organizationId: string | undefined;
   accessionContacts: AccessionContactDto[] | undefined;
   patientId: string | undefined;
+  testOrders: TestOrderDto[] | undefined;
 }) {
   const { data: samples } = useGetPatientSamples({
     patientId: patientId ?? "",
@@ -180,6 +184,7 @@ function AccessionDetails({
             <ManageAccessionTestOrders
               orderables={orderables}
               accessionId={accessionId}
+              testOrders={testOrders}
             />
           )}
         </Tab>
