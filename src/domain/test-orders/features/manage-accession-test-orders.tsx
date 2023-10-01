@@ -107,7 +107,10 @@ function Orderables({
       <div className="h-full p-4 space-y-4 overflow-auto bg-white border rounded-lg shadow">
         {filteredItems.map((item) => {
           return item.type === "panel" ? (
-            <Panel panel={item.data as OrderablePanel} />
+            <Panel
+              panel={item.data as OrderablePanel}
+              accessionId={accessionId}
+            />
           ) : (
             <Test test={item.data as OrderableTest} accessionId={accessionId} />
           );
@@ -117,7 +120,14 @@ function Orderables({
   );
 }
 
-function Panel({ panel }: { panel: OrderablePanel }) {
+function Panel({
+  panel,
+  accessionId,
+}: {
+  panel: OrderablePanel;
+  accessionId: string;
+}) {
+  const orderPanelApi = useAddTestOrderForPanel();
   const [showPanelTestsId, setShowPanelTestsId] = useState<string | undefined>(
     undefined
   );
@@ -162,7 +172,12 @@ function Panel({ panel }: { panel: OrderablePanel }) {
             className="max-w-[8rem] w-[48%] md:max-w-[5rem]"
             size="sm"
             variant="outline"
-            onClick={() => alert(`do things to ${panel.panelName}`)}
+            onClick={() => {
+              orderPanelApi.mutate({
+                accessionId: accessionId,
+                panelId: panel.id,
+              });
+            }}
           >
             Assign
           </Button>
