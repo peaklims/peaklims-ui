@@ -2,6 +2,7 @@ import { ManageAttachments } from "@/domain/accession-attachments/components/man
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
 import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
 import {
+  AccessionAttachmentDto,
   AccessionContactDto,
   AccessionStatus,
   TestOrderDto,
@@ -58,6 +59,7 @@ export function EditAccessionPage() {
                   accessionContacts={accession.accessionContacts}
                   patientId={accession?.patient?.id}
                   testOrders={accession.testOrders}
+                  attachments={accession.attachments}
                 />
               </>
             ) : null}
@@ -74,12 +76,14 @@ function AccessionDetails({
   accessionContacts,
   patientId,
   testOrders,
+  attachments,
 }: {
   accessionId: string | undefined;
   organizationId: string | undefined;
   accessionContacts: AccessionContactDto[] | undefined;
   patientId: string | undefined;
   testOrders: TestOrderDto[] | undefined;
+  attachments: AccessionAttachmentDto[] | undefined;
 }) {
   const { data: samples } = useGetPatientSamples({
     patientId: patientId ?? "",
@@ -199,7 +203,12 @@ function AccessionDetails({
           }
         >
           <div className="h-full px-6 py-4 overflow-auto">
-            {accessionId && <ManageAttachments accessionId={accessionId} />}
+            {accessionId && attachments && (
+              <ManageAttachments
+                accessionId={accessionId}
+                attachments={attachments}
+              />
+            )}
           </div>
         </Tab>
         <Tab

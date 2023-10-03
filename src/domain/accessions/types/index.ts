@@ -39,6 +39,15 @@ export type EditableAccessionDto = {
     | undefined;
   accessionContacts: AccessionContactDto[];
   testOrders: TestOrderDto[];
+  attachments: AccessionAttachmentDto[];
+};
+
+export type AccessionAttachmentDto = {
+  id: string;
+  type?: string | null;
+  filename: string;
+  comments?: string | null;
+  preSignedUrl: string;
 };
 
 export type TestOrderDto = {
