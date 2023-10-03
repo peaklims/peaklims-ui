@@ -82,11 +82,12 @@ export function ManageAttachments({
           }}
         />
       </div>
-      {attachments && (
+
+      <h3 className="pt-4 text-xl font-semibold tracking-tight">
+        Uploaded Attachments
+      </h3>
+      {attachments && attachments.length > 0 ? (
         <div className="pt-4">
-          <h3 className="text-xl font-semibold tracking-tight">
-            Uploaded Attachments
-          </h3>
           <div className="grid grid-cols-1 gap-4 pt-4">
             {attachments.map((attachment) => {
               const isImage = /\.(jpg|jpeg|png)$/i.test(attachment.filename);
@@ -100,10 +101,10 @@ export function ManageAttachments({
                     <img
                       src={attachment.preSignedUrl}
                       alt={attachment.filename}
-                      className="object-cover w-20 h-20 rounded-lg"
+                      className="w-20 h-20 rounded-lg aspect-square"
                     />
                   ) : (
-                    <div className="flex items-center justify-center w-20 h-20 border border-gray-300 rounded-lg shadow bg-gray-200/60">
+                    <div className="flex items-center justify-center w-20 h-20 border border-gray-300 rounded-lg shadow aspect-square bg-gray-200/60">
                       <FileIcon className="w-8 h-8" />
                     </div>
                   )}
@@ -143,6 +144,8 @@ export function ManageAttachments({
             })}
           </div>
         </div>
+      ) : (
+        <p className="pt-4">No attachments uploaded yet.</p>
       )}
     </div>
   );
