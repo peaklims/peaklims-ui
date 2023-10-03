@@ -1,3 +1,4 @@
+import { ManageAttachments } from "@/domain/accession-attachments/components/manage-attachemnts";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
 import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
 import {
@@ -197,8 +198,8 @@ function AccessionDetails({
             </div>
           }
         >
-          <div className="h-full px-6 py-4 overflow-auto bg-rose-500">
-            Change your attachments here.
+          <div className="h-full px-6 py-4 overflow-auto">
+            <ManageAttachments />
           </div>
         </Tab>
         <Tab
