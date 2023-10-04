@@ -5,8 +5,9 @@ import {
   type FileState,
 } from "@/components/file-upload/multi-file-dropzone";
 import { AccessionAttachmentDto } from "@/domain/accessions/types";
-import { ExternalLink, FileIcon } from "lucide-react";
+import { ExternalLink, FileIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
+import { useDeleteAccessionAttachment } from "../apis/delete-attachment";
 import { useUploadAccessionAttachments } from "../apis/upload-attachment";
 
 export function ManageAttachments({
@@ -17,7 +18,7 @@ export function ManageAttachments({
   attachments: AccessionAttachmentDto[];
 }) {
   const [fileStates, setFileStates] = useState<FileState[]>([]);
-  // const attachmentUploader = useUploadAccessionAttachment();
+  const attachmentDeleter = useDeleteAccessionAttachment();
   const multiAttachmentUploader = useUploadAccessionAttachments();
 
   function updateFileProgress(key: string, progress: FileState["progress"]) {
@@ -26,14 +27,16 @@ export function ManageAttachments({
         fileState.key === key ? { ...fileState, progress } : fileState
       );
 
-      setTimeout(() => {
-        setFileStates((fileStates) =>
-          fileStates.filter((fileState) => fileState.progress !== "COMPLETE")
-        );
-      }, 2000);
-
       return updatedStates;
     });
+  }
+
+  function removeCompletedUploads() {
+    setTimeout(() => {
+      setFileStates((fileStates) =>
+        fileStates.filter((fileState) => fileState.progress !== "COMPLETE")
+      );
+    }, 2000);
   }
 
   return (
@@ -68,15 +71,15 @@ export function ManageAttachments({
                 },
               },
               {
-                onSuccess: () => {
-                  addedFiles.forEach((addedFileState) => {
-                    updateFileProgress(addedFileState.key, "COMPLETE");
+                onSuccess: (results) => {
+                  results.forEach((result, index) => {
+                    if (result.status === "fulfilled") {
+                      updateFileProgress(addedFiles[index].key, "COMPLETE");
+                    } else if (result.status === "rejected") {
+                      updateFileProgress(addedFiles[index].key, "ERROR");
+                    }
                   });
-                },
-                onError: () => {
-                  addedFiles.forEach((addedFileState) => {
-                    updateFileProgress(addedFileState.key, "ERROR");
-                  });
+                  removeCompletedUploads();
                 },
               }
             );
@@ -113,7 +116,7 @@ export function ManageAttachments({
                     <div className="flex flex-1 text-lg font-medium">
                       {attachment.filename}
                     </div>
-                    <div className="pr-2 transition-all duration-200 opacity-0 group-hover:opacity-100">
+                    <div className="flex items-center pr-2 space-x-3 transition-all duration-200 opacity-0 group-hover:opacity-100">
                       <a
                         href={attachment.preSignedUrl}
                         target="_blank"
@@ -121,6 +124,18 @@ export function ManageAttachments({
                       >
                         <ExternalLink className="w-5 h-5 transition-colors duration-200 hover:text-sky-600" />
                       </a>
+
+                      <button
+                        className="flex items-center justify-center transition-colors duration-200 rounded-lg shadow aspect-square hover:text-rose-700 hover:outline-none"
+                        onClick={() => {
+                          attachmentDeleter.mutate({
+                            accessionId: accessionId,
+                            attachmentId: attachment.id,
+                          });
+                        }}
+                      >
+                        <Trash2Icon className="w-5 h-5" />
+                      </button>
                     </div>
                   </div>
                   {attachment.type && (

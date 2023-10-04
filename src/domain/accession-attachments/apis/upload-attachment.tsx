@@ -44,7 +44,7 @@ export const useUploadAccessionAttachment = () => {
       onMutate: (variables) => {
         return { accessionId: variables.accessionId };
       },
-      onSuccess: (_, __, context: MutationContext | undefined) => {
+      onSettled: (_, __, context: MutationContext | undefined) => {
         if (context) {
           queryClient.invalidateQueries(AccessionKeys.lists());
           queryClient.invalidateQueries(
@@ -76,13 +76,13 @@ export const useUploadAccessionAttachments = () => {
           params.onUploadProgress
         )
       );
-      return Promise.all(promises);
+      return Promise.allSettled(promises);
     },
     {
       onMutate: (variables) => {
         return { accessionId: variables.accessionId };
       },
-      onSuccess: (_, __, context: MutationContext | undefined) => {
+      onSettled: (_, __, context: MutationContext | undefined) => {
         if (context) {
           queryClient.invalidateQueries(AccessionKeys.lists());
           queryClient.invalidateQueries(

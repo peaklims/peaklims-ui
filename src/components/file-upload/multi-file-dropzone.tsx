@@ -9,6 +9,7 @@ import {
   LucideFileWarning,
   Trash2Icon,
   UploadCloudIcon,
+  XIcon,
 } from "lucide-react";
 import * as React from "react";
 import { useDropzone, type DropzoneOptions } from "react-dropzone";
@@ -19,7 +20,7 @@ const variants = {
   disabled:
     "bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700 dark:border-gray-600",
   accept: "border border-blue-500 bg-blue-500 bg-opacity-10",
-  reject: "border border-red-700 bg-red-700 bg-opacity-10",
+  reject: "border border-rose-700 bg-rose-700 bg-opacity-10",
 };
 
 export type FileState = {
@@ -149,7 +150,7 @@ export const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
               </div>
             </div>
 
-            <div className="mt-1 text-xs text-red-500">
+            <div className="mt-1 text-xs text-rose-500">
               {customError ?? errorMessage}
             </div>
           </div>
@@ -159,10 +160,17 @@ export const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
             {value?.map(({ file, progress }, i) => (
               <div
                 key={i}
-                className="flex flex-col justify-center w-full h-16 max-w-md col-span-1 px-4 py-2 border border-gray-300 rounded"
+                className="flex flex-col justify-center w-full h-16 max-w-md col-span-1 px-4 py-2 border border-gray-300 rounded group"
               >
                 <div className="flex items-center gap-2 text-gray-500 dark:text-white">
-                  <FileIcon size="30" className="shrink-0" />
+                  {progress === "ERROR" ? (
+                    <LucideFileWarning
+                      size="30"
+                      className="text-rose-600 shrink-0 dark:text-rose-400"
+                    />
+                  ) : (
+                    <FileIcon size="30" className="shrink-0" />
+                  )}
                   <div className="min-w-0 text-sm">
                     <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
                       {file.name}
@@ -185,7 +193,16 @@ export const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                         <Trash2Icon className="shrink-0" />
                       </button>
                     ) : progress === "ERROR" ? (
-                      <LucideFileWarning className="text-red-600 shrink-0 dark:text-red-400" />
+                      <button
+                        className="p-2"
+                        onClick={() => {
+                          void onChange?.(
+                            value.filter((_, index) => index !== i)
+                          );
+                        }}
+                      >
+                        <XIcon className="transition-all duration-200 text-rose-600 dark:text-rose-400 md:opacity-0 md:group-hover:opacity-100 hover:text-rose-400" />
+                      </button>
                     ) : progress !== "COMPLETE" ? (
                       <div>{Math.round(progress)}%</div>
                     ) : (
