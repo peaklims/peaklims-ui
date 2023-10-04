@@ -4,11 +4,13 @@ import {
   MultiFileDropzone,
   type FileState,
 } from "@/components/file-upload/multi-file-dropzone";
+import { AccessionKeys } from "@/domain/accessions/apis/accession.keys";
 import { AccessionAttachmentDto } from "@/domain/accessions/types";
+import { useQueryClient } from "@tanstack/react-query";
 import { ExternalLink, FileIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useDeleteAccessionAttachment } from "../apis/delete-attachment";
-import { useUploadAccessionAttachments } from "../apis/upload-attachment";
+import { useUploadAccessionAttachment } from "../apis/upload-attachment";
 
 export function ManageAttachments({
   accessionId,
@@ -19,7 +21,8 @@ export function ManageAttachments({
 }) {
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   const attachmentDeleter = useDeleteAccessionAttachment();
-  const multiAttachmentUploader = useUploadAccessionAttachments();
+  const attachmentUploader = useUploadAccessionAttachment();
+  const queryClient = useQueryClient();
 
   function updateFileProgress(key: string, progress: FileState["progress"]) {
     setFileStates((fileStates) => {
@@ -54,35 +57,40 @@ export function ManageAttachments({
               ...prevFileStates,
               ...addedFiles,
             ]);
+            await Promise.all(
+              addedFiles.map(async (addedFileState) => {
+                try {
+                  updateFileProgress(addedFileState.key, "PENDING");
 
-            multiAttachmentUploader.mutate(
-              {
-                accessionId: accessionId,
-                files: addedFiles.map((fileState) => fileState.file),
-                onUploadProgress: (progressEvent) => {
-                  addedFiles.forEach((addedFileState) => {
-                    const total =
-                      progressEvent.total || addedFileState.file.size;
-                    const progress = Math.round(
-                      (progressEvent.loaded * 100) / total
-                    );
-                    updateFileProgress(addedFileState.key, progress);
+                  await attachmentUploader.mutateAsync({
+                    accessionId: accessionId,
+                    file: addedFileState.file,
+                    skipQueryInvalidation: true,
+                    onUploadProgress: (progressEvent) => {
+                      const total =
+                        progressEvent.total || addedFileState.file.size;
+                      const progress = Math.round(
+                        (progressEvent.loaded * 100) / total
+                      );
+                      updateFileProgress(addedFileState.key, progress);
+                    },
                   });
-                },
-              },
-              {
-                onSuccess: (results) => {
-                  results.forEach((result, index) => {
-                    if (result.status === "fulfilled") {
-                      updateFileProgress(addedFiles[index].key, "COMPLETE");
-                    } else if (result.status === "rejected") {
-                      updateFileProgress(addedFiles[index].key, "ERROR");
-                    }
-                  });
-                  removeCompletedUploads();
-                },
-              }
+
+                  await new Promise((resolve) => setTimeout(resolve, 500));
+
+                  updateFileProgress(addedFileState.key, "COMPLETE");
+                } catch (err) {
+                  console.error(err);
+                  updateFileProgress(addedFileState.key, "ERROR");
+                }
+              })
             );
+            removeCompletedUploads();
+
+            // doing invalidation here because the batch api call isn't able to track
+            // progress independently as is and refactoring to it was taking too long
+            queryClient.invalidateQueries(AccessionKeys.lists());
+            queryClient.invalidateQueries(AccessionKeys.forEdit(accessionId));
           }}
         />
       </div>

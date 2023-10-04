@@ -34,6 +34,7 @@ export const useUploadAccessionAttachment = () => {
       accessionId: string;
       file: File;
       onUploadProgress?: (progressEvent: AxiosProgressEvent) => void;
+      skipQueryInvalidation?: boolean;
     }) =>
       uploadAccessionAttachment(
         params.accessionId,
@@ -42,10 +43,13 @@ export const useUploadAccessionAttachment = () => {
       ),
     {
       onMutate: (variables) => {
-        return { accessionId: variables.accessionId };
+        return {
+          accessionId: variables.accessionId,
+          skipQueryInvalidation: variables.skipQueryInvalidation,
+        };
       },
       onSettled: (_, __, context: MutationContext | undefined) => {
-        if (context) {
+        if (context && !context.skipQueryInvalidation) {
           queryClient.invalidateQueries(AccessionKeys.lists());
           queryClient.invalidateQueries(
             AccessionKeys.forEdit(context.accessionId)
@@ -58,8 +62,11 @@ export const useUploadAccessionAttachment = () => {
 
 type MutationContext = {
   accessionId: string;
+  skipQueryInvalidation?: boolean;
 };
 
+// **NOTE** this works as a single batch call for all the promises so
+// you can do a single invalidateQueries call, but the progress tracker breaks
 export const useUploadAccessionAttachments = () => {
   const queryClient = useQueryClient();
 
