@@ -1,5 +1,6 @@
+import { AccessionKeys } from "@/domain/accessions/apis/accession.keys";
 import { peakLimsApi } from "@/services/api-client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosProgressEvent, AxiosResponse } from "axios";
 
 export const uploadAccessionAttachment = async (
@@ -26,6 +27,8 @@ export const uploadAccessionAttachment = async (
 };
 
 export const useUploadAccessionAttachment = () => {
+  const queryClient = useQueryClient();
+
   return useMutation(
     (params: {
       accessionId: string;
@@ -36,6 +39,57 @@ export const useUploadAccessionAttachment = () => {
         params.accessionId,
         params.file,
         params.onUploadProgress
-      )
+      ),
+    {
+      onMutate: (variables) => {
+        return { accessionId: variables.accessionId };
+      },
+      onSuccess: (_, __, context: MutationContext | undefined) => {
+        if (context) {
+          queryClient.invalidateQueries(AccessionKeys.lists());
+          queryClient.invalidateQueries(
+            AccessionKeys.forEdit(context.accessionId)
+          );
+        }
+      },
+    }
+  );
+};
+
+type MutationContext = {
+  accessionId: string;
+};
+
+export const useUploadAccessionAttachments = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (params: {
+      accessionId: string;
+      files: File[];
+      onUploadProgress?: (progressEvent: AxiosProgressEvent) => void;
+    }) => {
+      const promises = params.files.map((file) =>
+        uploadAccessionAttachment(
+          params.accessionId,
+          file,
+          params.onUploadProgress
+        )
+      );
+      return Promise.all(promises);
+    },
+    {
+      onMutate: (variables) => {
+        return { accessionId: variables.accessionId };
+      },
+      onSuccess: (_, __, context: MutationContext | undefined) => {
+        if (context) {
+          queryClient.invalidateQueries(AccessionKeys.lists());
+          queryClient.invalidateQueries(
+            AccessionKeys.forEdit(context.accessionId)
+          );
+        }
+      },
+    }
   );
 };

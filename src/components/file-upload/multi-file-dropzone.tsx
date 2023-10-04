@@ -155,58 +155,60 @@ export const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
           </div>
 
           {/* Selected Files */}
-          {value?.map(({ file, progress }, i) => (
-            <div
-              key={i}
-              className="flex h-16 w-96 max-w-[100vw] flex-col justify-center rounded border border-gray-300 px-4 py-2"
-            >
-              <div className="flex items-center gap-2 text-gray-500 dark:text-white">
-                <FileIcon size="30" className="shrink-0" />
-                <div className="min-w-0 text-sm">
-                  <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
-                    {file.name}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+            {value?.map(({ file, progress }, i) => (
+              <div
+                key={i}
+                className="flex flex-col justify-center w-full h-16 max-w-md col-span-1 px-4 py-2 border border-gray-300 rounded"
+              >
+                <div className="flex items-center gap-2 text-gray-500 dark:text-white">
+                  <FileIcon size="30" className="shrink-0" />
+                  <div className="min-w-0 text-sm">
+                    <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+                      {file.name}
+                    </div>
+                    <div className="text-xs text-gray-400 dark:text-gray-400">
+                      {formatFileSize(file.size)}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-400 dark:text-gray-400">
-                    {formatFileSize(file.size)}
+                  <div className="grow" />
+                  <div className="flex justify-end w-12 text-xs">
+                    {progress === "PENDING" ? (
+                      <button
+                        className="p-1 transition-colors duration-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={() => {
+                          void onChange?.(
+                            value.filter((_, index) => index !== i)
+                          );
+                        }}
+                      >
+                        <Trash2Icon className="shrink-0" />
+                      </button>
+                    ) : progress === "ERROR" ? (
+                      <LucideFileWarning className="text-red-600 shrink-0 dark:text-red-400" />
+                    ) : progress !== "COMPLETE" ? (
+                      <div>{Math.round(progress)}%</div>
+                    ) : (
+                      <CheckCircleIcon className="text-green-600 shrink-0 dark:text-gray-400" />
+                    )}
                   </div>
                 </div>
-                <div className="grow" />
-                <div className="flex justify-end w-12 text-xs">
-                  {progress === "PENDING" ? (
-                    <button
-                      className="p-1 transition-colors duration-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => {
-                        void onChange?.(
-                          value.filter((_, index) => index !== i)
-                        );
-                      }}
-                    >
-                      <Trash2Icon className="shrink-0" />
-                    </button>
-                  ) : progress === "ERROR" ? (
-                    <LucideFileWarning className="text-red-600 shrink-0 dark:text-red-400" />
-                  ) : progress !== "COMPLETE" ? (
-                    <div>{Math.round(progress)}%</div>
-                  ) : (
-                    <CheckCircleIcon className="text-green-600 shrink-0 dark:text-gray-400" />
-                  )}
-                </div>
+                {/* Progress Bar */}
+                {typeof progress === "number" && (
+                  <div className="relative h-0">
+                    <div className="absolute w-full h-1 bg-gray-200 rounded-full top-1 overflow-clip dark:bg-gray-700">
+                      <div
+                        className="h-full transition-all duration-300 ease-in-out bg-gray-400 dark:bg-white"
+                        style={{
+                          width: progress ? `${progress}%` : "0%",
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
-              {/* Progress Bar */}
-              {typeof progress === "number" && (
-                <div className="relative h-0">
-                  <div className="absolute w-full h-1 bg-gray-200 rounded-full top-1 overflow-clip dark:bg-gray-700">
-                    <div
-                      className="h-full transition-all duration-300 ease-in-out bg-gray-400 dark:bg-white"
-                      style={{
-                        width: progress ? `${progress}%` : "0%",
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     );
