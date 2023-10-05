@@ -5,13 +5,31 @@ import {
   MultiFileDropzone,
   type FileState,
 } from "@/components/file-upload/multi-file-dropzone";
+import { Notification } from "@/components/notifications";
+import { Combobox } from "@/components/ui/combobox";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 import { AccessionKeys } from "@/domain/accessions/apis/accession.keys";
 import { AccessionAttachmentDto } from "@/domain/accessions/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Modal, ModalContent, ModalHeader } from "@nextui-org/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ExternalLink, FileIcon, Trash2Icon } from "lucide-react";
+import { EditIcon, ExternalLink, FileIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { AccessionAttachmentForUpdateDto } from "../accession-attachments.types";
 import { useDeleteAccessionAttachment } from "../apis/delete-attachment";
+import { useUpdateAccessionAttachment } from "../apis/update-attachment";
 import { useUploadAccessionAttachment } from "../apis/upload-attachment";
+import { attachmentTypesDropdown } from "../attachment-types.types";
 
 export function ManageAttachments({
   accessionId,
@@ -127,12 +145,12 @@ export function ManageAttachments({
                     <FileIcon className="w-8 h-8" />
                   </div>
                 )}
-                <div className="flex flex-col pl-6">
-                  <div className="flex">
+                <div className="flex flex-col w-full pl-6">
+                  <div className="flex w-full">
                     <div className="flex flex-1 text-lg font-medium">
                       {attachment.filename}
                     </div>
-                    <div className="flex items-center pr-2 space-x-3 transition-all duration-200 opacity-0 group-hover:opacity-100">
+                    <div className="flex items-center pr-2 space-x-5 transition-all duration-200 opacity-0 group-hover:opacity-100">
                       <a
                         href={attachment.preSignedUrl}
                         target="_blank"
@@ -140,6 +158,14 @@ export function ManageAttachments({
                       >
                         <ExternalLink className="w-5 h-5 transition-colors duration-200 hover:text-sky-600" />
                       </a>
+
+                      <EditAccessionAttachmentButton
+                        attachmentId={attachment.id}
+                        attachmentData={{
+                          type: attachment.type,
+                          comments: attachment.comments,
+                        }}
+                      />
 
                       <button
                         className="flex items-center justify-center transition-colors duration-200 rounded-lg shadow aspect-square hover:text-rose-700 hover:outline-none"
@@ -156,20 +182,15 @@ export function ManageAttachments({
                     </div>
                   </div>
                   {attachment.type && (
-                    <p className="pt-2 text-sm text-gray-500">
+                    <p className="pt-1 text-sm text-gray-500">
                       {attachment.type}
                     </p>
                   )}
-                  {/* {attachment.comments && ( */}
-                  <p className="pt-2 text-sm italic text-gray-700">
-                    {/* {attachment.comments} */}
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Obcaecati ipsa culpa dolor rem natus saepe asperiores,
-                    similique suscipit, adipisci distinctio neque deserunt
-                    voluptatibus architecto mollitia voluptas necessitatibus.
-                    Quibusdam, necessitatibus voluptas?
-                  </p>
-                  {/* )} */}
+                  {attachment.comments && (
+                    <p className="text-sm italic text-gray-700">
+                      {attachment.comments}
+                    </p>
+                  )}
                 </div>
               </div>
             );
@@ -203,5 +224,129 @@ export function ManageAttachments({
         title="Delete Attachment"
       />
     </div>
+  );
+}
+
+export type AccessionAttachmentForUpdateCard = {
+  type?: string;
+  comments?: string;
+};
+
+export function EditAccessionAttachmentButton({
+  attachmentId,
+  attachmentData,
+}: {
+  attachmentId: string;
+  attachmentData: AccessionAttachmentForUpdateCard;
+}) {
+  const [
+    updateAccessionAttachmentDialogIsOpen,
+    setUpdateAccessionAttachmentDialogIsOpen,
+  ] = useState(false);
+  const updateAccessionAttachmentApi = useUpdateAccessionAttachment();
+  return (
+    <>
+      <Modal
+        className="w-full max-w-3xl"
+        isOpen={updateAccessionAttachmentDialogIsOpen}
+        onOpenChange={setUpdateAccessionAttachmentDialogIsOpen}
+      >
+        <div className="relative inset-0 flex">
+          <ModalContent>
+            <ModalHeader className="text-2xl font-semibold scroll-m-20">
+              Edit Accession Attachment
+            </ModalHeader>
+            <div className="px-6 pb-6 overflow-y-auto grow">
+              <AccessionAttachmentForm
+                attachmentData={attachmentData}
+                onSubmit={(value) => {
+                  const dto = { ...value } as AccessionAttachmentForUpdateDto;
+                  updateAccessionAttachmentApi
+                    .mutateAsync({ data: dto, id: attachmentId })
+                    .then(() => {
+                      setUpdateAccessionAttachmentDialogIsOpen(false);
+                    })
+                    .catch((err) => {
+                      Notification.error("Error updating accession attachment");
+                      console.log(err);
+                    });
+                }}
+              />
+            </div>
+          </ModalContent>
+        </div>
+      </Modal>
+      <button
+        className="flex items-center justify-center transition-colors duration-200 rounded-lg shadow aspect-square hover:outline-none hover:text-slate-500"
+        onClick={() => setUpdateAccessionAttachmentDialogIsOpen(true)}
+      >
+        <EditIcon className="w-5 h-5" />
+      </button>
+    </>
+  );
+}
+
+const attachmentFormSchema = z.object({
+  comments: z.string().optional().nullable(),
+  type: z.string().optional().nullable(),
+});
+
+function AccessionAttachmentForm({
+  onSubmit,
+  attachmentData,
+}: {
+  onSubmit: (values: z.infer<typeof attachmentFormSchema>) => void;
+  attachmentData: AccessionAttachmentForUpdateCard;
+}) {
+  const attachmentForm = useForm<z.infer<typeof attachmentFormSchema>>({
+    resolver: zodResolver(attachmentFormSchema),
+    defaultValues: {
+      comments: attachmentData.comments,
+      type: attachmentData.type,
+    },
+  });
+
+  return (
+    <Form {...attachmentForm}>
+      <form
+        onSubmit={attachmentForm.handleSubmit(onSubmit)}
+        className="flex flex-col h-full"
+      >
+        <div className="flex-1 space-y-4">
+          <FormField
+            control={attachmentForm.control}
+            name="type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel required={false}>Type</FormLabel>
+                <FormControl>
+                  <Combobox items={attachmentTypesDropdown} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={attachmentForm.control}
+            name="comments"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel required={false}>Comments</FormLabel>
+                <FormControl>
+                  <Textarea {...field} rows={5} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="flex items-center justify-end pt-8">
+          <Button type="submit" color="primary">
+            Submit
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }
