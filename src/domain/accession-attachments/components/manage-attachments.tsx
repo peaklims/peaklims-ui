@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { AccessionKeys } from "@/domain/accessions/apis/accession.keys";
 import { AccessionAttachmentDto } from "@/domain/accessions/types";
@@ -65,7 +66,7 @@ export function ManageAttachments({
     useState(false);
   const [attachmentToDelete, setAttachmentToDelete] = useState<{
     id: string;
-    filename: string;
+    displayName: string;
   }>({});
 
   return (
@@ -148,7 +149,7 @@ export function ManageAttachments({
                 <div className="flex flex-col w-full pl-6">
                   <div className="flex w-full">
                     <div className="flex flex-1 text-lg font-medium">
-                      {attachment.filename}
+                      {attachment.displayName}
                     </div>
                     <div className="flex items-center pr-2 space-x-5 transition-all duration-200 opacity-0 group-hover:opacity-100">
                       <a
@@ -164,6 +165,7 @@ export function ManageAttachments({
                         attachmentData={{
                           type: attachment.type,
                           comments: attachment.comments,
+                          displayName: attachment.displayName,
                         }}
                       />
 
@@ -172,7 +174,7 @@ export function ManageAttachments({
                         onClick={() => {
                           setAttachmentToDelete({
                             id: attachment.id,
-                            filename: attachment.filename,
+                            displayName: attachment.displayName,
                           });
                           setDeleteAttachmentModalIsOpen(true);
                         }}
@@ -203,8 +205,8 @@ export function ManageAttachments({
       <ConfirmModal
         content={
           <p>
-            Are you sure you want to delete the '{attachmentToDelete.filename}'
-            attachment?
+            Are you sure you want to delete the '
+            {attachmentToDelete.displayName}' attachment?
           </p>
         }
         labels={{
@@ -230,6 +232,7 @@ export function ManageAttachments({
 export type AccessionAttachmentForUpdateCard = {
   type?: string;
   comments?: string;
+  displayName?: string;
 };
 
 export function EditAccessionAttachmentButton({
@@ -277,7 +280,7 @@ export function EditAccessionAttachmentButton({
         </div>
       </Modal>
       <button
-        className="flex items-center justify-center transition-colors duration-200 rounded-lg shadow aspect-square hover:outline-none hover:text-slate-500"
+        className="flex items-center justify-center transition-colors duration-200 rounded-lg shadow aspect-square hover:outline-none hover:text-slate-500 focus:border-none focus:outline-none"
         onClick={() => setUpdateAccessionAttachmentDialogIsOpen(true)}
       >
         <EditIcon className="w-5 h-5" />
@@ -287,6 +290,7 @@ export function EditAccessionAttachmentButton({
 }
 
 const attachmentFormSchema = z.object({
+  displayName: z.string(),
   comments: z.string().optional().nullable(),
   type: z.string().optional().nullable(),
 });
@@ -303,6 +307,7 @@ function AccessionAttachmentForm({
     defaultValues: {
       comments: attachmentData.comments,
       type: attachmentData.type,
+      displayName: attachmentData.displayName,
     },
   });
 
@@ -313,6 +318,19 @@ function AccessionAttachmentForm({
         className="flex flex-col h-full"
       >
         <div className="flex-1 space-y-4">
+          <FormField
+            control={attachmentForm.control}
+            name="displayName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel required={true}>Display Name</FormLabel>
+                <FormControl>
+                  <Input {...field} autoFocus />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={attachmentForm.control}
             name="type"

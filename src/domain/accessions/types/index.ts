@@ -47,6 +47,7 @@ export type AccessionAttachmentDto = {
   type?: string | null;
   filename: string;
   comments?: string | null;
+  displayName: string;
   preSignedUrl: string;
 };
 
