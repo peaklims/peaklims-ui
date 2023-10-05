@@ -1,5 +1,6 @@
 "use client";
 
+import { ConfirmModal } from "@/components/confirm-modal";
 import {
   MultiFileDropzone,
   type FileState,
@@ -41,6 +42,13 @@ export function ManageAttachments({
       );
     }, 2000);
   }
+
+  const [deleteAttachmentModalIsOpen, setDeleteAttachmentModalIsOpen] =
+    useState(false);
+  const [attachmentToDelete, setAttachmentToDelete] = useState<{
+    id: string;
+    filename: string;
+  }>({});
 
   return (
     <div>
@@ -136,10 +144,11 @@ export function ManageAttachments({
                       <button
                         className="flex items-center justify-center transition-colors duration-200 rounded-lg shadow aspect-square hover:text-rose-700 hover:outline-none"
                         onClick={() => {
-                          attachmentDeleter.mutate({
-                            accessionId: accessionId,
-                            attachmentId: attachment.id,
+                          setAttachmentToDelete({
+                            id: attachment.id,
+                            filename: attachment.filename,
                           });
+                          setDeleteAttachmentModalIsOpen(true);
                         }}
                       >
                         <Trash2Icon className="w-5 h-5" />
@@ -169,6 +178,30 @@ export function ManageAttachments({
       ) : (
         <p className="pt-4">No attachments uploaded yet.</p>
       )}
+
+      <ConfirmModal
+        content={
+          <p>
+            Are you sure you want to delete the '{attachmentToDelete.filename}'
+            attachment?
+          </p>
+        }
+        labels={{
+          confirm: "Delete",
+          cancel: "Cancel",
+        }}
+        confirmationType="danger"
+        onConfirm={() => {
+          attachmentDeleter.mutate({
+            accessionId: accessionId,
+            attachmentId: attachmentToDelete.id,
+          });
+        }}
+        onCancel={() => {}}
+        isOpen={deleteAttachmentModalIsOpen}
+        onOpenChange={setDeleteAttachmentModalIsOpen}
+        title="Delete Attachment"
+      />
     </div>
   );
 }
