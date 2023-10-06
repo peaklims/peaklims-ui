@@ -122,9 +122,6 @@ export function ManageAttachments({
         />
       </div>
 
-      <h3 className="pt-4 text-xl font-semibold tracking-tight">
-        Uploaded Attachments
-      </h3>
       {attachments && attachments.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 pt-4 overflow-y-auto max-h-[48rem]">
           {attachments.map((attachment) => {
@@ -198,9 +195,7 @@ export function ManageAttachments({
             );
           })}
         </div>
-      ) : (
-        <p className="pt-4">No attachments uploaded yet.</p>
-      )}
+      ) : null}
 
       <ConfirmModal
         content={
