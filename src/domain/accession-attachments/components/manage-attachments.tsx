@@ -133,11 +133,17 @@ export function ManageAttachments({
                 className="flex p-3 transition-shadow duration-300 border rounded-lg shadow-sm group"
               >
                 {isImage ? (
-                  <img
-                    src={attachment.preSignedUrl}
-                    alt={attachment.filename}
-                    className="w-20 h-20 rounded-lg aspect-square"
-                  />
+                  <a
+                    href={attachment.preSignedUrl}
+                    target="_blank"
+                    className="cursor-pointer"
+                  >
+                    <img
+                      src={attachment.preSignedUrl}
+                      alt={attachment.filename}
+                      className="w-20 h-20 rounded-lg aspect-square"
+                    />
+                  </a>
                 ) : (
                   <div className="flex items-center justify-center w-20 h-20 border border-gray-300 rounded-lg shadow aspect-square bg-gray-200/60">
                     <FileIcon className="w-8 h-8" />

@@ -1,6 +1,11 @@
 // import { generateSieveSortOrder } from "@/utils/sorting";
+import { AccessionKeys } from "@/domain/accessions/apis/accession.keys";
 import { peakLimsApi } from "@/services/api-client";
-import { UseMutationOptions, useMutation } from "@tanstack/react-query";
+import {
+  UseMutationOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { TestOrderDto, TestOrderForCreationDto } from "../types";
 
@@ -28,6 +33,8 @@ export function useAddTestOrder(
     MutationContext
   >
 ) {
+  const queryClient = useQueryClient();
+
   return useMutation<
     TestOrderDto,
     AxiosError,
@@ -40,27 +47,35 @@ export function useAddTestOrder(
     }: {
       accessionId: string;
       testOrderForCreation: TestOrderForCreationDto;
-    }) => {
-      return addTestOrder({ accessionId, testOrderForCreation });
-    },
+    }) => addTestOrder({ accessionId, testOrderForCreation }),
     {
       onMutate: (variables) => {
         // Make `data` available for cache key
         return { accessionId: variables.accessionId };
       },
-      // onSuccess: (_, __, context: MutationContext | undefined) => {
-      //   if (context) {
-      //     queryClient.invalidateQueries(
-      //       // TestOrderKeys.detail(context.testOrderId)
-      //     );
-      //   }
-      // },
+      onSuccess: (_, __, context: MutationContext | undefined) => {
+        if (context) {
+          queryClient.invalidateQueries(AccessionKeys.forEdits());
+        }
+      },
       ...options,
     }
   );
 }
 
-export function useAddTestOrderForPanel(
+const addPanelToAccession = async ({
+  accessionId,
+  panelId,
+}: {
+  accessionId: string;
+  panelId: string;
+}) => {
+  return await peakLimsApi
+    .post(`/panels/toAccession?accessionId=${accessionId}&panelId=${panelId}`)
+    .then((response) => response.data);
+};
+
+export function useAddPanelToAccession(
   options?: UseMutationOptions<
     TestOrderDto,
     AxiosError,
@@ -68,28 +83,25 @@ export function useAddTestOrderForPanel(
     MutationContext
   >
 ) {
+  const queryClient = useQueryClient();
+
   return useMutation<
     TestOrderDto,
     AxiosError,
     { accessionId: string; panelId: string },
     MutationContext
   >(
-    ({ accessionId, panelId }: { accessionId: string; panelId: string }) => {
-      const testOrderForCreation: TestOrderForCreationDto = { panelId };
-      return addTestOrder({ accessionId, testOrderForCreation });
-    },
+    ({ accessionId, panelId }: { accessionId: string; panelId: string }) =>
+      addPanelToAccession({ accessionId, panelId }),
     {
       onMutate: (variables) => {
-        // Make `data` available for cache key
         return { accessionId: variables.accessionId };
       },
-      // onSuccess: (_, __, context: MutationContext | undefined) => {
-      //   if (context) {
-      //     queryClient.invalidateQueries(
-      //       // TestOrderKeys.detail(context.testOrderId)
-      //     );
-      //   }
-      // },
+      onSuccess: (_, __, context: MutationContext | undefined) => {
+        if (context) {
+          queryClient.invalidateQueries(AccessionKeys.forEdits());
+        }
+      },
       ...options,
     }
   );
@@ -103,6 +115,8 @@ export function useAddTestOrderForTest(
     MutationContext
   >
 ) {
+  const queryClient = useQueryClient();
+
   return useMutation<
     TestOrderDto,
     AxiosError,
@@ -110,21 +124,18 @@ export function useAddTestOrderForTest(
     MutationContext
   >(
     ({ accessionId, testId }: { accessionId: string; testId: string }) => {
-      const testOrderForCreation: TestOrderForCreationDto = { testId };
+      const testOrderForCreation: TestOrderForCreationDto = { testId }; // Adjust if more fields are needed
       return addTestOrder({ accessionId, testOrderForCreation });
     },
     {
       onMutate: (variables) => {
-        // Make `data` available for cache key
         return { accessionId: variables.accessionId };
       },
-      // onSuccess: (_, __, context: MutationContext | undefined) => {
-      //   if (context) {
-      //     queryClient.invalidateQueries(
-      //       // TestOrderKeys.detail(context.testOrderId)
-      //     );
-      //   }
-      // },
+      onSuccess: (_, __, context: MutationContext | undefined) => {
+        if (context) {
+          queryClient.invalidateQueries(AccessionKeys.forEdits());
+        }
+      },
       ...options,
     }
   );

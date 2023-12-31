@@ -55,8 +55,15 @@ export type TestOrderDto = {
   id: string;
   testId: string;
   testName: string;
-  panelId: string;
-  panelName: string;
+  panel: {
+    id: string;
+    panelCode: string;
+    panelName: string;
+    type: string;
+    version: number;
+    panelOrderId: string;
+  };
+  testCode: string;
   status: string;
   dueDate: Date | null;
   tat: number | null;

@@ -13,7 +13,7 @@ import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-
 import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { ManageAccessionSamples } from "@/domain/samples/components/manage-accession-samples";
 import { useGetOrderables } from "@/domain/test-orders/apis/get-orderables.api";
-import ManageAccessionTestOrders from "@/domain/test-orders/features/manage-accession-test-orders";
+import { ManageAccessionTestOrders } from "@/domain/test-orders/features/manage-accession-test-orders";
 import { Tab, Tabs } from "@nextui-org/react";
 import { useParams } from "@tanstack/react-router";
 import { Paperclip } from "lucide-react";

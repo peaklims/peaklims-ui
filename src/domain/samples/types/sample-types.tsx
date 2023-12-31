@@ -4,11 +4,11 @@ export const sampleTypesDropdown = [
     label: "Blood",
   },
   {
-    value: "Urine",
-    label: "Urine",
+    value: "Sputum",
+    label: "Sputum",
   },
   {
-    value: "Saliva",
-    label: "Saliva",
+    value: "Data",
+    label: "Data",
   },
 ];

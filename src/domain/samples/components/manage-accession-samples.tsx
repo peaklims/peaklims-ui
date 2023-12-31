@@ -163,8 +163,10 @@ export function AddSampleButton({
                       setSampleFormIsOpen(false);
                     })
                     .catch((err) => {
-                      Notification.error("Error adding sample");
-                      console.log(err);
+                      const statusCode = err?.response?.status;
+                      if (statusCode != 422) {
+                        Notification.error(`Error adding sample`);
+                      }
                     });
                 }}
               />
