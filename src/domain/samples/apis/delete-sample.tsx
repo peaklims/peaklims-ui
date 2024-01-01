@@ -31,7 +31,8 @@ export function useDeleteSample(
     AxiosError,
     { sampleId: string; patientId: string },
     SampleMutationContext
-  >(({ sampleId }) => deleteSample({ sampleId }), {
+  >({
+    mutationFn: ({ sampleId }) => deleteSample({ sampleId }),
     onMutate: ({ sampleId, patientId }) => {
       return { sampleId, patientId };
     },

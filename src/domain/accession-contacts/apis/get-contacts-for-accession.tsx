@@ -13,11 +13,9 @@ export const getContactsForAnAccession = async (accessionId: string) => {
 export const useGetContactsForAnAccession = (
   accessionId: string | undefined
 ) => {
-  return useQuery(
-    AccessionContactKeys.byAccession(accessionId!),
-    () => getContactsForAnAccession(accessionId!),
-    {
-      enabled: accessionId !== null && accessionId !== undefined,
-    }
-  );
+  return useQuery({
+    queryKey: AccessionContactKeys.byAccession(accessionId!),
+    queryFn: () => getContactsForAnAccession(accessionId!),
+    enabled: accessionId !== null && accessionId !== undefined,
+  });
 };

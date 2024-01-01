@@ -57,7 +57,7 @@ const appRoute = new RootRoute({
                 },
               }}
             />
-            <ReactQueryDevtools position="top-right" />
+            <ReactQueryDevtools buttonPosition="top-right" />
           </div>
           <div className="block md:hidden">
             <TanStackRouterDevtools
@@ -69,15 +69,9 @@ const appRoute = new RootRoute({
                 },
               }}
             />
-            <ReactQueryDevtools
-              position="bottom-left"
-              toggleButtonProps={{
-                style: {
-                  marginLeft: "6rem",
-                  marginBottom: "1.5rem",
-                },
-              }}
-            />
+            <div className="mb-6 ml-24">
+              <ReactQueryDevtools buttonPosition="bottom-left" />
+            </div>
           </div>
         </div>
       </>

@@ -49,7 +49,8 @@ export function useSetAccessionPatient(
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation((data: SetAccessionPatient) => setAccessionPatient(data), {
+  return useMutation({
+    mutationFn: (data: SetAccessionPatient) => setAccessionPatient(data),
     onMutate: (data) => {
       // make `data` available for cache key
       return { data };

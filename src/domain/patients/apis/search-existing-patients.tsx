@@ -58,18 +58,17 @@ export const useExistingPatientSearch = ({
   });
   const hasArtificialDelay = delayInMs > 0;
 
-  return useQuery(
-    PatientKeys.searchExistingPatient(queryParams ?? ""),
-    () =>
+  return useQuery({
+    queryKey: PatientKeys.searchExistingPatient(queryParams ?? ""),
+
+    queryFn: () =>
       getExistingPatientSearch({
         queryString: queryParams,
         hasArtificialDelay,
         delayInMs,
       }),
-    {
-      enabled: filters !== undefined && (filters?.length ?? 0) > 0,
-    }
-  );
+    enabled: filters !== undefined && (filters?.length ?? 0) > 0,
+  });
 };
 
 // TODO: add tests

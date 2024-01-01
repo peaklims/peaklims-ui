@@ -11,11 +11,9 @@ export const getPatient = async (patientId: string) => {
 };
 
 export const useGetPatient = (patientId: string | undefined) => {
-  return useQuery(
-    PatientKeys.detail(patientId!),
-    () => getPatient(patientId!),
-    {
-      enabled: patientId !== null && patientId !== undefined,
-    }
-  );
+  return useQuery({
+    queryKey: PatientKeys.detail(patientId!),
+    queryFn: () => getPatient(patientId!),
+    enabled: patientId !== null && patientId !== undefined,
+  });
 };

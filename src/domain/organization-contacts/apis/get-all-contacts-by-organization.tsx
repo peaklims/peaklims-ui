@@ -11,12 +11,10 @@ export const getContactsByOrganization = async (organizationId: string) => {
 };
 
 export const useGetContactsByOrganization = (organizationId: string) => {
-  return useQuery(
-    OrganizationContactKeys.byOrg(organizationId),
-    () => getContactsByOrganization(organizationId),
-    {
-      enabled: (organizationId.length ?? 0) > 0,
-      cacheTime: 2 * 60 * 1000,
-    }
-  );
+  return useQuery({
+    queryKey: OrganizationContactKeys.byOrg(organizationId),
+    queryFn: () => getContactsByOrganization(organizationId),
+    enabled: (organizationId.length ?? 0) > 0,
+    gcTime: 2 * 60 * 1000,
+  });
 };

@@ -20,7 +20,8 @@ export function useAddAccession(
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation(() => addAccession(), {
+  return useMutation({
+    mutationFn: () => addAccession(),
     onSuccess: () => {
       queryClient.invalidateQueries(AccessionKeys.lists());
     },

@@ -18,22 +18,21 @@ export function useRemoveAccessionPatient(
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (accessionId: string) => removeAccessionPatient(accessionId),
-    {
-      onMutate: (accessionId) => {
-        // make `data` available for cache key
-        return { accessionId };
-      },
-      onSuccess: (_, __, context: MutationContext | undefined) => {
-        if (context) {
-          queryClient.invalidateQueries(AccessionKeys.lists());
-          queryClient.invalidateQueries(
-            AccessionKeys.forEdit(context.accessionId)
-          );
-        }
-      },
-      ...options,
-    }
-  );
+  return useMutation({
+    mutationFn: (accessionId: string) => removeAccessionPatient(accessionId),
+
+    onMutate: (accessionId) => {
+      // make `data` available for cache key
+      return { accessionId };
+    },
+    onSuccess: (_, __, context: MutationContext | undefined) => {
+      if (context) {
+        queryClient.invalidateQueries(AccessionKeys.lists());
+        queryClient.invalidateQueries(
+          AccessionKeys.forEdit(context.accessionId)
+        );
+      }
+    },
+    ...options,
+  });
 }

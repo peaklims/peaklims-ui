@@ -11,7 +11,10 @@ export const getAllOrganizations = async () => {
 };
 
 export const useGetAllOrganizations = () => {
-  return useQuery(OrganizationKeys.full(), () => getAllOrganizations(), {});
+  return useQuery({
+    queryKey: OrganizationKeys.full(),
+    queryFn: () => getAllOrganizations(),
+  });
 };
 
 export const getAllOrganizationsForDropdown = async () => {
@@ -28,9 +31,8 @@ export const getAllOrganizationsForDropdown = async () => {
 };
 
 export const useGetAllOrganizationsForDropdown = () => {
-  return useQuery(
-    OrganizationKeys.fullDropdown(),
-    () => getAllOrganizationsForDropdown(),
-    {}
-  );
+  return useQuery({
+    queryKey: OrganizationKeys.fullDropdown(),
+    queryFn: () => getAllOrganizationsForDropdown(),
+  });
 };

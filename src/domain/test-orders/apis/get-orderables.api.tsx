@@ -12,5 +12,8 @@ export const GetOrderables = async () => {
 };
 
 export const useGetOrderables = () => {
-  return useQuery(TestOrderKeys.orderables(), () => GetOrderables(), {});
+  return useQuery({
+    queryKey: TestOrderKeys.orderables(),
+    queryFn: () => GetOrderables(),
+  });
 };

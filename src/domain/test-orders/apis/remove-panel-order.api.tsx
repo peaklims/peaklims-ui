@@ -38,24 +38,22 @@ export function useRemovePanelOrder(
     AxiosError,
     { accessionId: string; panelOrderId: string },
     MutationContext
-  >(
-    ({
+  >({
+    mutationFn: ({
       accessionId,
       panelOrderId,
     }: {
       accessionId: string;
       panelOrderId: string;
     }) => removePanelOrder({ accessionId, panelOrderId }),
-    {
-      onMutate: (variables) => {
-        return { accessionId: variables.accessionId };
-      },
-      onSuccess: (_, __, context: MutationContext | undefined) => {
-        if (context) {
-          queryClient.invalidateQueries(AccessionKeys.forEdits());
-        }
-      },
-      ...options,
-    }
-  );
+    onMutate: (variables) => {
+      return { accessionId: variables.accessionId };
+    },
+    onSuccess: (_, __, context: MutationContext | undefined) => {
+      if (context) {
+        queryClient.invalidateQueries(AccessionKeys.forEdits());
+      }
+    },
+    ...options,
+  });
 }

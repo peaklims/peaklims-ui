@@ -11,7 +11,9 @@ export const getSample = async (sampleId: string) => {
 };
 
 export const useGetSample = (sampleId: string | undefined) => {
-  return useQuery(SampleKeys.detail(sampleId!), () => getSample(sampleId!), {
+  return useQuery({
+    queryKey: SampleKeys.detail(sampleId!),
+    queryFn: () => getSample(sampleId!),
     enabled: sampleId !== null && sampleId !== undefined,
   });
 };

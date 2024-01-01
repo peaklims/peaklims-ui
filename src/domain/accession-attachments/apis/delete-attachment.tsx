@@ -36,7 +36,9 @@ export function useDeleteAccessionAttachment(
     AxiosError,
     { attachmentId: string; accessionId: string },
     AccessionAttachmentMutationContext
-  >(({ attachmentId }) => deleteAccessionAttachment({ attachmentId }), {
+  >({
+    mutationFn: ({ attachmentId }) =>
+      deleteAccessionAttachment({ attachmentId }),
     onMutate: ({ attachmentId, accessionId }) => {
       return { attachmentId, accessionId };
     },

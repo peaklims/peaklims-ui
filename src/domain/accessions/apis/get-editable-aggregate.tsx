@@ -13,11 +13,9 @@ export const getAccessionForEdit = async (id: string) => {
 export const useGetAccessionForEdit = (
   accessionId: string | null | undefined
 ) => {
-  return useQuery(
-    AccessionKeys.forEdit(accessionId!),
-    () => getAccessionForEdit(accessionId!),
-    {
-      enabled: accessionId !== null && accessionId !== undefined,
-    }
-  );
+  return useQuery({
+    queryKey: AccessionKeys.forEdit(accessionId!),
+    queryFn: () => getAccessionForEdit(accessionId!),
+    enabled: accessionId !== null && accessionId !== undefined,
+  });
 };

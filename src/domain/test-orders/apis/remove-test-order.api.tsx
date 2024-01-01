@@ -33,29 +33,22 @@ export function useRemoveTestOrder(
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    unknown,
-    AxiosError,
-    { accessionId: string; testOrderId: string },
-    MutationContext
-  >(
-    ({
+  return useMutation({
+    mutationFn: ({
       accessionId,
       testOrderId,
     }: {
       accessionId: string;
       testOrderId: string;
     }) => removeTestOrder({ accessionId, testOrderId }),
-    {
-      onMutate: (variables) => {
-        return { accessionId: variables.accessionId };
-      },
-      onSuccess: (_, __, context: MutationContext | undefined) => {
-        if (context) {
-          queryClient.invalidateQueries(AccessionKeys.forEdits());
-        }
-      },
-      ...options,
-    }
-  );
+    onMutate: (variables) => {
+      return { accessionId: variables.accessionId };
+    },
+    onSuccess: (_, __, context: MutationContext | undefined) => {
+      if (context) {
+        queryClient.invalidateQueries(AccessionKeys.forEdits());
+      }
+    },
+    ...options,
+  });
 }

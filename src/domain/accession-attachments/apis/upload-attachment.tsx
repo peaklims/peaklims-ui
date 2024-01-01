@@ -29,8 +29,8 @@ export const uploadAccessionAttachment = async (
 export const useUploadAccessionAttachment = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (params: {
+  return useMutation({
+    mutationFn: (params: {
       accessionId: string;
       file: File;
       onUploadProgress?: (progressEvent: AxiosProgressEvent) => void;
@@ -41,23 +41,21 @@ export const useUploadAccessionAttachment = () => {
         params.file,
         params.onUploadProgress
       ),
-    {
-      onMutate: (variables) => {
-        return {
-          accessionId: variables.accessionId,
-          skipQueryInvalidation: variables.skipQueryInvalidation,
-        };
-      },
-      onSettled: (_, __, context: MutationContext | undefined) => {
-        if (context && !context.skipQueryInvalidation) {
-          queryClient.invalidateQueries(AccessionKeys.lists());
-          queryClient.invalidateQueries(
-            AccessionKeys.forEdit(context.accessionId)
-          );
-        }
-      },
-    }
-  );
+    onMutate: (variables) => {
+      return {
+        accessionId: variables.accessionId,
+        skipQueryInvalidation: variables.skipQueryInvalidation,
+      };
+    },
+    onSettled: (_, __, context: MutationContext | undefined) => {
+      if (context && !context.skipQueryInvalidation) {
+        queryClient.invalidateQueries(AccessionKeys.lists());
+        queryClient.invalidateQueries(
+          AccessionKeys.forEdit(context.accessionId)
+        );
+      }
+    },
+  });
 };
 
 type MutationContext = {

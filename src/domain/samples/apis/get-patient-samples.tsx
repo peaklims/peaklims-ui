@@ -15,11 +15,9 @@ export const getPatientSamples = async ({
 };
 
 export const useGetPatientSamples = ({ patientId }: { patientId: string }) => {
-  return useQuery(
-    SampleKeys.byPatient(patientId),
-    () => getPatientSamples({ patientId }),
-    {
-      enabled: (patientId?.length ?? 0) > 0,
-    }
-  );
+  return useQuery({
+    queryKey: SampleKeys.byPatient(patientId),
+    queryFn: () => getPatientSamples({ patientId }),
+    enabled: (patientId?.length ?? 0) > 0,
+  });
 };

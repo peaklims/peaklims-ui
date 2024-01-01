@@ -58,18 +58,16 @@ export const useAccessioningWorklist = ({
   });
   const hasArtificialDelay = delayInMs > 0;
 
-  return useQuery(
-    AccessionKeys.list(queryParams ?? ""),
-    () =>
+  return useQuery({
+    queryKey: AccessionKeys.list(queryParams ?? ""),
+    queryFn: () =>
       getAccessions({
         queryString: queryParams,
         hasArtificialDelay,
         delayInMs,
       }),
-    {
-      cacheTime: 1000 * 60 * 0.125,
-    }
-  );
+    gcTime: 1000 * 60 * 0.125,
+  });
 };
 
 // TODO: add tests

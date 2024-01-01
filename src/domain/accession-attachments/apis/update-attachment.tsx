@@ -27,15 +27,14 @@ export function useUpdateAccessionAttachment(
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    ({ id, data: updatedAccessionAttachment }: UpdateProps) =>
+  return useMutation({
+    mutationFn: ({ id, data: updatedAccessionAttachment }: UpdateProps) =>
       updateAccessionAttachment(id, updatedAccessionAttachment),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(AccessionKeys.forEdits());
-        // queryClient.invalidateQueries(AccessionAttachmentKeys.detail(patientId));
-      },
-      ...options,
-    }
-  );
+
+    onSuccess: () => {
+      queryClient.invalidateQueries(AccessionKeys.forEdits());
+      // queryClient.invalidateQueries(AccessionAttachmentKeys.detail(patientId));
+    },
+    ...options,
+  });
 }

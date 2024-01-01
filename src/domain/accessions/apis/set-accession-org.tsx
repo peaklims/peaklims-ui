@@ -39,8 +39,8 @@ export function useSetAccessionOrganization(
     AxiosError,
     { accessionId: string; organizationId: string },
     MutationContext
-  >(
-    ({
+  >({
+    mutationFn: ({
       accessionId,
       organizationId,
     }: {
@@ -49,20 +49,18 @@ export function useSetAccessionOrganization(
     }) => {
       return setAccessionOrganization({ accessionId, organizationId });
     },
-    {
-      onMutate: (variables) => {
-        // make `data` available for cache key
-        return { accessionId: variables.accessionId };
-      },
-      onSuccess: (_, __, context: MutationContext | undefined) => {
-        if (context) {
-          queryClient.invalidateQueries(AccessionKeys.lists());
-          queryClient.invalidateQueries(
-            AccessionKeys.forEdit(context.accessionId)
-          );
-        }
-      },
-      ...options,
-    }
-  );
+    onMutate: (variables) => {
+      // make `data` available for cache key
+      return { accessionId: variables.accessionId };
+    },
+    onSuccess: (_, __, context: MutationContext | undefined) => {
+      if (context) {
+        queryClient.invalidateQueries(AccessionKeys.lists());
+        queryClient.invalidateQueries(
+          AccessionKeys.forEdit(context.accessionId)
+        );
+      }
+    },
+    ...options,
+  });
 }

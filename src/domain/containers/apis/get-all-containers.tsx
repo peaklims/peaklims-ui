@@ -11,7 +11,10 @@ export const getAllContainers = async () => {
 };
 
 export const useGetAllContainers = () => {
-  return useQuery(ContainerKeys.full(), () => getAllContainers(), {});
+  return useQuery({
+    queryKey: ContainerKeys.full(),
+    queryFn: () => getAllContainers(),
+  });
 };
 
 export const getAllContainersForDropdown = async () => {
@@ -28,9 +31,8 @@ export const getAllContainersForDropdown = async () => {
 };
 
 export const useGetAllContainersForDropdown = () => {
-  return useQuery(
-    ContainerKeys.fullDropdown(),
-    () => getAllContainersForDropdown(),
-    {}
-  );
+  return useQuery({
+    queryKey: ContainerKeys.fullDropdown(),
+    queryFn: () => getAllContainersForDropdown(),
+  });
 };

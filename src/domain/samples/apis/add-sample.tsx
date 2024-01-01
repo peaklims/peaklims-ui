@@ -45,22 +45,18 @@ export function useAddSample(
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation<void, AxiosError, AddProps, SampleMutationContext>(
-    ({ data: sampleData }: AddProps) => addSample(sampleData),
-    {
-      onMutate: (variables) => {
-        return { patientId: variables.data.patientId };
-      },
-      onSuccess: (_, __, context: SampleMutationContext | undefined) => {
-        if (context) {
-          queryClient.invalidateQueries(SampleKeys.lists());
-          queryClient.invalidateQueries(AccessionKeys.forEdits());
-          queryClient.invalidateQueries(
-            SampleKeys.byPatient(context.patientId)
-          );
-        }
-      },
-      ...options,
-    }
-  );
+  return useMutation<void, AxiosError, AddProps, SampleMutationContext>({
+    mutationFn: ({ data: sampleData }: AddProps) => addSample(sampleData),
+    onMutate: (variables) => {
+      return { patientId: variables.data.patientId };
+    },
+    onSuccess: (_, __, context: SampleMutationContext | undefined) => {
+      if (context) {
+        queryClient.invalidateQueries(SampleKeys.lists());
+        queryClient.invalidateQueries(AccessionKeys.forEdits());
+        queryClient.invalidateQueries(SampleKeys.byPatient(context.patientId));
+      }
+    },
+    ...options,
+  });
 }

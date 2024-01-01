@@ -31,7 +31,8 @@ export function useDisposeSample(
     AxiosError,
     { sampleId: string; patientId: string },
     SampleMutationContext
-  >(({ sampleId }) => disposeSample({ sampleId }), {
+  >({
+    mutationFn: ({ sampleId }) => disposeSample({ sampleId }),
     onMutate: ({ sampleId, patientId }) => {
       return { sampleId, patientId };
     },

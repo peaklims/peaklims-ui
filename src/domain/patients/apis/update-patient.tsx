@@ -27,17 +27,15 @@ export function useUpdatePatient(
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    ({ id, data: updatedPatient }: UpdateProps) =>
+  return useMutation({
+    mutationFn: ({ id, data: updatedPatient }: UpdateProps) =>
       updatePatient(id, updatedPatient),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(PatientKeys.lists());
-        queryClient.invalidateQueries(AccessionKeys.forEdits());
-        queryClient.invalidateQueries(PatientKeys.details());
-        // queryClient.invalidateQueries(PatientKeys.detail(patientId));
-      },
-      ...options,
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries(PatientKeys.lists());
+      queryClient.invalidateQueries(AccessionKeys.forEdits());
+      queryClient.invalidateQueries(PatientKeys.details());
+      // queryClient.invalidateQueries(PatientKeys.detail(patientId));
+    },
+    ...options,
+  });
 }

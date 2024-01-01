@@ -41,8 +41,8 @@ export function useRemoveAccessionContact(
     AxiosError,
     { accessionId: string; accessionContactId: string },
     MutationContext
-  >(
-    ({
+  >({
+    mutationFn: ({
       accessionId,
       accessionContactId,
     }: {
@@ -51,23 +51,21 @@ export function useRemoveAccessionContact(
     }) => {
       return removeAccessionContact({ accessionId, accessionContactId });
     },
-    {
-      onMutate: (variables) => {
-        // Make `data` available for cache key
-        return { accessionId: variables.accessionId };
-      },
-      onSuccess: (_, __, context: MutationContext | undefined) => {
-        if (context) {
-          queryClient.invalidateQueries(AccessionKeys.lists());
-          queryClient.invalidateQueries(
-            AccessionKeys.forEdit(context.accessionId)
-          );
-          queryClient.invalidateQueries(
-            AccessionContactKeys.byAccession(context.accessionId)
-          );
-        }
-      },
-      ...options,
-    }
-  );
+    onMutate: (variables) => {
+      // Make `data` available for cache key
+      return { accessionId: variables.accessionId };
+    },
+    onSuccess: (_, __, context: MutationContext | undefined) => {
+      if (context) {
+        queryClient.invalidateQueries(AccessionKeys.lists());
+        queryClient.invalidateQueries(
+          AccessionKeys.forEdit(context.accessionId)
+        );
+        queryClient.invalidateQueries(
+          AccessionContactKeys.byAccession(context.accessionId)
+        );
+      }
+    },
+    ...options,
+  });
 }

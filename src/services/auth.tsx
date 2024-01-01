@@ -15,18 +15,16 @@ const fetchClaims = async (): Promise<ClaimsType[]> =>
   peakLimsBff.get("/user").then((res) => res.data);
 
 function useClaims() {
-  return useQuery(
-    claimsApiKeys.claims,
-    async () => {
+  return useQuery({
+    queryKey: claimsApiKeys.claims,
+    queryFn: async () => {
       const delay = new Promise((resolve) => setTimeout(resolve, 550));
       return Promise.all([fetchClaims(), delay]).then(
         ([claims]) => claims as ClaimsType[]
       );
     },
-    {
-      retry: false,
-    }
-  );
+    retry: false,
+  });
 }
 
 export function login() {
