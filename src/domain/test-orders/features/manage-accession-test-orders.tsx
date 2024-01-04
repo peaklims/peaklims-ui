@@ -1,8 +1,16 @@
 import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { TestOrderDto } from "@/domain/accessions/types";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -428,46 +436,160 @@ function PanelOrder({
             </h4>
           </button>
 
-          <Button
-            className="max-w-[8rem] w-[48%] md:max-w-[5rem]"
-            size="sm"
-            variant="outline"
-            onClick={() => {
-              removePanelOrderApi
-                .mutateAsync({
-                  accessionId: accessionId,
-                  panelOrderId: panel.panelOrderId,
-                })
-                .catch((e) => {
-                  Notification.error("There was an error removing the Panel");
-                  console.error(e);
-                });
-            }}
-          >
-            Remove
-          </Button>
-        </div>
-        {panel.id === showPanelTestsId &&
-          panel.tests?.map((test, k) => {
-            return (
-              <motion.div
-                className="flex flex-col pt-2 pl-12 space-y-3"
-                key={k}
-                variants={detailSectionVariants}
-                initial="closed"
-                animate={panel.id === showPanelTestsId ? "open" : "closed"}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                className={cn(
+                  "inline-flex items-center px-2 py-2 text-sm font-medium leading-5 transition duration-100 ease-in bg-white rounded-full hover:shadow",
+                  "hover:bg-slate-100 hover:text-slate-800 hover:outline-none text-slate-700",
+                  "sm:p-3 dark:hover:shadow dark:shadow-slate-400 dark:hover:shadow-slate-300"
+                )}
               >
-                <div className="flex flex-col pl-2 space-y-2 border-indigo-600 border-l-3">
-                  <h5 className="text-sm font-semibold tracking-tight">
-                    <p className="block">{test.testName}</p>
-                    <p className="block text-xs text-gray-400">
-                      [{test.testCode}]
-                    </p>
-                  </h5>
-                </div>
-              </motion.div>
-            );
-          })}
+                {/* https://iconbuddy.app/ion/ellipsis-horizontal-sharp */}
+                <svg
+                  className="w-4 h-4"
+                  width={512}
+                  height={512}
+                  viewBox="0 0 512 512"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx={256} cy={256} r={48} fill="currentColor" />
+                  <circle cx={416} cy={256} r={48} fill="currentColor" />
+                  <circle cx={96} cy={256} r={48} fill="currentColor" />
+                </svg>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" side="right">
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onClick={() => {
+                    removePanelOrderApi
+                      .mutateAsync({
+                        accessionId: accessionId,
+                        panelOrderId: panel.panelOrderId,
+                      })
+                      .catch((e) => {
+                        Notification.error(
+                          "There was an error removing the Panel"
+                        );
+                        console.error(e);
+                      });
+                  }}
+                >
+                  <p>Remove</p>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              {/* <DropdownMenuSeparator /> */}
+              {/* <DropdownMenuLabel>Manage Sample</DropdownMenuLabel>
+              <DropdownMenuSeparator /> */}
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  asChild
+                  onClick={(e) => {
+                    alert(`Cancel Panel Order ${panel.id}`);
+                    e.stopPropagation();
+                  }}
+                >
+                  <p
+                    className={cn(
+                      "hover:bg-rose-200 hover:text-rose-700 hover:outline-none",
+                      "focus:bg-rose-200 focus:text-rose-700 focus:outline-none",
+                      "dark:border-slate-900 dark:bg-slate-800 dark:text-white dark:hover:bg-rose-800 dark:hover:text-rose-300 dark:hover:outline-none",
+                      "dark:hover:shadow dark:shadow-rose-400 dark:hover:shadow-rose-300",
+                      "flex items-center justify-start space-x-2 w-full text-rose-500"
+                    )}
+                  >
+                    Cancel Order
+                  </p>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="pt-2">
+          {panel.id === showPanelTestsId &&
+            panel.tests?.map((test, k) => {
+              return (
+                <motion.div
+                  className="flex items-center pt-4 first:pt-0"
+                  key={k}
+                  variants={detailSectionVariants}
+                  initial="closed"
+                  animate={panel.id === showPanelTestsId ? "open" : "closed"}
+                >
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        className={cn(
+                          "inline-flex items-center px-2 py-2 text-sm font-medium leading-5 transition duration-100 ease-in bg-white rounded-full hover:shadow",
+                          "hover:bg-slate-100 hover:text-slate-800 hover:outline-none text-slate-700",
+                          "sm:p-3 dark:hover:shadow dark:shadow-slate-400 dark:hover:shadow-slate-300"
+                        )}
+                      >
+                        {/* https://iconbuddy.app/ion/ellipsis-horizontal-sharp */}
+                        <svg
+                          className="w-4 h-4"
+                          width={512}
+                          height={512}
+                          viewBox="0 0 512 512"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle
+                            cx={256}
+                            cy={256}
+                            r={48}
+                            fill="currentColor"
+                          />
+                          <circle
+                            cx={416}
+                            cy={256}
+                            r={48}
+                            fill="currentColor"
+                          />
+                          <circle cx={96} cy={256} r={48} fill="currentColor" />
+                        </svg>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" side="right">
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            alert(`Set Sample for Test ${test.id}`);
+                          }}
+                        >
+                          <p>Set Sample</p>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  <div className="flex flex-col w-full pl-2">
+                    <div className="flex flex-col pl-2 border-indigo-600 border-l-3">
+                      <div className="">
+                        <div className="flex items-center justify-between">
+                          <h5 className="flex-1 text-sm font-semibold tracking-tight">
+                            {test.testName}
+                          </h5>
+                          <p className="text-xs font-semibold text-rose-400">
+                            High Priority
+                          </p>
+                        </div>
+                        <p className="block text-xs font-semibold text-gray-400">
+                          [{test.testCode}]
+                        </p>
+
+                        <div className="pt-2">
+                          <p className="block text-xs font-medium">
+                            No sample set
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+        </div>
       </div>
     </div>
   );
