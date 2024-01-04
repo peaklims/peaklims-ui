@@ -105,7 +105,7 @@ export function AccessionOrganizationForm({
       </Form>
 
       <div className="flex flex-col items-center justify-start w-full pt-3 space-y-12 sm:space-x-6 sm:flex-row sm:space-y-0">
-        <div className="space-y-1 h-[20rem] sm:h-[36rem] w-full">
+        <div className="space-y-1 h-[16rem] sm:h-[36rem] w-full">
           <h4 className="text-lg font-medium">Organization Contacts</h4>
           <OrganizationContacts
             accessionContacts={accessionContacts}
@@ -114,7 +114,7 @@ export function AccessionOrganizationForm({
           />
         </div>
 
-        <div className="space-y-1 h-[20rem] sm:h-[36rem] w-full">
+        <div className="space-y-1 h-[16rem] sm:h-[36rem] w-full">
           <h4 className="text-lg font-medium">Accession Contacts</h4>
           <AccessionContacts
             accessionContacts={accessionContacts}
@@ -147,7 +147,7 @@ function OrganizationContacts({
 
   const addAccessionContactApi = useAddAccessionContact();
   return (
-    <div className="w-full h-full p-3 border rounded-md shadow-md bg-slate-50">
+    <div className="w-full h-full p-3 overflow-auto border rounded-md shadow-md bg-slate-50">
       {filteredOrgContacts !== undefined &&
       (filteredOrgContacts?.length ?? 0) > 0 ? (
         <div className="flex flex-col items-start w-full h-full space-y-2 ">
