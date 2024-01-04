@@ -1,7 +1,7 @@
 import logo from "@/assets/logo.svg";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +11,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { User as UserType, useAuthUser } from "@/services/auth";
 import {
@@ -25,6 +31,7 @@ import {
   Menu,
   PackageOpen,
   Settings,
+  Sidebar,
   User as UserIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -39,11 +46,6 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Accessioning", href: "/accessions", icon: PackageOpen },
 ] as NavType[];
-const teams = [
-  // { id: 1, name: "Heroicons", href: "#", initial: "H" },
-  // { id: 2, name: "Tailwind Labs", href: "#", initial: "T" },
-  // { id: 3, name: "Workcation", href: "#", initial: "W" },
-];
 
 export default function AuthLayout() {
   const { user, logoutUrl, isLoading } = useAuthUser();
@@ -54,21 +56,25 @@ export default function AuthLayout() {
       <div>
         <DesktopMenu user={user} logoutUrl={logoutUrl} />
 
-        <div className="sticky top-0 z-40 flex items-center px-4 py-4 shadow-sm bg-background gap-x-6 sm:px-6 md:hidden">
-          <div className="flex-1 text-sm font-semibold leading-6 text-primary">
-            Peak LIMS
+        <div className="sticky top-0 z-40 flex items-center justify-center px-4 py-4 shadow-sm bg-background gap-x-2 sm:px-6 lg:hidden">
+          <div className="flex items-center flex-1 px-1 space-x-2 text-sm font-semibold leading-6 text-gray-900">
+            <div className="hidden sm:block">
+              <MobileMenu />
+            </div>
+            <h1 className="text-sm font-semibold leading-6 text-primary">
+              Peak LIMS
+            </h1>
           </div>
-
-          <ProfileManagement user={user} logoutUrl={logoutUrl} />
         </div>
 
-        <main className="pt-4 pb-6 md:pt-6 md:pb-10 md:pl-52">
-          <div className="px-4 sm:px-6 md:px-8">
+        <main className="pt-4 pb-6 lg:pt-6 lg:pb-10 lg:pl-52">
+          <div className="px-4 sm:px-6 lg:px-8">
             <Outlet />
           </div>
         </main>
-
-        <MobileMenu />
+        <div className="sm:hidden">
+          <MobileMenu />
+        </div>
       </div>
     </>
   );
@@ -77,54 +83,74 @@ export default function AuthLayout() {
 function MobileMenu() {
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, logoutUrl } = useAuthUser();
   function navigateAndClose(target: RegisteredRoutesInfo["routePaths"]) {
     navigate({ to: target });
     setMobileMenuIsOpen(false);
   }
 
   return (
-    <Dialog open={mobileMenuIsOpen} onOpenChange={setMobileMenuIsOpen}>
-      <div className="relative inset-0 flex">
-        <DialogContent className="relative flex flex-1 w-full min-h-[30vh]">
-          <div className="flex flex-col px-6 pb-2 -mt-10 overflow-y-auto grow gap-y-5">
-            <div className="flex items-center h-16 shrink-0">
-              <img
-                className="w-auto h-8"
-                // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
-                src={logo}
-                alt="Peak LIMS"
-              />
-            </div>
-            <nav className="flex flex-col flex-1">
-              <ul role="list" className="flex flex-col flex-1 gap-y-7">
-                <li>
-                  <ul role="list" className="-mx-2 space-y-1">
-                    {navigation.map((item) => (
-                      <li key={item.name}>
-                        <button
-                          data-status={
-                            item.href === window.location.pathname
-                              ? "active"
-                              : "inactive"
-                          }
-                          onClick={() => navigateAndClose(item.href)}
-                          className={cn(
-                            "w-full text-secondary-foreground hover:text-primary/80 hover:bg-gray-50 py-3",
-                            "group flex gap-x-3 rounded-md px-2 text-sm leading-6 font-semibold",
-                            "data-[status=active]:bg-card data-[status=active]:text-primary data-[status=active]:hover:bg-secondary/50"
-                          )}
-                        >
-                          <item.icon
-                            className={cn("h-6 w-6 shrink-0")}
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-                {/* <li>
+    <Sheet open={mobileMenuIsOpen} onOpenChange={setMobileMenuIsOpen}>
+      <SheetTrigger asChild>
+        <div className="absolute z-10 block p-1 rounded-full bottom-4 right-4 bg-slate-100 sm:p-2 sm:hidden">
+          <div className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
+            <Menu className="w-6 h-6" aria-hidden="true" />
+          </div>
+        </div>
+      </SheetTrigger>
+
+      <SheetTrigger asChild>
+        <div className="hidden p-1 rounded-full cursor-pointer sm:block lg:hidden">
+          <div className="flex items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
+            <Sidebar className="w-5 h-5" aria-hidden="true" />
+          </div>
+        </div>
+      </SheetTrigger>
+
+      <SheetContent className="flex flex-1 w-72" side={"left"}>
+        <div className="flex flex-col px-4 pb-2 overflow-y-auto grow gap-y-2">
+          <SheetHeader className="flex flex-row items-start h-12 space-y-0 shrink-0">
+            <img
+              className="w-auto h-6"
+              // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
+              src={logo}
+              alt="Peak LIMS"
+            />
+            <h1 className="ml-2 text-sm font-semibold leading-6 text-primary">
+              Peak LIMS
+            </h1>
+          </SheetHeader>
+          <nav className="flex flex-col flex-1">
+            <ul role="list" className="flex flex-col flex-1 gap-y-7">
+              <li>
+                <ul role="list" className="-mx-2 space-y-1">
+                  {navigation.map((item) => (
+                    <li key={item.name}>
+                      <button
+                        data-status={
+                          item.href === window.location.pathname
+                            ? "active"
+                            : "inactive"
+                        }
+                        onClick={() => navigateAndClose(item.href)}
+                        className={cn(
+                          "w-full text-secondary-foreground hover:text-primary/80 hover:bg-gray-50 py-3",
+                          "group flex gap-x-3 rounded-md px-2 text-sm leading-6 font-semibold",
+                          "data-[status=active]:bg-card data-[status=active]:text-primary data-[status=active]:hover:bg-secondary/50",
+                          "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                        )}
+                      >
+                        <item.icon
+                          className={cn("h-6 w-6 shrink-0")}
+                          aria-hidden="true"
+                        />
+                        {item.name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              {/* <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400">
                     Your teams
                   </div>
@@ -156,24 +182,16 @@ function MobileMenu() {
                     ))}
                   </ul>
                 </li> */}
-              </ul>
-            </nav>
-          </div>
-        </DialogContent>
-      </div>
-
-      <DialogTrigger>
-        <div className="absolute z-10 p-1 rounded-full bottom-4 right-4 bg-slate-100 sm:p-2 md:hidden">
-          <div className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
-            <Menu className="w-6 h-6" aria-hidden="true" />
-          </div>
+            </ul>
+          </nav>
+          <ProfileManagement user={user} logoutUrl={logoutUrl} />
         </div>
-      </DialogTrigger>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
 
-const sideNavWidth = "md:w-52";
+const sideNavWidth = "lg:w-52";
 
 function DesktopMenu({
   user,
@@ -185,19 +203,21 @@ function DesktopMenu({
   return (
     <div
       className={cn(
-        "hidden md:fixed md:inset-y-0 md:z-50 md:flex md:flex-col",
+        "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
         sideNavWidth
       )}
     >
       {/* Sidebar component, swap this element with another sidebar if you like */}
       <div className="flex flex-col px-6 overflow-y-auto border-r bg-card grow gap-y-5">
         <div className="flex items-center h-16 shrink-0">
-          <img
-            className="w-auto h-8"
-            // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
-            src={logo}
-            alt="Peak LIMS"
-          />
+          <Link to="/">
+            <img
+              className="w-auto h-8"
+              // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
+              src={logo}
+              alt="Peak LIMS"
+            />
+          </Link>
         </div>
         <nav className="flex flex-col flex-1">
           <ul role="list" className="flex flex-col flex-1 gap-y-7">
@@ -278,15 +298,15 @@ function ProfileManagement({
         <a
           href="#"
           className={
-            "flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 md:pr-6 md:py-3 gap-x-4"
+            "flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 lg:pr-6 lg:py-3 gap-x-4"
           }
         >
           <Avatar>
             {/* <AvatarImage src={user?.image} /> */}
             <AvatarFallback>{user?.initials}</AvatarFallback>
           </Avatar>
-          <span className="hidden sr-only md:inline">Your profile</span>
-          <span aria-hidden="true" className="hidden md:inline">
+          <span className="sr-only">Your profile</span>
+          <span aria-hidden="true" className="inline">
             {user?.name}
           </span>
         </a>

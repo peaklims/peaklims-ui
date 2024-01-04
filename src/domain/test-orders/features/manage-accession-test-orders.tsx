@@ -255,9 +255,11 @@ function Panel({
       className="flex items-center py-3 pl-1 pr-3 border rounded-lg shadow-md"
     >
       <div className="flex flex-col w-full">
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-start justify-between w-full xl:items-center">
           <button
-            className={"flex items-center h-full px-2 py-1 space-x-2"}
+            className={
+              "flex items-start xl:items-center h-full px-2 py-1 space-x-2"
+            }
             onClick={() =>
               setShowPanelTestsId(
                 panel.id === showPanelTestsId ? undefined : panel.id
@@ -272,13 +274,15 @@ function Panel({
             >
               <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
             </motion.div>
-            <h4 className="flex flex-col items-start font-medium lg:space-x-2 lg:flex-row">
+            <h4 className="flex flex-col items-start font-medium xl:flex-row xl:flex xl:space-x-2">
               <span
                 className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
               >
                 {panel.panelCode}
               </span>
-              <span className="hidden sm:inline-flex">{panel.panelName}</span>
+              <span className="hidden pt-1 sm:block text-start xl:pt-0">
+                {panel.panelName}
+              </span>
             </h4>
           </button>
 
@@ -335,14 +339,16 @@ function Test({
       key={test.id}
       className="flex flex-col px-3 py-3 space-y-2 border rounded-lg shadow-md"
     >
-      <div className="flex items-center justify-between flex-1">
-        <h4 className="flex flex-col items-start font-medium lg:space-x-2 lg:flex-row">
+      <div className="flex items-start justify-between w-full xl:items-center">
+        <h4 className="flex flex-col items-start font-medium xl:flex-row xl:flex xl:space-x-2">
           <span
             className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
           >
             {test.testCode}
           </span>
-          <span className="hidden sm:inline-flex">{test.testName}</span>
+          <span className="hidden pt-1 sm:inline-flex xl:pt-0">
+            {test.testName}
+          </span>
         </h4>
 
         <Button
@@ -391,9 +397,11 @@ function PanelOrder({
       className="flex items-center py-3 pl-1 pr-3 border rounded-lg shadow-md"
     >
       <div className="flex flex-col w-full">
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-start justify-between w-full xl:items-center">
           <button
-            className={"flex items-center h-full px-2 py-1 space-x-2"}
+            className={
+              "flex items-start xl:items-center h-full px-2 py-1 space-x-2"
+            }
             onClick={() =>
               setShowPanelTestsId(
                 panel.id === showPanelTestsId ? undefined : panel.id
@@ -408,13 +416,15 @@ function PanelOrder({
             >
               <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
             </motion.div>
-            <h4 className="flex flex-col items-start font-medium lg:space-x-2 lg:flex-row">
+            <h4 className="flex flex-col items-start font-medium xl:flex-row xl:flex xl:space-x-2">
               <span
                 className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
               >
                 {panel.panelCode}
               </span>
-              <span className="hidden sm:inline-flex">{panel.panelName}</span>
+              <span className="hidden pt-1 sm:block text-start xl:pt-0">
+                {panel.panelName}
+              </span>
             </h4>
           </button>
 
