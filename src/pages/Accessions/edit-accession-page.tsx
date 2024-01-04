@@ -35,15 +35,15 @@ export function EditAccessionPage() {
 
       <div className="flex items-center justify-start w-full space-x-4">
         <h1 className="flex items-center justify-start text-4xl font-bold tracking-tight scroll-m-20">
-          Edit Accession{" "}
-          <span className="pl-2 text-2xl">({accession?.accessionNumber})</span>
+          Edit Accession
+          <span className="pl-3 text-2xl">({accession?.accessionNumber})</span>
         </h1>
         {accession && (
           <AccessionStatusBadge status={accession?.status as AccessionStatus} />
         )}
       </div>
 
-      <div className="space-y-10">
+      <div className="pt-3 space-y-10">
         <div className="flex items-center justify-center w-full sm:justify-start">
           <h2 className="sr-only">Accession Patient</h2>
           <ManageAccessionPatientCard accession={accession} />
