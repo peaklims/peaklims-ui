@@ -189,6 +189,7 @@ function AccessionDetails({
             orderables={orderables}
             accessionId={accessionId}
             testOrders={testOrders}
+            patientId={patientId ?? ""}
           />
         )}
       </Tab>

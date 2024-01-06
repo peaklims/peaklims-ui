@@ -1,16 +1,8 @@
 import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { TestOrderDto } from "@/domain/accessions/types";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -18,23 +10,29 @@ import {
   useAddPanelToAccession,
   useAddTestOrderForTest,
 } from "../apis/add-test-order.api";
-import { useRemovePanelOrder } from "../apis/remove-panel-order.api";
 import { useRemoveTestOrder } from "../apis/remove-test-order.api";
+import { PanelOrderCard } from "../components/panel-order-card";
 import { OrderablePanelsAndTestsDto } from "../types";
 
 export function ManageAccessionTestOrders({
   orderables,
   accessionId,
   testOrders,
+  patientId,
 }: {
   orderables: OrderablePanelsAndTestsDto | undefined;
   accessionId: string;
   testOrders: TestOrderDto[] | undefined;
+  patientId: string | null;
 }) {
   return (
     <div className="flex h-full space-x-12">
       <Orderables orderables={orderables} accessionId={accessionId} />
-      <OrdersPlaced testOrders={testOrders} accessionId={accessionId} />
+      <OrdersPlaced
+        testOrders={testOrders}
+        accessionId={accessionId}
+        patientId={patientId}
+      />
     </div>
   );
 }
@@ -42,9 +40,11 @@ export function ManageAccessionTestOrders({
 function OrdersPlaced({
   testOrders,
   accessionId,
+  patientId,
 }: {
   testOrders: TestOrderDto[] | undefined;
   accessionId: string;
+  patientId: string | null;
 }) {
   const panelsArray = useGroupedPanels(testOrders || []);
   const removeTestOrderApi = useRemoveTestOrder();
@@ -86,10 +86,11 @@ function OrdersPlaced({
               })}
 
             {panelsArray.map((panel) => (
-              <PanelOrder
+              <PanelOrderCard
                 key={panel.id}
                 panel={panel}
                 accessionId={accessionId}
+                patientId={patientId}
               />
             ))}
           </>
@@ -111,6 +112,10 @@ function useGroupedPanels(testOrders: TestOrderDto[]) {
       id: string;
       testCode: string;
       testName: string;
+      sample: {
+        id: string | null;
+        sampleNumber: string | null;
+      };
     }[];
   };
   const groupedPanels = testOrders.reduce((groups, order) => {
@@ -367,229 +372,6 @@ function Test({
         >
           {actionText}
         </Button>
-      </div>
-    </div>
-  );
-}
-
-function PanelOrder({
-  panel,
-  accessionId,
-}: {
-  accessionId: string;
-  panel: {
-    id: string;
-    panelCode: string;
-    panelName: string;
-    panelOrderId: string;
-    type: string;
-    version: number;
-    tests: {
-      id: string;
-      testCode: string;
-      testName: string;
-    }[];
-  };
-}) {
-  const removePanelOrderApi = useRemovePanelOrder();
-  const [showPanelTestsId, setShowPanelTestsId] = useState<string | undefined>(
-    undefined
-  );
-  const detailSectionVariants = {
-    open: { opacity: 1, height: "100%" },
-    closed: { opacity: 0, height: "0%" },
-  };
-  return (
-    <div
-      key={panel.id}
-      className="flex items-center py-3 pl-1 pr-3 border rounded-lg shadow-md"
-    >
-      <div className="flex flex-col w-full">
-        <div className="flex items-start justify-between w-full xl:items-center">
-          <button
-            className={
-              "flex items-start xl:items-center h-full px-2 py-1 space-x-2"
-            }
-            onClick={() =>
-              setShowPanelTestsId(
-                panel.id === showPanelTestsId ? undefined : panel.id
-              )
-            }
-          >
-            <motion.div
-              initial={false}
-              animate={{
-                rotate: panel.id === showPanelTestsId ? 90 : 0,
-              }}
-            >
-              <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
-            </motion.div>
-            <h4 className="flex flex-col items-start font-medium xl:flex-row xl:flex xl:space-x-2">
-              <span
-                className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
-              >
-                {panel.panelCode}
-              </span>
-              <span className="hidden pt-1 sm:block text-start xl:pt-0">
-                {panel.panelName}
-              </span>
-            </h4>
-          </button>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                className={cn(
-                  "inline-flex items-center px-2 py-2 text-sm font-medium leading-5 transition duration-100 ease-in bg-white rounded-full hover:shadow",
-                  "hover:bg-slate-100 hover:text-slate-800 hover:outline-none text-slate-700",
-                  "sm:p-3 dark:hover:shadow dark:shadow-slate-400 dark:hover:shadow-slate-300"
-                )}
-              >
-                {/* https://iconbuddy.app/ion/ellipsis-horizontal-sharp */}
-                <svg
-                  className="w-4 h-4"
-                  width={512}
-                  height={512}
-                  viewBox="0 0 512 512"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx={256} cy={256} r={48} fill="currentColor" />
-                  <circle cx={416} cy={256} r={48} fill="currentColor" />
-                  <circle cx={96} cy={256} r={48} fill="currentColor" />
-                </svg>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" side="right">
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  onClick={() => {
-                    removePanelOrderApi
-                      .mutateAsync({
-                        accessionId: accessionId,
-                        panelOrderId: panel.panelOrderId,
-                      })
-                      .catch((e) => {
-                        Notification.error(
-                          "There was an error removing the Panel"
-                        );
-                        console.error(e);
-                      });
-                  }}
-                >
-                  <p>Remove</p>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              {/* <DropdownMenuSeparator /> */}
-              {/* <DropdownMenuLabel>Manage Sample</DropdownMenuLabel>
-              <DropdownMenuSeparator /> */}
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  asChild
-                  onClick={(e) => {
-                    alert(`Cancel Panel Order ${panel.id}`);
-                    e.stopPropagation();
-                  }}
-                >
-                  <p
-                    className={cn(
-                      "hover:bg-rose-200 hover:text-rose-700 hover:outline-none",
-                      "focus:bg-rose-200 focus:text-rose-700 focus:outline-none",
-                      "dark:border-slate-900 dark:bg-slate-800 dark:text-white dark:hover:bg-rose-800 dark:hover:text-rose-300 dark:hover:outline-none",
-                      "dark:hover:shadow dark:shadow-rose-400 dark:hover:shadow-rose-300",
-                      "flex items-center justify-start space-x-2 w-full text-rose-500"
-                    )}
-                  >
-                    Cancel Order
-                  </p>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div className="pt-2">
-          {panel.id === showPanelTestsId &&
-            panel.tests?.map((test, k) => {
-              return (
-                <motion.div
-                  className="flex items-center pt-4 first:pt-0"
-                  key={k}
-                  variants={detailSectionVariants}
-                  initial="closed"
-                  animate={panel.id === showPanelTestsId ? "open" : "closed"}
-                >
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        className={cn(
-                          "inline-flex items-center px-2 py-2 text-sm font-medium leading-5 transition duration-100 ease-in bg-white rounded-full hover:shadow",
-                          "hover:bg-slate-100 hover:text-slate-800 hover:outline-none text-slate-700",
-                          "sm:p-3 dark:hover:shadow dark:shadow-slate-400 dark:hover:shadow-slate-300"
-                        )}
-                      >
-                        {/* https://iconbuddy.app/ion/ellipsis-horizontal-sharp */}
-                        <svg
-                          className="w-4 h-4"
-                          width={512}
-                          height={512}
-                          viewBox="0 0 512 512"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle
-                            cx={256}
-                            cy={256}
-                            r={48}
-                            fill="currentColor"
-                          />
-                          <circle
-                            cx={416}
-                            cy={256}
-                            r={48}
-                            fill="currentColor"
-                          />
-                          <circle cx={96} cy={256} r={48} fill="currentColor" />
-                        </svg>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56" side="right">
-                      <DropdownMenuGroup>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            alert(`Set Sample for Test ${test.id}`);
-                          }}
-                        >
-                          <p>Set Sample</p>
-                        </DropdownMenuItem>
-                      </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  <div className="flex flex-col w-full pl-2">
-                    <div className="flex flex-col pl-2 border-indigo-600 border-l-3">
-                      <div className="">
-                        <div className="flex items-center justify-between">
-                          <h5 className="flex-1 text-sm font-semibold tracking-tight">
-                            {test.testName}
-                          </h5>
-                          <p className="text-xs font-semibold text-rose-400">
-                            High Priority
-                          </p>
-                        </div>
-                        <p className="block text-xs font-semibold text-gray-400">
-                          [{test.testCode}]
-                        </p>
-
-                        <div className="pt-2">
-                          <p className="block text-xs font-medium">
-                            No sample set
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-        </div>
       </div>
     </div>
   );

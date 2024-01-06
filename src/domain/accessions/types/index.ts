@@ -70,6 +70,10 @@ export type TestOrderDto = {
   cancellationReason: string | null;
   cancellationComments: string | null;
   isPartOfPanel: boolean;
+  sample: {
+    id: string | null;
+    sampleNumber: string | null;
+  };
 };
 
 export type AccessionContactDto = {

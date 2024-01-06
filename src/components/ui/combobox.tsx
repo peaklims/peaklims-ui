@@ -23,6 +23,7 @@ export function Combobox({
   buttonProps,
   value,
   onChange,
+  autoFocus,
 }: {
   items: { label: string; value: string; disabled?: boolean }[];
   emptyMessage?: string;
@@ -31,6 +32,7 @@ export function Combobox({
   buttonProps?: React.ComponentProps<typeof Button>;
   value?: string;
   onChange?: (value: string) => void;
+  autoFocus?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
 

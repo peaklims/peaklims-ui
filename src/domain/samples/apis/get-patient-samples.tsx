@@ -14,10 +14,10 @@ export const getPatientSamples = async ({
     .then((response: AxiosResponse<SampleDto[]>) => response.data);
 };
 
-export const useGetPatientSamples = ({ patientId }: { patientId: string }) => {
+export const useGetPatientSamples = ({ patientId }: { patientId: string | null }) => {
   return useQuery({
-    queryKey: SampleKeys.byPatient(patientId),
-    queryFn: () => getPatientSamples({ patientId }),
+    queryKey: SampleKeys.byPatient(patientId!),
+    queryFn: () => getPatientSamples({ patientId: patientId! }),
     enabled: (patientId?.length ?? 0) > 0,
   });
 };
