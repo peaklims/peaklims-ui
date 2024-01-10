@@ -1,4 +1,5 @@
 import { ManageAttachments } from "@/domain/accession-attachments/components/manage-attachments";
+import { ManageAccessionComments } from "@/domain/accession-comments/feature/manage-comments";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
 import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
 import {
@@ -240,9 +241,7 @@ function AccessionDetails({
           </div>
         }
       >
-        <div className="h-full px-6 py-4 overflow-auto bg-rose-600">
-          Change your comments here.
-        </div>
+        {accessionId && <ManageAccessionComments accessionId={accessionId} />}
       </Tab>
 
       <Tab
