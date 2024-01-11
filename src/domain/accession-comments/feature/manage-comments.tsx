@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Button,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -10,6 +11,7 @@ import {
   Modal,
   ModalBody,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
@@ -20,7 +22,10 @@ import { z } from "zod";
 import { useAddAccessionComment } from "../apis/add-comment";
 import { useGetAccessionComment } from "../apis/get-accession-comments";
 import { SetCommentForm } from "../components/edit-comment-form";
-import { AccessionCommentItemDto } from "../types";
+import {
+  AccessionCommentHistoryRecordDto,
+  AccessionCommentItemDto,
+} from "../types";
 
 const schema = z.object({
   comment: z.string().min(1, "Comment is required"),
@@ -81,12 +86,6 @@ export function ManageAccessionComments({
                 return (
                   <ChatBubble
                     bubbleSide={comment.ownedByCurrentUser ? "right" : "left"}
-                    commentText={comment.comment}
-                    firstName={comment.createdByFirstName}
-                    lastName={comment.createdByLastName}
-                    createdAt={comment.createdDate}
-                    commentId={comment.id}
-                    accessionId={accessionId}
                     comment={comment}
                   />
                 );
@@ -219,6 +218,7 @@ function ChatBubble({
                   commentId={comment.id}
                   commentText={comment.comment}
                   accessionId={accessionId}
+                  history={comment.history}
                 />
                 <CopyButton textToCopy={comment.comment} />
               </>
@@ -254,6 +254,7 @@ function ChatBubble({
                   commentId={comment.id}
                   commentText={comment.comment}
                   accessionId={accessionId}
+                  history={comment.history}
                 />
               </>
             ) : null}
@@ -269,13 +270,24 @@ function ActionMenu({
   accessionId,
   commentText,
   commentToCopy,
+  history,
 }: {
   commentId: string;
   accessionId: string;
   commentText: string;
   commentToCopy: string;
+  history: AccessionCommentHistoryRecordDto[];
 }) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isEditModalOpen,
+    onOpen: onEditModalOpen,
+    onOpenChange: onEditModalOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isHistoryModalOpen,
+    onOpen: onHistoryModalOpen,
+    onOpenChange: onHistoryModalOpenChange,
+  } = useDisclosure();
   return (
     <>
       <Dropdown>
@@ -303,7 +315,10 @@ function ActionMenu({
               Notification.success("Copied to clipboard");
             }
             if (key === "edit") {
-              onOpen();
+              onEditModalOpen();
+            }
+            if (key === "history") {
+              onHistoryModalOpen();
             }
           }}
         >
@@ -362,6 +377,32 @@ function ActionMenu({
               <p>Copy Comment</p>
             </div>
           </DropdownItem>
+          <DropdownItem
+            className="rounded-md"
+            key="history"
+            hidden={history.length <= 0}
+          >
+            <div className="flex items-center space-x-3">
+              {/* https://iconbuddy.app/akar-icons/history */}
+              <svg
+                width="512"
+                height="512"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.266 16.06a8.923 8.923 0 0 0 3.915 3.978a8.706 8.706 0 0 0 5.471.832a8.795 8.795 0 0 0 4.887-2.64a9.067 9.067 0 0 0 2.388-5.079a9.135 9.135 0 0 0-1.044-5.53a8.903 8.903 0 0 0-4.069-3.815a8.7 8.7 0 0 0-5.5-.608c-1.85.401-3.366 1.313-4.62 2.755c-.151.16-.735.806-1.22 1.781M7.5 8l-3.609.72L3 5m9 4v4l3 2"
+                />
+              </svg>
+              <p>View Edit History</p>
+            </div>
+          </DropdownItem>
           {/* <DropdownItem
             className="rounded-md text-rose-500 data-[hover=true]:text-white data-[hover=true]:bg-rose-500"
             key="delete"
@@ -371,7 +412,7 @@ function ActionMenu({
         </DropdownMenu>
       </Dropdown>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isEditModalOpen} onOpenChange={onEditModalOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -388,6 +429,64 @@ function ActionMenu({
                   accessionId={accessionId}
                 />
               </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={isHistoryModalOpen}
+        onOpenChange={onHistoryModalOpenChange}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Comment History
+              </ModalHeader>
+              <ModalBody>
+                <div className="space-y-10">
+                  {history.map((historyItem, index) => {
+                    return (
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-start w-full">
+                          <p className="bold font-lg">{index}</p>
+                          <div className="flex flex-col w-full gap-1 pl-3">
+                            <div className="flex flex-col">
+                              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                                {historyItem.createdByFirstName}{" "}
+                                {historyItem.createdByLastName}
+                              </span>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-xs italic font-medium text-gray-500 dark:text-white">
+                                  <span>
+                                    {index === 0 ? "Created on" : "Edited on"}
+                                  </span>
+                                  <span> </span>
+                                  {format(
+                                    historyItem.createdDate,
+                                    "yyyy-MM-dd hh:mm a"
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                            <p
+                              className={cn(
+                                "text-sm font-normal whitespace-break-spaces text-gray-900 dark:text-white text-balance w-full border rounded-lg shadow p-3"
+                              )}
+                            >
+                              {historyItem.comment}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button onClick={onHistoryModalOpenChange}>Close</Button>
+              </ModalFooter>
             </>
           )}
         </ModalContent>
