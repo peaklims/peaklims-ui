@@ -166,15 +166,28 @@ function ChatBubble({
 
         {/* user info */}
         <div className="">
-          <div className={cn(`flex flex-col w-full leading-1.5 pl-4`)}>
+          <div className={cn(`flex flex-col w-full leading-1.5 pl-2`)}>
             {!isCurrentUser ? (
-              <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {comment.createdByFirstName} {comment.createdByLastName}
-                </span>
-                <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                  {format(comment.originalCommentAt, "yyyy-MM-dd hh:mm a")}
-                </span>
+              <div>
+                <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {comment.createdByFirstName} {comment.createdByLastName}
+                  </span>
+                  <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                    {format(comment.originalCommentAt, "yyyy-MM-dd hh:mm a")}
+                  </span>
+                </div>
+
+                {hasHistory ? (
+                  <div className={cn(`flex flex-col w-full leading-1.5 pt-1`)}>
+                    <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                      <span className="text-xs italic font-medium text-gray-500 dark:text-white">
+                        Edited on{" "}
+                        {format(comment.createdDate, "yyyy-MM-dd hh:mm a")}
+                      </span>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ) : (
               <div className="flex flex-col">
