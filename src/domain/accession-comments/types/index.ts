@@ -10,6 +10,7 @@ export type AccessionCommentItemDto = {
   createdByLastName: string;
   createdById: string;
   ownedByCurrentUser: boolean;
+  originalCommentAt: Date;
   history: AccessionCommentHistoryRecordDto[];
 };
 

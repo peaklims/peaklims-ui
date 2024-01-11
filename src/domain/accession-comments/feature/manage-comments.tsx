@@ -177,14 +177,14 @@ function ChatBubble({
                   {comment.createdByFirstName} {comment.createdByLastName}
                 </span>
                 <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                  {format(comment.createdDate, "yyyy-MM-dd hh:mm a")}
+                  {format(comment.originalCommentAt, "yyyy-MM-dd hh:mm a")}
                 </span>
               </div>
             ) : (
               <div className="flex flex-col">
                 <div className="flex items-center justify-end space-x-2 rtl:space-x-reverse">
                   <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    {format(comment.createdDate, "yyyy-MM-dd hh:mm a")}
+                    {format(comment.originalCommentAt, "yyyy-MM-dd hh:mm a")}
                   </span>
                   <span className="text-sm font-semibold text-gray-900 dark:text-white">
                     (Me)
