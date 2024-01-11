@@ -22,10 +22,7 @@ import { z } from "zod";
 import { useAddAccessionComment } from "../apis/add-comment";
 import { useGetAccessionComment } from "../apis/get-accession-comments";
 import { SetCommentForm } from "../components/edit-comment-form";
-import {
-  AccessionCommentHistoryRecordDto,
-  AccessionCommentItemDto,
-} from "../types";
+import { AccessionCommentItemDto } from "../types";
 
 const schema = z.object({
   comment: z.string().min(1, "Comment is required"),
@@ -218,7 +215,7 @@ function ChatBubble({
                   commentId={comment.id}
                   commentText={comment.comment}
                   accessionId={accessionId}
-                  history={comment.history}
+                  comment={comment}
                 />
                 <CopyButton textToCopy={comment.comment} />
               </>
@@ -254,7 +251,7 @@ function ChatBubble({
                   commentId={comment.id}
                   commentText={comment.comment}
                   accessionId={accessionId}
-                  history={comment.history}
+                  comment={comment}
                 />
               </>
             ) : null}
@@ -270,13 +267,13 @@ function ActionMenu({
   accessionId,
   commentText,
   commentToCopy,
-  history,
+  comment,
 }: {
   commentId: string;
   accessionId: string;
   commentText: string;
   commentToCopy: string;
-  history: AccessionCommentHistoryRecordDto[];
+  comment: AccessionCommentItemDto;
 }) {
   const {
     isOpen: isEditModalOpen,
@@ -380,7 +377,7 @@ function ActionMenu({
           <DropdownItem
             className="rounded-md"
             key="history"
-            hidden={history.length <= 0}
+            hidden={comment.history.length <= 0}
           >
             <div className="flex items-center space-x-3">
               {/* https://iconbuddy.app/akar-icons/history */}
@@ -446,7 +443,7 @@ function ActionMenu({
               </ModalHeader>
               <ModalBody>
                 <div className="space-y-10">
-                  {history.map((historyItem, index) => {
+                  {comment.history.map((historyItem, index) => {
                     return (
                       <div className="flex flex-col gap-1">
                         <div className="flex items-start w-full">
@@ -470,18 +467,70 @@ function ActionMenu({
                                 </span>
                               </div>
                             </div>
-                            <p
-                              className={cn(
-                                "text-sm font-normal whitespace-break-spaces text-gray-900 dark:text-white text-balance w-full border rounded-lg shadow p-3"
-                              )}
-                            >
-                              {historyItem.comment}
-                            </p>
+                            {index === 0 ? (
+                              <p
+                                className={cn(
+                                  "text-sm font-normal whitespace-break-spaces text-gray-900 dark:text-white text-balance w-full border rounded-lg shadow p-3"
+                                )}
+                              >
+                                {historyItem.comment}
+                              </p>
+                            ) : (
+                              <div className="flex space-x-4">
+                                <p
+                                  className={cn(
+                                    "text-sm font-normal whitespace-break-spaces text-gray-900 dark:text-white text-balance w-full border rounded-lg shadow p-3"
+                                  )}
+                                >
+                                  {comment.history[index - 1].comment}
+                                </p>
+
+                                <p
+                                  className={cn(
+                                    "text-sm font-normal whitespace-break-spaces text-gray-900 dark:text-white text-balance w-full border rounded-lg shadow p-3"
+                                  )}
+                                >
+                                  {historyItem.comment}
+                                </p>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
                     );
                   })}
+                  {
+                    <div className="flex flex-col gap-1">
+                      <div className="w-full">
+                        <h2 className="text-lg font-medium">Current</h2>
+                        <div className="flex flex-col w-full gap-1 pt-2">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                              {comment.createdByFirstName}{" "}
+                              {comment.createdByLastName}
+                            </span>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs italic font-medium text-gray-500 dark:text-white">
+                                <span>Created on</span>
+                                <span> </span>
+                                {format(
+                                  comment.originalCommentAt,
+                                  "yyyy-MM-dd hh:mm a"
+                                )}
+                              </span>
+                            </div>
+                          </div>
+                          <p
+                            className={cn(
+                              "text-sm font-normal whitespace-break-spaces text-gray-900 dark:text-white text-balance w-full border rounded-lg shadow p-3"
+                            )}
+                          >
+                            {comment.comment}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  }
                 </div>
               </ModalBody>
               <ModalFooter>
