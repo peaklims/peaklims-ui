@@ -213,11 +213,9 @@ function ChatBubble({
                   commentText={comment.comment}
                 /> */}
                 <ActionMenu
-                  commentToCopy={comment.comment}
-                  commentId={comment.id}
-                  commentText={comment.comment}
                   accessionId={accessionId}
                   comment={comment}
+                  isCurrentUser={isCurrentUser}
                 />
                 <CopyButton textToCopy={comment.comment} />
               </>
@@ -249,11 +247,9 @@ function ChatBubble({
                   accessionId={accessionId}
                 /> */}
                 <ActionMenu
-                  commentToCopy={comment.comment}
-                  commentId={comment.id}
-                  commentText={comment.comment}
                   accessionId={accessionId}
                   comment={comment}
+                  isCurrentUser={isCurrentUser}
                 />
               </>
             ) : null}
@@ -265,17 +261,13 @@ function ChatBubble({
 }
 
 function ActionMenu({
-  commentId,
   accessionId,
-  commentText,
-  commentToCopy,
   comment,
+  isCurrentUser,
 }: {
-  commentId: string;
   accessionId: string;
-  commentText: string;
-  commentToCopy: string;
   comment: AccessionCommentItemDto;
+  isCurrentUser: boolean;
 }) {
   const {
     isOpen: isEditModalOpen,
@@ -310,7 +302,7 @@ function ActionMenu({
           aria-label="Static Actions"
           onAction={(key) => {
             if (key === "copy") {
-              navigator.clipboard.writeText(commentToCopy);
+              navigator.clipboard.writeText(comment.comment);
               Notification.success("Copied to clipboard");
             }
             if (key === "edit") {
@@ -321,7 +313,10 @@ function ActionMenu({
             }
           }}
         >
-          <DropdownItem className="rounded-md" key="edit">
+          <DropdownItem
+            className={cn("rounded-md", !isCurrentUser && "hidden")}
+            key="edit"
+          >
             <div className="flex items-center space-x-3">
               {/* https://iconbuddy.app/akar-icons/chatedit */}
               <svg
@@ -352,7 +347,7 @@ function ActionMenu({
               <p>Edit Comment</p>
             </div>
           </DropdownItem>
-          <DropdownItem className="rounded-md" key="copy">
+          <DropdownItem className={cn("rounded-md")} key="copy">
             <div className="flex items-center space-x-3">
               {/* https://iconbuddy.app/akar-icons/copy */}
               <svg
@@ -422,11 +417,11 @@ function ActionMenu({
               </ModalHeader>
               <ModalBody>
                 <SetCommentForm
-                  commentId={commentId}
+                  commentId={comment.id}
                   afterSubmit={() => {
                     onClose();
                   }}
-                  initialComment={commentText}
+                  initialComment={comment.comment}
                   accessionId={accessionId}
                 />
               </ModalBody>
