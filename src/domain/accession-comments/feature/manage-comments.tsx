@@ -3,7 +3,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Button,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -11,17 +10,16 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
 import { format } from "date-fns";
 import { useEffect, useRef } from "react";
-import ReactDiffViewer from "react-diff-viewer";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useAddAccessionComment } from "../apis/add-comment";
 import { useGetAccessionComment } from "../apis/get-accession-comments";
+import { CommentHistoryModal } from "../components/comment-history-modal";
 import { SetCommentForm } from "../components/edit-comment-form";
 import { AccessionCommentItemDto } from "../types";
 
@@ -164,9 +162,9 @@ function ChatBubble({
           </Avatar>
         ) : null}
 
-        {/* user info */}
         <div className="">
           <div className={cn(`flex flex-col w-full leading-1.5 pl-2`)}>
+            {/* user info */}
             {!isCurrentUser ? (
               <div>
                 <div className="flex items-center space-x-2 rtl:space-x-reverse">
@@ -216,15 +214,9 @@ function ChatBubble({
             )}
           </div>
 
-          {/* the bubble */}
           <div className={cn(`flex items-start gap-1 pl-2`)}>
             {!isCurrentUser ? null : (
               <>
-                {/* <EditButton
-                  commentId={comment.id}
-                  accessionId={accessionId}
-                  commentText={comment.comment}
-                /> */}
                 <ActionMenu
                   accessionId={accessionId}
                   comment={comment}
@@ -233,6 +225,8 @@ function ChatBubble({
                 <CopyButton textToCopy={comment.comment} />
               </>
             )}
+
+            {/* the bubble */}
             <div
               data-iscurrentuser={isCurrentUser ? true : undefined}
               className={cn(
@@ -254,11 +248,6 @@ function ChatBubble({
             {!isCurrentUser ? (
               <>
                 <CopyButton textToCopy={comment.comment} />
-                {/* <EditButton
-                  commentId={comment.id}
-                  commentText={comment.comment}
-                  accessionId={accessionId}
-                /> */}
                 <ActionMenu
                   accessionId={accessionId}
                   comment={comment}
@@ -360,6 +349,7 @@ function ActionMenu({
               <p>Edit Comment</p>
             </div>
           </DropdownItem>
+
           <DropdownItem className={cn("rounded-md")} key="copy">
             <div className="flex items-center space-x-3">
               {/* https://iconbuddy.app/akar-icons/copy */}
@@ -384,6 +374,7 @@ function ActionMenu({
               <p>Copy Comment</p>
             </div>
           </DropdownItem>
+
           <DropdownItem
             className={cn(
               "rounded-md",
@@ -412,12 +403,6 @@ function ActionMenu({
               <p>View Edit History</p>
             </div>
           </DropdownItem>
-          {/* <DropdownItem
-            className="rounded-md text-rose-500 data-[hover=true]:text-white data-[hover=true]:bg-rose-500"
-            key="delete"
-          >
-            Delete Comment
-          </DropdownItem> */}
         </DropdownMenu>
       </Dropdown>
 
@@ -443,179 +428,14 @@ function ActionMenu({
         </ModalContent>
       </Modal>
 
-      <Modal
-        isOpen={isHistoryModalOpen}
-        onOpenChange={onHistoryModalOpenChange}
-        size="5xl"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Comment History
-              </ModalHeader>
-              <ModalBody>
-                <div className="space-y-10 overflow-y-auto">
-                  {comment.history.map((historyItem, index) => {
-                    return (
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-start w-full">
-                          <p className="bold font-lg">{index}</p>
-                          <div className="flex flex-col w-full gap-1 pl-3">
-                            <div className="flex flex-col">
-                              <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                                {historyItem.createdByFirstName}{" "}
-                                {historyItem.createdByLastName}
-                              </span>
-                              <div className="flex items-center space-x-2">
-                                <span className="text-xs italic font-medium text-gray-500 dark:text-white">
-                                  <span>
-                                    {index === 0 ? "Created on" : "Edited on"}
-                                  </span>
-                                  <span> </span>
-                                  {format(
-                                    historyItem.createdDate,
-                                    "yyyy-MM-dd hh:mm a"
-                                  )}
-                                </span>
-                              </div>
-                            </div>
-                            {index === 0 ? (
-                              <ReactDiffViewer
-                                oldValue={""}
-                                newValue={historyItem.comment}
-                                splitView={false}
-                              />
-                            ) : (
-                              <div className="">
-                                <ReactDiffViewer
-                                  oldValue={comment.history[index - 1].comment}
-                                  newValue={historyItem.comment}
-                                  splitView={true}
-                                />
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {
-                    <div className="flex flex-col gap-1">
-                      <div className="w-full">
-                        <h2 className="text-lg font-medium">Current</h2>
-                        <div className="flex flex-col w-full gap-1 pt-2">
-                          <div className="flex flex-col">
-                            <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                              {comment.createdByFirstName}{" "}
-                              {comment.createdByLastName}
-                            </span>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-xs italic font-medium text-gray-500 dark:text-white">
-                                <span>Edited on</span>
-                                <span> </span>
-                                {format(
-                                  comment.createdDate,
-                                  "yyyy-MM-dd hh:mm a"
-                                )}
-                              </span>
-                            </div>
-                          </div>
-                          <ReactDiffViewer
-                            oldValue={
-                              comment.history[comment.history.length - 1]
-                                .comment
-                            }
-                            newValue={comment.comment}
-                            splitView={true}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  }
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button onClick={onClose}>Close</Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      {CommentHistoryModal(
+        isHistoryModalOpen,
+        onHistoryModalOpenChange,
+        comment
+      )}
     </>
   );
 }
-
-// function EditButton({
-//   commentId,
-//   accessionId,
-//   commentText,
-// }: {
-//   commentId: string;
-//   accessionId: string;
-//   commentText: string;
-// }) {
-//   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-//   return (
-//     <>
-//       <button
-//         className="inline-flex items-center self-center p-2 text-sm font-medium text-center text-gray-900 transition-opacity bg-white rounded-lg md:opacity-0 hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600 md:group-hover:opacity-100"
-//         type="button"
-//         onClick={onOpen}
-//       >
-//         {/* https://iconbuddy.app/akar-icons/chatedit */}
-//         <svg
-//           className="w-4 h-4 text-gray-500 dark:text-gray-400"
-//           width="512"
-//           height="512"
-//           viewBox="0 0 24 24"
-//           xmlns="http://www.w3.org/2000/svg"
-//         >
-//           <g fill="none" stroke="currentColor" stroke-width="2">
-//             <path
-//               stroke-linecap="round"
-//               stroke-linejoin="round"
-//               d="M14 19c3.771 0 5.657 0 6.828-1.172C22 16.657 22 14.771 22 11c0-3.771 0-5.657-1.172-6.828C19.657 3 17.771 3 14 3h-4C6.229 3 4.343 3 3.172 4.172C2 5.343 2 7.229 2 11c0 3.771 0 5.657 1.172 6.828c.653.654 1.528.943 2.828 1.07"
-//             />
-//             <path
-//               stroke-linecap="round"
-//               stroke-linejoin="round"
-//               d="M15.207 6.793a1 1 0 0 0-1.418.003l-4.55 4.597a2 2 0 0 0-.54 1.015l-.18.896a1 1 0 0 0 1.177 1.177l.896-.18a2 2 0 0 0 1.015-.54l4.597-4.55a1 1 0 0 0 .003-1.418z"
-//             />
-//             <path d="m12.5 9.5l1 1" />
-//             <path
-//               stroke-linecap="round"
-//               d="M14 19c-1.236 0-2.598.5-3.841 1.145c-1.998 1.037-2.997 1.556-3.489 1.225c-.492-.33-.399-1.355-.212-3.404L6.5 17.5"
-//             />
-//           </g>
-//         </svg>
-//       </button>
-
-//       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-//         <ModalContent>
-//           {(onClose) => (
-//             <>
-//               <ModalHeader className="flex flex-col gap-1">
-//                 Edit Comment
-//               </ModalHeader>
-//               <ModalBody>
-//                 <SetCommentForm
-//                   commentId={commentId}
-//                   afterSubmit={() => {
-//                     onClose();
-//                   }}
-//                   initialComment={commentText}
-//                   accessionId={accessionId}
-//                 />
-//               </ModalBody>
-//             </>
-//           )}
-//         </ModalContent>
-//       </Modal>
-//     </>
-//   );
-// }
 
 function CopyButton({ textToCopy }: { textToCopy: string }) {
   return (
