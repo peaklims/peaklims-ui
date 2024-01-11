@@ -58,6 +58,7 @@ export function CommentHistoryModal(
                               oldValue={""}
                               newValue={historyItem.comment}
                               splitView={false}
+                              hideLineNumbers={true}
                             />
                           ) : (
                             <div className="">
@@ -65,6 +66,7 @@ export function CommentHistoryModal(
                                 oldValue={comment.history[index - 1].comment}
                                 newValue={historyItem.comment}
                                 splitView={true}
+                                hideLineNumbers={true}
                               />
                             </div>
                           )}
@@ -100,6 +102,7 @@ export function CommentHistoryModal(
                           }
                           newValue={comment.comment}
                           splitView={true}
+                          hideLineNumbers={true}
                         />
                       </div>
                     </div>
