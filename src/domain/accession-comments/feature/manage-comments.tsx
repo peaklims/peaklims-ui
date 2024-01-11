@@ -17,6 +17,7 @@ import {
 } from "@nextui-org/react";
 import { format } from "date-fns";
 import { useEffect, useRef } from "react";
+import ReactDiffViewer from "react-diff-viewer";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useAddAccessionComment } from "../apis/add-comment";
@@ -84,6 +85,7 @@ export function ManageAccessionComments({
                   <ChatBubble
                     bubbleSide={comment.ownedByCurrentUser ? "right" : "left"}
                     comment={comment}
+                    accessionId={accessionId}
                   />
                 );
               })}
@@ -189,7 +191,7 @@ function ChatBubble({
                   <div
                     className={cn(`flex flex-col w-full leading-1.5 pl-4 pt-1`)}
                   >
-                    <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                    <div className="flex items-center justify-end space-x-2 rtl:space-x-reverse">
                       <span className="text-xs italic font-medium text-gray-500 dark:text-white">
                         Edited on{" "}
                         {format(comment.createdDate, "yyyy-MM-dd hh:mm a")}
@@ -375,9 +377,11 @@ function ActionMenu({
             </div>
           </DropdownItem>
           <DropdownItem
-            className="rounded-md"
+            className={cn(
+              "rounded-md",
+              comment.history.length <= 0 && "hidden"
+            )}
             key="history"
-            hidden={comment.history.length <= 0}
           >
             <div className="flex items-center space-x-3">
               {/* https://iconbuddy.app/akar-icons/history */}
@@ -434,6 +438,7 @@ function ActionMenu({
       <Modal
         isOpen={isHistoryModalOpen}
         onOpenChange={onHistoryModalOpenChange}
+        size="5xl"
       >
         <ModalContent>
           {(onClose) => (
@@ -442,7 +447,7 @@ function ActionMenu({
                 Comment History
               </ModalHeader>
               <ModalBody>
-                <div className="space-y-10">
+                <div className="space-y-10 overflow-y-auto">
                   {comment.history.map((historyItem, index) => {
                     return (
                       <div className="flex flex-col gap-1">
@@ -468,30 +473,18 @@ function ActionMenu({
                               </div>
                             </div>
                             {index === 0 ? (
-                              <p
-                                className={cn(
-                                  "text-sm font-normal whitespace-break-spaces text-gray-900 dark:text-white text-balance w-full border rounded-lg shadow p-3"
-                                )}
-                              >
-                                {historyItem.comment}
-                              </p>
+                              <ReactDiffViewer
+                                oldValue={""}
+                                newValue={historyItem.comment}
+                                splitView={false}
+                              />
                             ) : (
-                              <div className="flex space-x-4">
-                                <p
-                                  className={cn(
-                                    "text-sm font-normal whitespace-break-spaces text-gray-900 dark:text-white text-balance w-full border rounded-lg shadow p-3"
-                                  )}
-                                >
-                                  {comment.history[index - 1].comment}
-                                </p>
-
-                                <p
-                                  className={cn(
-                                    "text-sm font-normal whitespace-break-spaces text-gray-900 dark:text-white text-balance w-full border rounded-lg shadow p-3"
-                                  )}
-                                >
-                                  {historyItem.comment}
-                                </p>
+                              <div className="">
+                                <ReactDiffViewer
+                                  oldValue={comment.history[index - 1].comment}
+                                  newValue={historyItem.comment}
+                                  splitView={true}
+                                />
                               </div>
                             )}
                           </div>
@@ -511,22 +504,23 @@ function ActionMenu({
                             </span>
                             <div className="flex items-center space-x-2">
                               <span className="text-xs italic font-medium text-gray-500 dark:text-white">
-                                <span>Created on</span>
+                                <span>Edited on</span>
                                 <span> </span>
                                 {format(
-                                  comment.originalCommentAt,
+                                  comment.createdDate,
                                   "yyyy-MM-dd hh:mm a"
                                 )}
                               </span>
                             </div>
                           </div>
-                          <p
-                            className={cn(
-                              "text-sm font-normal whitespace-break-spaces text-gray-900 dark:text-white text-balance w-full border rounded-lg shadow p-3"
-                            )}
-                          >
-                            {comment.comment}
-                          </p>
+                          <ReactDiffViewer
+                            oldValue={
+                              comment.history[comment.history.length - 1]
+                                .comment
+                            }
+                            newValue={comment.comment}
+                            splitView={true}
+                          />
                         </div>
                       </div>
                     </div>
@@ -534,7 +528,7 @@ function ActionMenu({
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button onClick={onHistoryModalOpenChange}>Close</Button>
+                <Button onClick={onClose}>Close</Button>
               </ModalFooter>
             </>
           )}

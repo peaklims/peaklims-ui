@@ -69,7 +69,7 @@ export function SetCommentForm({
               <FormItem>
                 <FormLabel required={false}>Comment</FormLabel>
                 <FormControl>
-                  <Textarea rows={20} {...field} />
+                  <Textarea autoFocus rows={20} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
