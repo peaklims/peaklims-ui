@@ -301,7 +301,7 @@ function ActionMenu({
           </button>
         </DropdownTrigger>
         <DropdownMenu
-          aria-label="Static Actions"
+          aria-label="Actions"
           onAction={(key) => {
             if (key === "copy") {
               navigator.clipboard.writeText(comment.comment);

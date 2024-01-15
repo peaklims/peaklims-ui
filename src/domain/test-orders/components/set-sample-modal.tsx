@@ -1,5 +1,5 @@
 import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
-import { Modal, ModalContent, ModalHeader } from "@nextui-org/react";
+import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react";
 import React, { ReactNode, useState } from "react";
 import { SetSampleForm } from "./set-sample-form";
 
@@ -56,7 +56,7 @@ export const SetSampleModal = ({
           <ModalHeader className="text-2xl font-semibold scroll-m-20">
             Set Sample
           </ModalHeader>
-          <div className="px-6 pb-2 overflow-y-auto grow gap-y-5">
+          <ModalBody className="px-6 pb-2 overflow-y-auto grow gap-y-5">
             <SetSampleForm
               sampleOptions={patientSamplesForDropdown}
               testOrderId={testOrderId}
@@ -65,7 +65,7 @@ export const SetSampleModal = ({
                 setSetSampleDialogIsOpen(false);
               }}
             />
-          </div>
+          </ModalBody>
         </ModalContent>
       </Modal>
       {children}
