@@ -39,3 +39,22 @@ export type TestOrderDto = {
   panelId?: string;
   testId?: string;
 };
+
+export type TestOrderStatus =
+  | "Pending"
+  | "Ready For Testing"
+  | "Testing"
+  | "Testing Complete"
+  | "Report Pending"
+  | "Report Complete"
+  | "Completed"
+  | "Abandoned"
+  | "Cancelled"
+  | "Qns";
+
+export type PanelOrderStatus =
+  | "Pending"
+  | "Processing"
+  | "Completed"
+  | "Abandoned"
+  | "Cancelled";

@@ -12,7 +12,9 @@ import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useState } from "react";
 import { useRemovePanelOrder } from "../apis/remove-panel-order.api";
+import { PanelOrderStatus, TestOrderStatus } from "../types";
 import { SetSampleButton, SetSampleModal } from "./set-sample-modal";
+import { PanelOrderStatusBadge, TestOrderStatusBadge } from "./status-badge";
 
 export function PanelOrderCard({
   panel: panelOrder,
@@ -26,12 +28,14 @@ export function PanelOrderCard({
     panelCode: string;
     panelName: string;
     panelOrderId: string;
+    status: string;
     type: string;
     version: number;
     tests: {
       id: string;
       testCode: string;
       testName: string;
+      status: string;
       sample: {
         id: string | null;
         sampleNumber: string | null;
@@ -72,15 +76,26 @@ export function PanelOrderCard({
             >
               <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
             </motion.div>
-            <h4 className="flex flex-col items-start font-medium xl:flex-row xl:flex xl:space-x-2">
-              <span
-                className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
-              >
-                {panelOrder.panelCode}
-              </span>
-              <span className="hidden pt-1 sm:block text-start xl:pt-0">
-                {panelOrder.panelName}
-              </span>
+            <h4 className="flex flex-col font-medium xl:space-x-2">
+              <div className="flex flex-col items-start">
+                <span className="hidden pt-1 sm:block text-start xl:pt-0">
+                  {panelOrder.panelName}
+                </span>
+
+                <p className="block text-xs font-semibold text-gray-400">
+                  [{panelOrder.panelCode}]
+                </p>
+                <div className="flex items-start pt-2">
+                  {/* <span
+                  className={`w-auto ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
+                >
+                  {panelOrder.status || "-"}
+                </span> */}
+                  <PanelOrderStatusBadge
+                    status={(panelOrder?.status || "-") as PanelOrderStatus}
+                  />
+                </div>
+              </div>
             </h4>
           </button>
 
@@ -226,7 +241,7 @@ export function PanelOrderCard({
 
                     <div className="flex flex-col w-full pl-2">
                       <div className="flex flex-col pl-2 border-indigo-600 border-l-3">
-                        <div className="">
+                        <div className="flex flex-col">
                           <div className="flex items-center justify-between">
                             <h5 className="flex-1 text-sm font-semibold tracking-tight">
                               {testOrder.testName}
@@ -240,6 +255,13 @@ export function PanelOrderCard({
                           <p className="block text-xs font-semibold text-gray-400">
                             [{testOrder.testCode}]
                           </p>
+                          <div className="flex items-start pt-2">
+                            <TestOrderStatusBadge
+                              status={
+                                (testOrder.status || "-") as TestOrderStatus
+                              }
+                            />
+                          </div>
 
                           <SetSampleModal
                             testOrderId={testOrder.id}

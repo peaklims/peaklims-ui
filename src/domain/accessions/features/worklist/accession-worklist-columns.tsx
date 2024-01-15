@@ -1,6 +1,6 @@
 "use client";
 
-import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
+import AccessionStatusBadge from "@/domain/accessions/components/status-badge";
 import {
   AccessionStatus,
   AccessionWorklistDto,

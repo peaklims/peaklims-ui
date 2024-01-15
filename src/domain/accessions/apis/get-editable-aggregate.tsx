@@ -17,5 +17,7 @@ export const useGetAccessionForEdit = (
     queryKey: AccessionKeys.forEdit(accessionId!),
     queryFn: () => getAccessionForEdit(accessionId!),
     enabled: accessionId !== null && accessionId !== undefined,
+    staleTime: 3000,
+    gcTime: 3000,
   });
 };

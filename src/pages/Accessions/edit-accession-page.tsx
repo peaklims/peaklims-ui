@@ -1,7 +1,8 @@
 import { ManageAttachments } from "@/domain/accession-attachments/components/manage-attachments";
+import { useGetAccessionComment } from "@/domain/accession-comments/apis/get-accession-comments";
 import { ManageAccessionComments } from "@/domain/accession-comments/feature/manage-comments";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
-import AccessionStatusBadge from "@/domain/accessions/features/status-badge";
+import AccessionStatusBadge from "@/domain/accessions/components/status-badge";
 import {
   AccessionAttachmentDto,
   AccessionContactDto,
@@ -21,11 +22,14 @@ import { Paperclip } from "lucide-react";
 import { Helmet } from "react-helmet";
 
 export function EditAccessionPage() {
-  const queryParams = useParams();
+  const queryParams = useParams({
+    from: "/auth-layout/accessions/$accessionId",
+  });
   const accessionId = queryParams.accessionId;
   const { data: accession } = useGetAccessionForEdit(accessionId);
 
   const accessionNumber = accession?.accessionNumber ?? "";
+  useGetAccessionComment(accessionId);
   const accessionNumberTitle = accessionNumber ? ` - ${accessionNumber}` : "";
 
   return (
