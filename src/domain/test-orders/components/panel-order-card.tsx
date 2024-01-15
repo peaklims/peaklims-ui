@@ -97,11 +97,6 @@ export function PanelOrderCard({
                   [{panelOrder.panelCode}]
                 </p>
                 <div className="flex items-start pt-2">
-                  {/* <span
-                  className={`w-auto ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
-                >
-                  {panelOrder.status || "-"}
-                </span> */}
                   <PanelOrderStatusBadge
                     status={(panelOrder?.status || "-") as PanelOrderStatus}
                   />
@@ -217,50 +212,9 @@ function TestOrderActions({
               initial="closed"
               animate={panelOrder.id === showPanelTestsId ? "open" : "closed"}
             >
-              {/* <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    className={cn(
-                      "inline-flex items-center px-2 py-2 text-sm font-medium leading-5 transition duration-100 ease-in bg-white rounded-full hover:shadow",
-                      "hover:bg-slate-100 hover:text-slate-800 hover:outline-none text-slate-700",
-                      "sm:p-3 dark:hover:shadow dark:shadow-slate-400 dark:hover:shadow-slate-300"
-                    )}
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      width={512}
-                      height={512}
-                      viewBox="0 0 512 512"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle cx={256} cy={256} r={48} fill="currentColor" />
-                      <circle cx={416} cy={256} r={48} fill="currentColor" />
-                      <circle cx={96} cy={256} r={48} fill="currentColor" />
-                    </svg>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" side="right">
-                  <DropdownMenuGroup>
-                    <SetSampleModal
-                      testOrderId={testOrder.id}
-                      sampleId={testOrder.sample.id}
-                      testName={testOrder.testName}
-                      patientId={patientId}
-                    >
-                      <SetSampleButton>
-                        <DropdownMenuItem>
-                          <p>Set Sample</p>
-                        </DropdownMenuItem>
-                      </SetSampleButton>
-                    </SetSampleModal>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu> */}
-
               <TestOrderActionMenu
                 testOrderId={testOrder.id}
                 sampleId={testOrder.sample.id}
-                testName={testOrder.testName}
                 patientId={patientId}
               />
 
@@ -330,12 +284,10 @@ function TestOrderActions({
 
 function TestOrderActionMenu({
   sampleId,
-  testName,
   testOrderId,
   patientId,
 }: {
   sampleId: string | null;
-  testName: string | null;
   testOrderId: string | null;
   patientId: string | null;
 }) {
