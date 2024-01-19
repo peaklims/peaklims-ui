@@ -23,6 +23,7 @@ import {
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useState } from "react";
+import { useCancelTestOrder } from "../apis/canel-test-order";
 import { useRemovePanelOrder } from "../apis/remove-panel-order.api";
 import { PanelOrderStatus, TestOrderStatus } from "../types";
 import { SetSampleForm } from "./set-sample-form";
@@ -288,7 +289,7 @@ function TestOrderActionMenu({
   patientId,
 }: {
   sampleId: string | null;
-  testOrderId: string | null;
+  testOrderId: string;
   patientId: string | null;
 }) {
   const {
@@ -302,6 +303,25 @@ function TestOrderActionMenu({
   const patientSamplesForDropdown = patientSamples.map((sample) => {
     return { value: sample.id, label: sample.sampleNumber };
   });
+  const cancelTestOrderApi = useCancelTestOrder();
+
+  function cancelTestOrder({ testOrderId }: { testOrderId: string }) {
+    const accessionCommentForCreation = {
+      reason: "Other",
+      comments: "Test Order Cancelled",
+    };
+    cancelTestOrderApi
+      .mutateAsync({
+        testOrderId,
+        data: accessionCommentForCreation,
+      })
+      .catch((err) => {
+        const statusCode = err?.response?.status;
+        if (statusCode != 422) {
+          Notification.error(`Error cancelling test order`);
+        }
+      });
+  }
   return (
     <>
       <NextDropdown>
@@ -333,11 +353,19 @@ function TestOrderActionMenu({
             if (key === "set sample") {
               onEditModalOpen();
             }
+            if (key === "cancel test order") {
+              cancelTestOrder({ testOrderId });
+            }
           }}
         >
           <NextDropdownItem key="set sample">
             <div className="flex items-center space-x-3">
               <p>Set Sample</p>
+            </div>
+          </NextDropdownItem>
+          <NextDropdownItem key="cancel test order">
+            <div className="flex items-center space-x-3">
+              <p>Cancel Test Order</p>
             </div>
           </NextDropdownItem>
         </NextDropdownMenu>

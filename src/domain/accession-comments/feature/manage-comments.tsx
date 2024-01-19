@@ -67,7 +67,7 @@ export function ManageAccessionComments({
       <div className="">
         <div
           className={cn(
-            "w-full h-full p-6 space-y-3 overflow-auto border-2 rounded-t-lg max-h-[35rem]"
+            "w-full h-full p-6 space-y-3 overflow-auto border-2 rounded-tLg max-h-[35rem]"
           )}
         >
           {(comments?.accessionComments?.length ?? 0) <= 0 ? (
@@ -98,9 +98,9 @@ export function ManageAccessionComments({
           <textarea
             id="comment"
             rows={4}
-            aria-label="Add a comment"
+            ariaLabel="Add a comment"
             className={cn(
-              "max-h-52 z-20 w-full px-5 py-4 -mt-[2px] border-2 rounded-b-lg shadow-md focus:outline-none focus:border-emerald-400"
+              "max-h-52 z-20 w-full px-5 py-4 -mt-[2px] border-2 rounded-bLg shadow-md focus:outline-none focus:border-emerald-400"
             )}
             autoFocus={true}
             placeholder="Add a comment"
@@ -286,7 +286,7 @@ function ActionMenu({
       <Dropdown>
         <DropdownTrigger>
           <button
-            className="inline-flex items-center self-center p-2 text-sm font-medium text-center text-gray-900 transition-opacity bg-white rounded-lg md:opacity-0 hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600 md:group-hover:opacity-100"
+            className="inline-flex items-center self-center p-2 text-sm font-medium text-center text-gray-900 transition-opacity bg-white roundedLg md:opacity-0 hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600 md:group-hover:opacity-100"
             type="button"
           >
             <svg
@@ -301,7 +301,7 @@ function ActionMenu({
           </button>
         </DropdownTrigger>
         <DropdownMenu
-          aria-label="Actions"
+          ariaLabel="Actions"
           onAction={(key) => {
             if (key === "copy") {
               navigator.clipboard.writeText(comment.comment);
@@ -328,20 +328,20 @@ function ActionMenu({
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <g fill="none" stroke="currentColor" stroke-width="2">
+                <g fill="none" stroke="currentColor" strokeWidth="2">
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M14 19c3.771 0 5.657 0 6.828-1.172C22 16.657 22 14.771 22 11c0-3.771 0-5.657-1.172-6.828C19.657 3 17.771 3 14 3h-4C6.229 3 4.343 3 3.172 4.172C2 5.343 2 7.229 2 11c0 3.771 0 5.657 1.172 6.828c.653.654 1.528.943 2.828 1.07"
                   />
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M15.207 6.793a1 1 0 0 0-1.418.003l-4.55 4.597a2 2 0 0 0-.54 1.015l-.18.896a1 1 0 0 0 1.177 1.177l.896-.18a2 2 0 0 0 1.015-.54l4.597-4.55a1 1 0 0 0 .003-1.418z"
                   />
                   <path d="m12.5 9.5l1 1" />
                   <path
-                    stroke-linecap="round"
+                    strokeLinecap="round"
                     d="M14 19c-1.236 0-2.598.5-3.841 1.145c-1.998 1.037-2.997 1.556-3.489 1.225c-.492-.33-.399-1.355-.212-3.404L6.5 17.5"
                   />
                 </g>
@@ -363,9 +363,9 @@ function ActionMenu({
                 <g
                   fill="none"
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                 >
                   <path d="M8 4v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.242a2 2 0 0 0-.602-1.43L16.083 2.57A2 2 0 0 0 14.685 2H10a2 2 0 0 0-2 2" />
                   <path d="M16 18v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2" />
@@ -394,9 +394,9 @@ function ActionMenu({
                 <path
                   fill="none"
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M4.266 16.06a8.923 8.923 0 0 0 3.915 3.978a8.706 8.706 0 0 0 5.471.832a8.795 8.795 0 0 0 4.887-2.64a9.067 9.067 0 0 0 2.388-5.079a9.135 9.135 0 0 0-1.044-5.53a8.903 8.903 0 0 0-4.069-3.815a8.7 8.7 0 0 0-5.5-.608c-1.85.401-3.366 1.313-4.62 2.755c-.151.16-.735.806-1.22 1.781M7.5 8l-3.609.72L3 5m9 4v4l3 2"
                 />
               </svg>
@@ -440,7 +440,7 @@ function ActionMenu({
 function CopyButton({ textToCopy }: { textToCopy: string }) {
   return (
     <button
-      className="inline-flex items-center self-center p-2 text-sm font-medium text-center text-gray-900 transition-opacity bg-white rounded-lg md:opacity-0 hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600 md:group-hover:opacity-100"
+      className="inline-flex items-center self-center p-2 text-sm font-medium text-center text-gray-900 transition-opacity bg-white roundedLg md:opacity-0 hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600 md:group-hover:opacity-100"
       type="button"
       onClick={() => {
         navigator.clipboard.writeText(textToCopy);
@@ -458,9 +458,9 @@ function CopyButton({ textToCopy }: { textToCopy: string }) {
         <g
           fill="none"
           stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
         >
           <path d="M8 4v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.242a2 2 0 0 0-.602-1.43L16.083 2.57A2 2 0 0 0 14.685 2H10a2 2 0 0 0-2 2" />
           <path d="M16 18v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2" />

@@ -58,3 +58,8 @@ export type PanelOrderStatus =
   | "Completed"
   | "Abandoned"
   | "Cancelled";
+
+export type TestOrderCancellationDto = {
+  reason: string;
+  comments: string;
+};
