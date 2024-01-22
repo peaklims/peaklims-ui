@@ -75,13 +75,21 @@ export const SetSampleModal = ({
 
 type SetSampleButtonProps = {
   children?: ReactNode;
-  // Include any additional props needed for setting sampleId and testName
+  className?: string;
 };
 
-export const SetSampleButton = ({ children }: SetSampleButtonProps) => {
+export const SetSampleButton = ({
+  children,
+  className,
+}: SetSampleButtonProps) => {
   const { setSetSampleDialogIsOpen } = React.useContext(SetSampleModalContext);
 
   return (
-    <button onClick={() => setSetSampleDialogIsOpen(true)}>{children}</button>
+    <button
+      className={className}
+      onClick={() => setSetSampleDialogIsOpen(true)}
+    >
+      {children}
+    </button>
   );
 };

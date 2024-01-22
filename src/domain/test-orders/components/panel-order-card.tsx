@@ -23,9 +23,11 @@ import {
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useState } from "react";
-import { useCancelTestOrder } from "../apis/canel-test-order";
+import { useGetTestOrderCancellationReasons } from "../apis/get-test-order-cancellation-reasons.api";
 import { useRemovePanelOrder } from "../apis/remove-panel-order.api";
 import { PanelOrderStatus, TestOrderStatus } from "../types";
+import { CancelTestOrderForm } from "./cancel-test-order-form";
+import { CancellationInfoButton } from "./cancellation-info-button";
 import { SetSampleForm } from "./set-sample-form";
 import { SetSampleButton, SetSampleModal } from "./set-sample-modal";
 import { PanelOrderStatusBadge, TestOrderStatusBadge } from "./status-badge";
@@ -43,6 +45,8 @@ type PanelOrder = {
     testCode: string;
     testName: string;
     status: string;
+    cancellationReason: string | null;
+    cancellationComments: string | null;
     sample: {
       id: string | null;
       sampleNumber: string | null;
@@ -235,10 +239,20 @@ function TestOrderActions({
                     <p className="block text-xs font-semibold text-gray-400">
                       [{testOrder.testCode}]
                     </p>
-                    <div className="flex items-start pt-2">
+                    <div className="flex items-center justify-start pt-2 space-x-3">
                       <TestOrderStatusBadge
                         status={(testOrder.status || "-") as TestOrderStatus}
                       />
+                      {testOrder.status === "Cancelled" && (
+                        <CancellationInfoButton
+                          cancellationReason={
+                            testOrder.cancellationReason ?? ""
+                          }
+                          cancellationComments={
+                            testOrder.cancellationComments ?? ""
+                          }
+                        />
+                      )}
                     </div>
 
                     <SetSampleModal
@@ -247,9 +261,9 @@ function TestOrderActions({
                       testName={testOrder.testName}
                       patientId={patientId}
                     >
-                      <SetSampleButton>
-                        <div className="flex items-center pt-2 group">
-                          <p className="block text-xs font-medium transition-colors group-hover:text-slate-500">
+                      <SetSampleButton className="inline-flex items-center pt-2 group">
+                        <>
+                          <p className="text-xs font-medium transition-colors group-hover:text-slate-500">
                             {testOrder.sample.sampleNumber ||
                               "Sample not assigned"}
                           </p>
@@ -270,7 +284,7 @@ function TestOrderActions({
                               </svg>
                             </div>
                           )}
-                        </div>
+                        </>
                       </SetSampleButton>
                     </SetSampleModal>
                   </div>
@@ -297,31 +311,12 @@ function TestOrderActionMenu({
     onOpen: onEditModalOpen,
     onOpenChange: onEditModalOpenChange,
   } = useDisclosure();
+  const {
+    isOpen: isCancelModalOpen,
+    onOpen: onCancelModalOpen,
+    onOpenChange: onCancelModalOpenChange,
+  } = useDisclosure();
 
-  const { data } = useGetPatientSamples({ patientId });
-  const patientSamples = data ?? [];
-  const patientSamplesForDropdown = patientSamples.map((sample) => {
-    return { value: sample.id, label: sample.sampleNumber };
-  });
-  const cancelTestOrderApi = useCancelTestOrder();
-
-  function cancelTestOrder({ testOrderId }: { testOrderId: string }) {
-    const accessionCommentForCreation = {
-      reason: "Other",
-      comments: "Test Order Cancelled",
-    };
-    cancelTestOrderApi
-      .mutateAsync({
-        testOrderId,
-        data: accessionCommentForCreation,
-      })
-      .catch((err) => {
-        const statusCode = err?.response?.status;
-        if (statusCode != 422) {
-          Notification.error(`Error cancelling test order`);
-        }
-      });
-  }
   return (
     <>
       <NextDropdown>
@@ -354,7 +349,7 @@ function TestOrderActionMenu({
               onEditModalOpen();
             }
             if (key === "cancel test order") {
-              cancelTestOrder({ testOrderId });
+              onCancelModalOpen();
             }
           }}
         >
@@ -371,28 +366,104 @@ function TestOrderActionMenu({
         </NextDropdownMenu>
       </NextDropdown>
 
-      <Modal isOpen={isEditModalOpen} onOpenChange={onEditModalOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Set Sample
-              </ModalHeader>
+      <SetSampleModalAction
+        isEditModalOpen={isEditModalOpen}
+        onEditModalOpenChange={onEditModalOpenChange}
+        testOrderId={testOrderId}
+        sampleId={sampleId}
+        patientId={patientId}
+      />
 
-              <ModalBody className="px-6 pb-2 overflow-y-auto grow gap-y-5">
-                <SetSampleForm
-                  sampleOptions={patientSamplesForDropdown}
-                  testOrderId={testOrderId}
-                  sampleId={sampleId}
-                  afterSubmit={() => {
-                    onClose();
-                  }}
-                />
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <CancelModalAction
+        isCancelModalOpen={isCancelModalOpen}
+        onCancelModalOpenChange={onCancelModalOpenChange}
+        testOrderId={testOrderId}
+      />
     </>
+  );
+}
+
+function SetSampleModalAction({
+  isEditModalOpen,
+  onEditModalOpenChange,
+  testOrderId,
+  sampleId,
+  patientId,
+}: {
+  isEditModalOpen: boolean;
+  onEditModalOpenChange: (isOpen: boolean) => void;
+  testOrderId: string;
+  sampleId: string | null;
+  patientId: string | null;
+}) {
+  const { data } = useGetPatientSamples({ patientId });
+  const patientSamples = data ?? [];
+  const patientSamplesForDropdown = patientSamples.map((sample) => {
+    return { value: sample.id, label: sample.sampleNumber };
+  });
+
+  return (
+    <Modal isOpen={isEditModalOpen} onOpenChange={onEditModalOpenChange}>
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex flex-col gap-1">
+              Set Sample
+            </ModalHeader>
+
+            <ModalBody className="px-6 pb-2 overflow-y-auto grow gap-y-5">
+              <SetSampleForm
+                sampleOptions={patientSamplesForDropdown}
+                testOrderId={testOrderId}
+                sampleId={sampleId}
+                afterSubmit={() => {
+                  onClose();
+                }}
+              />
+            </ModalBody>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
+  );
+}
+
+function CancelModalAction({
+  isCancelModalOpen,
+  onCancelModalOpenChange,
+  testOrderId,
+}: {
+  isCancelModalOpen: boolean;
+  onCancelModalOpenChange: (isOpen: boolean) => void;
+  testOrderId: string;
+}) {
+  const { data } = useGetTestOrderCancellationReasons();
+  const reasons = data ?? [];
+  const reasonsForDropdown = reasons.map((sample) => {
+    return { value: sample, label: sample };
+  });
+
+  return (
+    <Modal isOpen={isCancelModalOpen} onOpenChange={onCancelModalOpenChange}>
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex flex-col gap-1">
+              Cancel Test Order
+            </ModalHeader>
+
+            <ModalBody className="px-6 pb-2 overflow-y-auto grow gap-y-5">
+              <CancelTestOrderForm
+                cancellationReasonOptions={reasonsForDropdown}
+                testOrderId={testOrderId}
+                afterSubmit={() => {
+                  onClose();
+                }}
+              />
+            </ModalBody>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
 }

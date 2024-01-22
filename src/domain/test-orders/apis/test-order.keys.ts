@@ -7,6 +7,8 @@ const TestOrderKeys = {
   details: () => [...TestOrderKeys.all, "detail"] as const,
   detail: (TestOrderId: string) =>
     [...TestOrderKeys.details(), TestOrderId] as const,
+  testOrderCancellationReasons: () =>
+    [...TestOrderKeys.all, "TestOrderCancellationReasons"] as const,
 };
 
 export { TestOrderKeys };
