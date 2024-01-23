@@ -287,7 +287,7 @@ function ActionMenu({
       <Dropdown>
         <DropdownTrigger>
           <button
-            className="inline-flex items-center self-center p-2 text-sm font-medium text-center text-gray-900 transition-opacity bg-white roundedLg md:opacity-0 hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600 md:group-hover:opacity-100"
+            className="inline-flex items-center self-center p-2 text-sm font-medium text-center text-gray-900 transition-opacity bg-white rounded-md roundedLg md:opacity-0 hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600 md:group-hover:opacity-100"
             type="button"
           >
             <svg

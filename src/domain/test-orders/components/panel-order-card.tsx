@@ -33,18 +33,20 @@ type PanelOrder = {
   status: string;
   type: string;
   version: number;
-  tests: {
-    id: string;
-    testCode: string;
-    testName: string;
-    status: string;
-    cancellationReason: string | null;
-    cancellationComments: string | null;
-    sample: {
-      id: string | null;
-      sampleNumber: string | null;
-    };
-  }[];
+  tests: TestOrder[];
+};
+
+type TestOrder = {
+  id: string;
+  testCode: string;
+  testName: string;
+  status: string;
+  cancellationReason: string | null;
+  cancellationComments: string | null;
+  sample: {
+    id: string | null;
+    sampleNumber: string | null;
+  };
 };
 
 export function PanelOrderCard({
@@ -219,6 +221,7 @@ function TestOrderActions({
                 testOrderId={testOrder.id}
                 sampleId={testOrder.sample.id}
                 patientId={patientId}
+                testOrder={testOrder}
               />
 
               <div className="flex flex-col w-full pl-2">
@@ -303,10 +306,12 @@ function TestOrderActionMenu({
   sampleId,
   testOrderId,
   patientId,
+  testOrder,
 }: {
   sampleId: string | null;
   testOrderId: string;
   patientId: string | null;
+  testOrder: TestOrder;
 }) {
   const {
     isOpen: isSampleModalOpen,
@@ -355,12 +360,19 @@ function TestOrderActionMenu({
             }
           }}
         >
-          <NextDropdownItem key="set sample">
+          <NextDropdownItem key="set sample" className={cn("rounded-md")}>
             <div className="flex items-center space-x-3">
               <p>Set Sample</p>
             </div>
           </NextDropdownItem>
-          <NextDropdownItem key="cancel test order">
+
+          <NextDropdownItem
+            key="cancel test order"
+            className={cn(
+              "rounded-md",
+              testOrder.status === "Cancelled" && "hidden"
+            )}
+          >
             <div className="flex items-center space-x-3">
               <p>Cancel Test Order</p>
             </div>

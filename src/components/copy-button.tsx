@@ -11,7 +11,7 @@ export function CopyButton({
   return (
     <button
       className={cn(
-        "inline-flex items-center self-center p-2 text-sm font-medium text-center text-gray-900 transition-opacity bg-white roundedLg md:opacity-0 hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600 md:group-hover:opacity-100",
+        "rounded-md inline-flex items-center self-center p-2 text-sm font-medium text-center text-gray-900 transition-opacity bg-white roundedLg md:opacity-0 hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600 md:group-hover:opacity-100",
         className
       )}
       type="button"
