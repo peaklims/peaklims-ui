@@ -1,6 +1,6 @@
+import { Autocomplete } from "@/components/autocomplete";
 import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/ui/combobox";
 import {
   Form,
   FormControl,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AutocompleteItem } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useCancelTestOrder } from "../apis/canel-test-order";
@@ -77,7 +78,26 @@ export function CancelTestOrderForm({
               <FormItem>
                 <FormLabel required={true}>Cancellation Reason</FormLabel>
                 <FormControl>
-                  <Combobox items={cancellationReasonOptions} {...field} />
+                  <Autocomplete
+                    autoFocus={true}
+                    placeholder="Select a reason"
+                    items={
+                      cancellationReasonOptions ? cancellationReasonOptions : []
+                    }
+                    renderItem={(item) => (
+                      <AutocompleteItem key={item.value} textValue={item.value}>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="flex flex-col">
+                              <span className="text-sm text-slate-800">
+                                {item.value}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </AutocompleteItem>
+                    )}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
