@@ -97,6 +97,8 @@ export function CancelTestOrderForm({
                         </div>
                       </AutocompleteItem>
                     )}
+                    selectedKey={field.value}
+                    onSelectionChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />

@@ -11,6 +11,8 @@ export function Autocomplete<T>({
   ariaLabel,
   asSearchInput = false,
   autoFocus = false,
+  selectedKey,
+  onSelectionChange,
 }: {
   items: Iterable<T> | undefined;
   renderItem: (item: T) => React.ReactElement<typeof AutocompleteItem>;
@@ -18,6 +20,8 @@ export function Autocomplete<T>({
   ariaLabel?: string;
   asSearchInput?: boolean;
   autoFocus?: boolean;
+  selectedKey?: Key | null | undefined;
+  onSelectionChange?: ((key: Key) => any) | undefined;
 }) {
   return (
     <NewAutocomplete
@@ -70,6 +74,8 @@ export function Autocomplete<T>({
         )
       }
       variant="bordered"
+      selectedKey={selectedKey}
+      onSelectionChange={onSelectionChange}
     >
       {(item: T) => renderItem(item)}
     </NewAutocomplete>
