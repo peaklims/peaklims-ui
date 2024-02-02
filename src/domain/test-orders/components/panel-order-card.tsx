@@ -7,8 +7,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { cn } from "@/lib/utils";
 import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
   Dropdown as NextDropdown,
   DropdownItem as NextDropdownItem,
   DropdownMenu as NextDropdownMenu,
@@ -18,11 +23,13 @@ import {
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useState } from "react";
+import { useGetTestOrderCancellationReasons } from "../apis/get-test-order-cancellation-reasons.api";
 import { useRemovePanelOrder } from "../apis/remove-panel-order.api";
 import { PanelOrderStatus, TestOrderStatus } from "../types";
 import { CancelModalAction } from "./cancel-test-order-modal";
 import { CancellationInfoButton } from "./cancellation-info-button";
-import { SetSampleModalAction } from "./set-sample-modal";
+import { SetSampleForm } from "./set-sample-form";
+import { SetSampleButton, SetSampleModal } from "./set-sample-modal";
 import { PanelOrderStatusBadge, TestOrderStatusBadge } from "./status-badge";
 
 type PanelOrder = {
@@ -200,11 +207,6 @@ function TestOrderActions({
     open: { opacity: 1, height: "100%" },
     closed: { opacity: 0, height: "0%" },
   };
-  const {
-    isOpen: isSampleModalOpen,
-    onOpen: onSampleModalOpen,
-    onOpenChange: onSampleModalOpenChange,
-  } = useDisclosure();
   return (
     <div className="pt-2">
       {panelOrder.id === showPanelTestsId &&
@@ -256,42 +258,38 @@ function TestOrderActions({
                       )}
                     </div>
 
-                    <button
-                      onClick={onSampleModalOpen}
-                      className="inline-flex items-center pt-2 group"
-                    >
-                      <>
-                        <p className="text-xs font-medium transition-colors group-hover:text-slate-500">
-                          {testOrder.sample.sampleNumber ||
-                            "Sample not assigned"}
-                        </p>
-                        {(testOrder?.sample?.sampleNumber?.length ?? 0) <=
-                          0 && (
-                          <div className="pl-2">
-                            <svg
-                              width="512"
-                              height="512"
-                              viewBox="0 0 20 20"
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-4 h-4 text-rose-500"
-                            >
-                              <path
-                                fill="currentColor"
-                                d="M10 2c4.42 0 8 3.58 8 8s-3.58 8-8 8s-8-3.58-8-8s3.58-8 8-8m1.13 9.38l.35-6.46H8.52l.35 6.46zm-.09 3.36c.24-.23.37-.55.37-.96c0-.42-.12-.74-.36-.97s-.59-.35-1.06-.35s-.82.12-1.07.35s-.37.55-.37.97c0 .41.13.73.38.96c.26.23.61.34 1.06.34s.8-.11 1.05-.34"
-                              />
-                            </svg>
-                          </div>
-                        )}
-                      </>
-                    </button>
-
-                    <SetSampleModalAction
-                      isSampleModalOpen={isSampleModalOpen}
-                      onSampleModalOpenChange={onSampleModalOpenChange}
+                    <SetSampleModal
                       testOrderId={testOrder.id}
                       sampleId={testOrder.sample.id}
+                      testName={testOrder.testName}
                       patientId={patientId}
-                    />
+                    >
+                      <SetSampleButton className="inline-flex items-center pt-2 group">
+                        <>
+                          <p className="text-xs font-medium transition-colors group-hover:text-slate-500">
+                            {testOrder.sample.sampleNumber ||
+                              "Sample not assigned"}
+                          </p>
+                          {(testOrder?.sample?.sampleNumber?.length ?? 0) <=
+                            0 && (
+                            <div className="pl-2">
+                              <svg
+                                width="512"
+                                height="512"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-4 h-4 text-rose-500"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M10 2c4.42 0 8 3.58 8 8s-3.58 8-8 8s-8-3.58-8-8s3.58-8 8-8m1.13 9.38l.35-6.46H8.52l.35 6.46zm-.09 3.36c.24-.23.37-.55.37-.96c0-.42-.12-.74-.36-.97s-.59-.35-1.06-.35s-.82.12-1.07.35s-.37.55-.37.97c0 .41.13.73.38.96c.26.23.61.34 1.06.34s.8-.11 1.05-.34"
+                                />
+                              </svg>
+                            </div>
+                          )}
+                        </>
+                      </SetSampleButton>
+                    </SetSampleModal>
                   </div>
                 </div>
               </div>
@@ -314,9 +312,9 @@ function TestOrderActionMenu({
   testOrder: TestOrder;
 }) {
   const {
-    isOpen: isSampleModalOpen,
-    onOpen: onSampleModalOpen,
-    onOpenChange: onSampleModalOpenChange,
+    isOpen: isEditModalOpen,
+    onOpen: onEditModalOpen,
+    onOpenChange: onEditModalOpenChange,
   } = useDisclosure();
   const {
     isOpen: isCancelModalOpen,
@@ -353,7 +351,7 @@ function TestOrderActionMenu({
           aria-label="Actions"
           onAction={(key) => {
             if (key === "set sample") {
-              onSampleModalOpen();
+              onEditModalOpen();
             }
             if (key === "cancel test order") {
               onCancelModalOpen();
@@ -381,8 +379,8 @@ function TestOrderActionMenu({
       </NextDropdown>
 
       <SetSampleModalAction
-        isSampleModalOpen={isSampleModalOpen}
-        onSampleModalOpenChange={onSampleModalOpenChange}
+        isEditModalOpen={isEditModalOpen}
+        onEditModalOpenChange={onEditModalOpenChange}
         testOrderId={testOrderId}
         sampleId={sampleId}
         patientId={patientId}
@@ -394,5 +392,50 @@ function TestOrderActionMenu({
         testOrderId={testOrderId}
       />
     </>
+  );
+}
+
+function SetSampleModalAction({
+  isEditModalOpen,
+  onEditModalOpenChange,
+  testOrderId,
+  sampleId,
+  patientId,
+}: {
+  isEditModalOpen: boolean;
+  onEditModalOpenChange: (isOpen: boolean) => void;
+  testOrderId: string;
+  sampleId: string | null;
+  patientId: string | null;
+}) {
+  const { data } = useGetPatientSamples({ patientId });
+  const patientSamples = data ?? [];
+  const patientSamplesForDropdown = patientSamples.map((sample) => {
+    return { value: sample.id, label: sample.sampleNumber };
+  });
+
+  return (
+    <Modal isOpen={isEditModalOpen} onOpenChange={onEditModalOpenChange}>
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex flex-col gap-1">
+              Set Sample
+            </ModalHeader>
+
+            <ModalBody className="px-6 pb-2 overflow-y-auto grow gap-y-5">
+              <SetSampleForm
+                sampleOptions={patientSamplesForDropdown}
+                testOrderId={testOrderId}
+                sampleId={sampleId}
+                afterSubmit={() => {
+                  onClose();
+                }}
+              />
+            </ModalBody>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
 }
