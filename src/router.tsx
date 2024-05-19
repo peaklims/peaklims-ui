@@ -14,9 +14,22 @@ import {
 } from "@tanstack/react-router";
 import { Helmet } from "react-helmet";
 import { z } from "zod";
+import { LoadingSpinner } from "./components/loading-spinner";
+import { useAuthUser } from "./services/auth";
+
+function Loading() {
+  return (
+    <div className="flex items-center justify-center w-screen h-screen transition-all bg-slate-100">
+      <LoadingSpinner />
+    </div>
+  );
+}
 
 const appRoute = new RootRoute({
   component: () => {
+    const { isLoading } = useAuthUser();
+    if (isLoading) return <Loading />;
+
     return (
       <>
         <Helmet

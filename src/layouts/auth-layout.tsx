@@ -1,5 +1,4 @@
 import logo from "@/assets/logo.svg";
-import { LoadingSpinner } from "@/components/loading-spinner";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import {
@@ -48,8 +47,7 @@ const navigation = [
 ] as NavType[];
 
 export default function AuthLayout() {
-  const { user, logoutUrl, isLoading } = useAuthUser();
-  if (isLoading) return <Loading />;
+  const { user, logoutUrl } = useAuthUser();
 
   return (
     <>
@@ -341,13 +339,5 @@ function ProfileManagement({
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-}
-
-function Loading() {
-  return (
-    <div className="flex items-center justify-center w-screen h-screen transition-all bg-slate-100">
-      <LoadingSpinner />
-    </div>
   );
 }
