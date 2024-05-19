@@ -11,7 +11,7 @@ import {
   ChevronRightIcon,
   ChevronsUpDown,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface PaginationControlsProps {
   entityPlural: string;
@@ -34,9 +34,15 @@ export function PaginationControls({
   setPageNumber,
   className,
 }: PaginationControlsProps) {
+  const [totalPages, setTotalPages] = useState(apiPagination?.totalPages);
   const pageInfo = `${pageNumber} ${
-    apiPagination?.totalPages ? `of ${apiPagination?.totalPages}` : null
+    totalPages ? `of ${totalPages}` : "of ..."
   }`;
+
+  useEffect(() => {
+    if (apiPagination?.totalPages != null)
+      setTotalPages(apiPagination?.totalPages);
+  }, [apiPagination?.totalPages, totalPages]);
   return (
     <div
       className={cn(
@@ -59,6 +65,7 @@ export function PaginationControls({
               value={pageSize.toString()}
               onValueChange={(value) => {
                 setPageSize(Number(value));
+                setTotalPages(undefined);
                 setPageNumber(1);
               }}
             />

@@ -36,7 +36,8 @@ export const useAccessioningWorklistTableStore =
     filterInput: null,
     setFilterInput: (f) => set({ filterInput: f }),
     isFiltered: {
-      result: () => get().status.length > 0 || get().filterInput !== null,
+      result: () =>
+        get().status.length > 0 || (get().filterInput?.length ?? 0) > 0,
     },
     resetFilters: () => set({ status: [], filterInput: null }),
     queryKit: {
