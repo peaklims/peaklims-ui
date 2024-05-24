@@ -1,28 +1,126 @@
-import * as React from "react"
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
-import { Check } from "lucide-react"
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import * as React from "react";
+import * as CheckboxPrimitive from "react-aria-components";
 
-import { cn } from "@/lib/utils"
+export type CheckboxProps = {} & CheckboxPrimitive.CheckboxProps;
 
-const Checkbox = React.forwardRef<
-  React.ElementRef<typeof CheckboxPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <CheckboxPrimitive.Root
-    ref={ref}
-    className={cn(
-      "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
-      className
-    )}
-    {...props}
-  >
-    <CheckboxPrimitive.Indicator
-      className={cn("flex items-center justify-center text-current")}
-    >
-      <Check className="h-4 w-4" />
-    </CheckboxPrimitive.Indicator>
-  </CheckboxPrimitive.Root>
-))
-Checkbox.displayName = CheckboxPrimitive.Root.displayName
+// export function Checkbox({
+//   children,
+//   ...props
+// }: CheckboxProps & {
+//   children?: React.ReactNode | React.ReactElement | string;
+// }) {
+export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
+  ({ className, children, ...props }, ref) => {
+    const tickVariants = {
+      checked: {
+        pathLength: 1,
+        opacity: 1,
+        transition: {
+          duration: 0.2,
+          delay: 0.1,
+        },
+      },
+      unchecked: {
+        pathLength: 0,
+        opacity: 0,
+        transition: {
+          duration: 0.2,
+        },
+      },
+    };
 
-export { Checkbox }
+    return (
+      <CheckboxPrimitive.Checkbox
+        className={cn(
+          "font-sm group flex items-center justify-center text-gray-500",
+          className,
+          props.isDisabled && "cursor-not-allowed"
+        )}
+        ref={ref}
+        {...props}
+      >
+        {({
+          isSelected,
+          isIndeterminate,
+          isDisabled,
+        }: CheckboxPrimitive.CheckboxProps) => (
+          <>
+            <div
+              className={cn(
+                "flex h-[1.143rem] w-[1.143rem] items-center justify-center rounded border-2 border-gray-300 text-white transition-all",
+                "group-data-[focus-visible=true]:ring group-data-[focus-visible=true]:ring-emerald-500 group-data-[focus-visible=true]:ring-offset-1",
+                "group-data-[selected=true]:border-emerald-500 group-data-[selected=true]:bg-emerald-500",
+                "group-data-[indeterminate=true]:border-emerald-500 group-data-[indeterminate=true]:bg-emerald-500",
+                props.isReadOnly && "pointer-events-none",
+                isDisabled &&
+                  "opacity-70 group-data-[selected=true]:border-slate-500/50 group-data-[selected=true]:bg-slate-500/70 group-data-[selected=true]:text-slate-200"
+              )}
+            >
+              <motion.svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="3.5"
+                stroke="currentColor"
+                className={cn(
+                  "h-3 w-3",
+                  (!isSelected || isIndeterminate) && "hidden"
+                )}
+                initial={isSelected}
+                animate={isSelected ? "checked" : "unchecked"}
+              >
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4.5 12.75l6 6 9-13.5"
+                  variants={tickVariants}
+                />
+              </motion.svg>
+
+              <motion.svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={200}
+                height={200}
+                viewBox="0 0 16 16"
+                className={cn("h-3 w-3", !isIndeterminate && "hidden")}
+                initial={isIndeterminate}
+                animate={isIndeterminate ? "checked" : "unchecked"}
+              >
+                <motion.path
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  d="M2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8Z"
+                  clipRule="evenodd"
+                />
+              </motion.svg>
+
+              {/* {isIndeterminate && (
+              <motion.svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={200}
+                height={200}
+                viewBox="0 0 16 16"
+                className={cn("h-3 w-3")}
+                initial={isIndeterminate}
+                animate={isIndeterminate ? "checked" : "unchecked"}
+              >
+                <motion.path
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  d="M2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8Z"
+                  clipRule="evenodd"
+                />
+              </motion.svg>
+            )} */}
+            </div>
+            {children}
+          </>
+        )}
+      </CheckboxPrimitive.Checkbox>
+    );
+  }
+);
+
+Checkbox.displayName = "Checkbox";
