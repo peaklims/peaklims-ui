@@ -1,6 +1,10 @@
 import logo from "@/assets/logo.svg";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,20 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { User as UserType, useAuthUser } from "@/services/auth";
-import {
-  Link,
-  Outlet,
-  RegisteredRoutesInfo,
-  useNavigate,
-} from "@tanstack/react-router";
+import { AllRoutesPaths } from "@/router";
 import {
   LayoutDashboard,
   LogOut,
@@ -31,13 +22,19 @@ import {
   PackageOpen,
   Settings,
   Sidebar,
-  User as UserIcon,
+  UserIcon,
+  XIcon,
 } from "lucide-react";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+import { useAuthUser } from "@/services/auth";
+import { Link, Outlet } from "@tanstack/react-router";
 import { useState } from "react";
 
 type NavType = {
   name: string;
-  href: RegisteredRoutesInfo["routePaths"];
+  href: AllRoutesPaths;
   icon: React.FC<any>;
 };
 
@@ -46,158 +43,45 @@ const navigation = [
   { name: "Accessioning", href: "/accessions", icon: PackageOpen },
 ] as NavType[];
 
-export default function AuthLayout() {
-  const { user, logoutUrl } = useAuthUser();
-
+export function AuthLayout() {
   return (
     <>
       <div>
-        <DesktopMenu user={user} logoutUrl={logoutUrl} />
+        <DesktopMenu />
 
-        <div className="sticky top-0 z-40 flex items-center justify-center px-4 py-4 shadow-sm bg-background gap-x-2 sm:px-6 lg:hidden">
-          <div className="flex items-center flex-1 px-1 space-x-2 text-sm font-semibold leading-6 text-gray-900">
-            <div className="hidden sm:block">
-              <MobileMenu />
-            </div>
-            <h1 className="text-sm font-semibold leading-6 text-primary">
-              Peak LIMS
-            </h1>
-          </div>
-        </div>
-
-        <main className="pt-4 pb-6 lg:pt-6 lg:pb-10 lg:pl-52">
-          <div className="px-4 sm:px-6 lg:px-8">
-            <Outlet />
-          </div>
-        </main>
-        <div className="sm:hidden">
-          <MobileMenu />
-        </div>
-      </div>
-    </>
-  );
-}
-
-function MobileMenu() {
-  const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
-  const navigate = useNavigate();
-  const { user, logoutUrl } = useAuthUser();
-  function navigateAndClose(target: RegisteredRoutesInfo["routePaths"]) {
-    navigate({ to: target });
-    setMobileMenuIsOpen(false);
-  }
-
-  return (
-    <Sheet open={mobileMenuIsOpen} onOpenChange={setMobileMenuIsOpen}>
-      <SheetTrigger asChild>
-        <div className="absolute z-10 block p-1 rounded-full bottom-4 right-4 bg-slate-100 sm:p-2 sm:hidden">
-          <div className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
-            <Menu className="w-6 h-6" aria-hidden="true" />
-          </div>
-        </div>
-      </SheetTrigger>
-
-      <SheetTrigger asChild>
-        <div className="hidden p-1 rounded-full cursor-pointer sm:block lg:hidden">
-          <div className="flex items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
-            <Sidebar className="w-5 h-5" aria-hidden="true" />
-          </div>
-        </div>
-      </SheetTrigger>
-
-      <SheetContent className="flex flex-1 w-72" side={"left"}>
-        <div className="flex flex-col px-4 pb-2 overflow-y-auto grow gap-y-2">
-          <SheetHeader className="flex flex-row items-start h-12 space-y-0 shrink-0">
+        <div className="sticky top-0 z-40 flex items-center justify-center px-4 py-2 bg-white shadow-sm gap-x-2 sm:px-6 lg:hidden">
+          <Link to="/" className="block">
             <img
               className="w-auto h-6"
               // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
               src={logo}
               alt="Peak LIMS"
             />
-            <h1 className="ml-2 text-sm font-semibold leading-6 text-primary">
-              Peak LIMS
-            </h1>
-          </SheetHeader>
-          <nav className="flex flex-col flex-1">
-            <ul role="list" className="flex flex-col flex-1 gap-y-7">
-              <li>
-                <ul role="list" className="-mx-2 space-y-1">
-                  {navigation.map((item) => (
-                    <li key={item.name}>
-                      <button
-                        data-status={
-                          item.href === window.location.pathname
-                            ? "active"
-                            : "inactive"
-                        }
-                        onClick={() => navigateAndClose(item.href)}
-                        className={cn(
-                          "w-full text-secondary-foreground hover:text-primary/80 hover:bg-gray-50 py-3",
-                          "group flex gap-x-3 rounded-md px-2 text-sm leading-6 font-semibold",
-                          "data-[status=active]:bg-card data-[status=active]:text-primary data-[status=active]:hover:bg-secondary/50",
-                          "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                        )}
-                      >
-                        <item.icon
-                          className={cn("h-6 w-6 shrink-0")}
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-              {/* <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400">
-                    Your teams
-                  </div>
-                  <ul role="list" className="mt-2 -mx-2 space-y-1">
-                    {teams.map((team) => (
-                      <li key={team.name}>
-                        <Link
-                          to={team.href}
-                          className={cn(
-                            team.current
-                              ? "bg-gray-50 text-foreground"
-                              : "text-gray-700 hover:text-foreground hover:bg-gray-50",
-                            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-                          )}
-                        >
-                          <span
-                            className={cn(
-                              team.current
-                                ? "text-foreground border-foreground"
-                                : "text-gray-400 border-gray-200 group-hover:border-foreground group-hover:text-foreground",
-                              "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white"
-                            )}
-                          >
-                            {team.initial}
-                          </span>
-                          <span className="truncate">{team.name}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li> */}
-            </ul>
-          </nav>
-          <ProfileManagement user={user} logoutUrl={logoutUrl} />
+          </Link>
+          <div className="flex items-center flex-1 px-1 space-x-2 text-sm font-semibold leading-6 text-gray-900">
+            <div className="hidden sm:block">
+              <MobileMenu direction={"left"} />
+            </div>
+          </div>
         </div>
-      </SheetContent>
-    </Sheet>
+
+        <main className="pt-4 pb-6 lg:pb-10 lg:pl-52 lg:pt-6">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <Outlet />
+          </div>
+        </main>
+        <div className="sm:hidden">
+          <MobileMenu direction={"bottom"} />
+        </div>
+      </div>
+    </>
   );
 }
 
 const sideNavWidth = "lg:w-52";
 
-function DesktopMenu({
-  user,
-  logoutUrl,
-}: {
-  user: UserType;
-  logoutUrl: string | undefined;
-}) {
+function DesktopMenu() {
+  const { user, logoutUrl } = useAuthUser();
   return (
     <div
       className={cn(
@@ -205,31 +89,38 @@ function DesktopMenu({
         sideNavWidth
       )}
     >
-      {/* Sidebar component, swap this element with another sidebar if you like */}
       <div className="flex flex-col px-6 overflow-y-auto border-r bg-card grow gap-y-5">
         <div className="flex items-center h-16 shrink-0">
           <Link to="/">
-            <img
-              className="w-auto h-8"
-              // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
-              src={logo}
-              alt="Peak LIMS"
-            />
+            <div className="flex items-center space-x-2">
+              <img
+                className="w-auto h-6"
+                // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
+                src={logo}
+                alt="Peak LIMS"
+              />
+            </div>
           </Link>
         </div>
         <nav className="flex flex-col flex-1">
-          <ul role="list" className="flex flex-col flex-1 gap-y-7">
+          <ul role="list" className="flex flex-col flex-1 gap-y-4">
             <li>
               <ul role="list" className="-mx-2 space-y-1">
                 {navigation.map((item) => (
                   <li key={item.name}>
                     <Link
                       to={item.href}
+                      params={{}}
                       className={cn(
-                        "text-secondary-foreground hover:text-primary/80 hover:bg-gray-50",
-                        "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
-                        "data-[status=active]:bg-card data-[status=active]:text-primary data-[status=active]:hover:bg-secondary/50"
+                        "border-2 border-transparent hover:text-emerald-400",
+                        "group flex gap-x-3 rounded-md px-2 py-1 text-sm font-semibold leading-6",
+                        "data-[status=active]:text-emerald-500 data-[status=active]:hover:text-emerald-300"
                       )}
+                      activeOptions={{ exact: false }}
+                      // activeProps={{
+                      //   className:
+                      //     "data-[status=active]:border-2 data-[status=active]:border-emerald-500 data-[status=active]:text-emerald-500 data-[status=active]:hover:bg-zinc-100/50",
+                      // }}
                     >
                       <item.icon
                         className={cn("h-6 w-6 shrink-0")}
@@ -241,38 +132,6 @@ function DesktopMenu({
                 ))}
               </ul>
             </li>
-            {/* <li>
-              <div className="text-xs font-semibold leading-6 text-gray-400">
-                Your teams
-              </div>
-              <ul role="list" className="mt-2 -mx-2 space-y-1">
-                {teams.map((team) => (
-                  <li key={team.name}>
-                    <Link
-                      to={team.href}
-                      className={cn(
-                        team.current
-                          ? "bg-gray-50 text-foreground"
-                          : "text-gray-700 hover:text-foreground hover:bg-gray-50",
-                        "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          team.current
-                            ? "text-foreground border-foreground"
-                            : "text-gray-400 border-gray-200 group-hover:border-foreground group-hover:text-foreground",
-                          "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white"
-                        )}
-                      >
-                        {team.initial}
-                      </span>
-                      <span className="truncate">{team.name}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li> */}
             <li className="mt-auto">
               <ProfileManagement user={user} logoutUrl={logoutUrl} />
             </li>
@@ -280,6 +139,114 @@ function DesktopMenu({
         </nav>
       </div>
     </div>
+  );
+}
+
+function MobileMenu({ direction }: { direction: "left" | "bottom" }) {
+  const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
+  // const navigate = useNavigate();
+  // function navigateAndClose(target: AllRoutesPaths) {
+  function navigateAndClose() {
+    // navigate({ to: target });
+    setMobileMenuIsOpen(false);
+  }
+
+  const { user, logoutUrl } = useAuthUser();
+
+  return (
+    <Drawer
+      open={mobileMenuIsOpen}
+      onOpenChange={setMobileMenuIsOpen}
+      direction={direction}
+    >
+      <DrawerTrigger asChild>
+        <div
+          className="absolute z-10 block p-1 rounded-full bottom-4 right-4 bg-slate-100 sm:hidden sm:p-2"
+          data-testid="mobile-menu-hamburger"
+        >
+          <div className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
+            <Menu className="w-6 h-6" aria-hidden="true" />
+          </div>
+        </div>
+      </DrawerTrigger>
+
+      <DrawerTrigger asChild>
+        <div
+          className="hidden p-1 rounded-full cursor-pointer sm:block lg:hidden"
+          data-testid="sidenav-tablet-trigger"
+        >
+          <div className="flex items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
+            <Sidebar className="w-5 h-5" aria-hidden="true" />
+          </div>
+        </div>
+      </DrawerTrigger>
+
+      <DrawerContent
+        className={cn(
+          "flex w-full flex-1 rounded-t-[10px]",
+          direction === "left" && "h-screen w-[50vw] rounded-r-[10px]"
+        )}
+        side={"center"}
+      >
+        <div className={cn("flex grow flex-col gap-y-2 overflow-y-auto px-4")}>
+          <DrawerHeader className="flex justify-between w-full p-1 space-y-0 shrink-0">
+            <Link to="/" className="flex items-center">
+              <img
+                className="w-auto h-8"
+                // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
+                src={logo}
+                alt="Peak LIMS"
+              />
+            </Link>
+            <DrawerTrigger asChild>
+              <button
+                onClick={() => setMobileMenuIsOpen(false)}
+                className="text-slate-800"
+              >
+                <XIcon className="w-5 h-5" />
+              </button>
+            </DrawerTrigger>
+          </DrawerHeader>
+          <nav className="flex flex-col flex-1">
+            <ul role="list" className="flex flex-col flex-1 gap-y-7">
+              <li>
+                <ul role="list" className="-mx-2 space-y-1">
+                  {navigation.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        data-status={
+                          item.href === window.location.pathname
+                            ? "active"
+                            : "inactive"
+                        }
+                        to={item.href}
+                        onClick={() => navigateAndClose()}
+                        className={cn(
+                          "w-full border-2 border-transparent hover:text-emerald-400",
+                          "group flex items-center gap-x-3 rounded-md px-2 py-1 text-sm font-semibold leading-6",
+                          "data-[status=active]:text-emerald-500 data-[status=active]:hover:text-emerald-300"
+                        )}
+                      >
+                        <item.icon
+                          className={cn("h-6 w-6 shrink-0")}
+                          aria-hidden="true"
+                        />
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            </ul>
+          </nav>
+          <ProfileManagement user={user} logoutUrl={logoutUrl} />
+          <Avatar>
+            {/* <AvatarImage src="" alt="" /> */}
+            <AvatarFallback>{user.initials}</AvatarFallback>
+          </Avatar>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 }
 
