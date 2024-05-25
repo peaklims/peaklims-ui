@@ -1,5 +1,5 @@
 import { Notification } from "@/components/notifications";
-import { AuthLayout } from "@/layouts/auth-layout";
+import { AuthLayout } from "@/layouts/new-layout";
 import { ReactQueryDevtools, TanStackRouterDevtools } from "@/lib/dev-tools";
 import { siteConfig } from "@/lib/site-config";
 import { AccessionWorklistPage } from "@/pages/accessions";
@@ -19,7 +19,7 @@ import { useAuthUser } from "./services/auth";
 
 function Loading() {
   return (
-    <div className="flex items-center justify-center w-screen h-screen transition-all bg-slate-100">
+    <div className="relative flex items-center justify-center w-full bg-white isolate min-h-svh max-lg:flex-col lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">
       <LoadingSpinner />
     </div>
   );
