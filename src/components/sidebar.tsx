@@ -286,7 +286,7 @@ function MobileSidebar({
           className={cn(
             // "fixed inset-y-0 w-full p-2 transition max-w-80",
             "flex w-full flex-1 rounded-t-[10px]",
-            direction === "left" && "h-screen w-[50vw] rounded-r-[10px]",
+            direction === "left" && "h-screen max-w-80 rounded-r-[10px]",
             direction === "bottom" ? "sm:hidden" : "hidden sm:block"
           )}
           overlayClassName={
