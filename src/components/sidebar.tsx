@@ -6,8 +6,54 @@ import { Link, useMatchRoute } from "@tanstack/react-router";
 import clsx from "clsx";
 import { LayoutGroup, motion } from "framer-motion";
 import { Menu, Sidebar as SidebarIcon } from "lucide-react";
-import { default as React, useId, useState } from "react";
+import {
+  default as React,
+  createContext,
+  useContext,
+  useId,
+  useState,
+} from "react";
 import { Button } from "./ui/button";
+
+interface SidebarContextResponse {
+  showSidebar: boolean;
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const SidebarContext = createContext<SidebarContextResponse>(
+  {} as SidebarContextResponse
+);
+
+interface SidebarProviderProps {
+  children: React.ReactNode;
+  props?: any;
+}
+
+export function SidebarProvider({ props, children }: SidebarProviderProps) {
+  const [showSidebar, setShowSidebar] = useState(false);
+
+  const value = {
+    showSidebar,
+    setShowSidebar,
+  };
+
+  return (
+    <SidebarContext.Provider value={value} {...props}>
+      {children}
+    </SidebarContext.Provider>
+  );
+}
+
+export function useSidebarContext() {
+  const context = useContext(SidebarContext);
+  if (Object.keys(context).length === 0)
+    throw new Error("useSidebarContext must be used within a SidebarProvider");
+  return context;
+}
+
+export const useSidebar = () => {
+  return useContext(SidebarContext);
+};
 
 export function Sidebar({
   className,
@@ -163,6 +209,7 @@ export const SidebarItem = React.forwardRef(function SidebarItem(
     // fuzzy: true,
   });
   const isCurrent = current || matchesRoute;
+  const { setShowSidebar } = useSidebarContext();
 
   return (
     <span className={clsx(className, "relative")}>
@@ -175,6 +222,7 @@ export const SidebarItem = React.forwardRef(function SidebarItem(
       {"href" in props ? (
         <Link
           to={props.href}
+          onClick={() => setShowSidebar(false)}
           {...props}
           className={classes}
           data-current={isCurrent ? "true" : undefined}
@@ -212,22 +260,6 @@ export function SidebarLabel({
   ...props
 }: React.ComponentPropsWithoutRef<"span">) {
   return <span {...props} className={clsx(className, "truncate")} />;
-}
-
-function OpenMenuIcon() {
-  return (
-    <svg data-slot="icon" viewBox="0 0 20 20" aria-hidden="true">
-      <path d="M2 6.75C2 6.33579 2.33579 6 2.75 6H17.25C17.6642 6 18 6.33579 18 6.75C18 7.16421 17.6642 7.5 17.25 7.5H2.75C2.33579 7.5 2 7.16421 2 6.75ZM2 13.25C2 12.8358 2.33579 12.5 2.75 12.5H17.25C17.6642 12.5 18 12.8358 18 13.25C18 13.6642 17.6642 14 17.25 14H2.75C2.33579 14 2 13.6642 2 13.25Z" />
-    </svg>
-  );
-}
-
-function CloseMenuIcon() {
-  return (
-    <svg data-slot="icon" viewBox="0 0 20 20" aria-hidden="true">
-      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-    </svg>
-  );
 }
 
 function MobileSidebar({
@@ -302,114 +334,6 @@ function MobileSidebar({
   );
 }
 
-// function MobileMenu({ direction }: { direction: "left" | "bottom" }) {
-//   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
-//   // const navigate = useNavigate();
-//   // function navigateAndClose(target: AllRoutesPaths) {
-//   function navigateAndClose() {
-//     // navigate({ to: target });
-//     setMobileMenuIsOpen(false);
-//   }
-
-//   const { user, logoutUrl } = useAuthUser();
-
-//   return (
-//     <Drawer
-//       open={mobileMenuIsOpen}
-//       onOpenChange={setMobileMenuIsOpen}
-//       direction={direction}
-//     >
-//       <DrawerTrigger asChild>
-//         <div
-//           className="absolute z-10 block p-1 rounded-full bottom-4 right-4 bg-slate-100 sm:hidden sm:p-2"
-//           data-testid="mobile-menu-hamburger"
-//         >
-//           <div className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
-//             <Menu className="w-6 h-6" aria-hidden="true" />
-//           </div>
-//         </div>
-//       </DrawerTrigger>
-
-//       <DrawerTrigger asChild>
-//         <div
-//           className="hidden p-1 rounded-full cursor-pointer sm:block lg:hidden"
-//           data-testid="sidenav-tablet-trigger"
-//         >
-//           <div className="flex items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
-//             <Sidebar className="w-5 h-5" aria-hidden="true" />
-//           </div>
-//         </div>
-//       </DrawerTrigger>
-
-//       <DrawerContent
-//         className={cn(
-//           "flex w-full flex-1 rounded-t-[10px]",
-//           direction === "left" && "h-screen w-[50vw] rounded-r-[10px]"
-//         )}
-//         side={"center"}
-//       >
-//         <div className={cn("flex grow flex-col gap-y-2 overflow-y-auto px-4")}>
-//           <DrawerHeader className="flex justify-between w-full p-1 space-y-0 shrink-0">
-//             <Link to="/" className="flex items-center">
-//               <img
-//                 className="w-auto h-8"
-//                 // src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=500"
-//                 src={logo}
-//                 alt="Peak LIMS"
-//               />
-//             </Link>
-//             <DrawerTrigger asChild>
-//               <button
-//                 onClick={() => setMobileMenuIsOpen(false)}
-//                 className="text-slate-800"
-//               >
-//                 <XIcon className="w-5 h-5" />
-//               </button>
-//             </DrawerTrigger>
-//           </DrawerHeader>
-//           <nav className="flex flex-col flex-1">
-//             <ul role="list" className="flex flex-col flex-1 gap-y-7">
-//               <li>
-//                 <ul role="list" className="-mx-2 space-y-1">
-//                   {navigation.map((item) => (
-//                     <li key={item.name}>
-//                       <Link
-//                         data-status={
-//                           item.href === window.location.pathname
-//                             ? "active"
-//                             : "inactive"
-//                         }
-//                         to={item.href}
-//                         onClick={() => navigateAndClose()}
-//                         className={cn(
-//                           "w-full border-2 border-transparent hover:text-emerald-400",
-//                           "group flex items-center gap-x-3 rounded-md px-2 py-1 text-sm font-semibold leading-6",
-//                           "data-[status=active]:text-emerald-500 data-[status=active]:hover:text-emerald-300"
-//                         )}
-//                       >
-//                         <item.icon
-//                           className={cn("h-6 w-6 shrink-0")}
-//                           aria-hidden="true"
-//                         />
-//                         {item.name}
-//                       </Link>
-//                     </li>
-//                   ))}
-//                 </ul>
-//               </li>
-//             </ul>
-//           </nav>
-//           <ProfileManagement user={user} logoutUrl={logoutUrl} />
-//           <Avatar>
-//             {/* <AvatarImage src="" alt="" /> */}
-//             <AvatarFallback>{user.initials}</AvatarFallback>
-//           </Avatar>
-//         </div>
-//       </DrawerContent>
-//     </Drawer>
-//   );
-// }
-
 export function SidebarLayout({
   navbar,
   sidebar,
@@ -418,14 +342,14 @@ export function SidebarLayout({
   navbar: React.ReactNode;
   sidebar: React.ReactNode;
 }>) {
-  let [showSidebar, setShowSidebar] = useState(false);
+  const { showSidebar, setShowSidebar } = useSidebarContext();
 
   return (
     <div className="relative flex w-full bg-white isolate min-h-svh max-lg:flex-col lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">
       {/* Sidebar on desktop */}
       <div className="fixed inset-y-0 left-0 w-64 max-lg:hidden">{sidebar}</div>
-      {/* Sidebar on mobile */}
 
+      {/* Sidebar on mobile */}
       <MobileSidebar
         isOpen={showSidebar}
         setIsOpen={setShowSidebar}
