@@ -51,7 +51,7 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <span
       className={cn(
-        `inline-flex ring-inset ring-1 items-center px-2 py-1 text-xs font-medium rounded-md ${variantClasses}`,
+        `inline-flex ring-inset ring-1 items-center px-1 py-0.5 text-xs font-medium rounded-md ${variantClasses}`,
         className
       )}
       {...props}

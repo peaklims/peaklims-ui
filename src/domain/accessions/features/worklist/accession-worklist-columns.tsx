@@ -29,7 +29,7 @@ export const columns: ColumnDef<AccessionWorklistDto>[] = [
       const accessionNumber = row.getValue("accessionNumber") as string;
       const accessionStatus = row.getValue("status");
       return (
-        <div className="flex space-x-3">
+        <div className="flex items-center space-x-3">
           <p className="inline-flex">{accessionNumber}</p>
 
           <AccessionStatusBadge
@@ -71,8 +71,8 @@ export const columns: ColumnDef<AccessionWorklistDto>[] = [
       const sexDisplay = getSexDisplay(patient?.sex);
 
       return (
-        <div className="flex flex-col space-y-1">
-          <p>{hasName ? name : "—"}</p>
+        <div className="flex flex-col space-y-0.5">
+          <p className="">{hasName ? name : "—"}</p>
           {(patient?.age ?? -1) >= 0 ? (
             <p className="text-xs text-slate-700">
               {patient?.age} year old {sexDisplay}

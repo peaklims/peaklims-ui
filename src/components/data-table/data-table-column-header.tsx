@@ -27,16 +27,15 @@ export function DataTableColumnHeader<TData, TValue>({
       {canSort && (
         <Button
           variant="ghost"
-          size="sm"
-          className="h-8"
+          size="xs"
           onClick={() => column.toggleSorting()}
         >
           {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon className="w-4 h-4 text-primary" />
+            <ArrowDownIcon className="w-3.5 h-3.5 text-primary" />
           ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon className="w-4 h-4 text-primary" />
+            <ArrowUpIcon className="w-3.5 h-3.5 text-primary" />
           ) : (
-            <SortAsc className="w-4 h-4" />
+            <SortAsc className="w-3.5 h-3.5" />
           )}
         </Button>
       )}

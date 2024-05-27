@@ -78,7 +78,7 @@ export function AccessionWorklistToolbar() {
         className="w-full space-x-2 sm:w-auto"
         onClick={() => createAccession()}
       >
-        <PlusCircle className="w-5 h-5" />
+        <PlusCircle className="w-4 h-4" />
         <span>Add Accession</span>
       </Button>
     </div>

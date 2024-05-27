@@ -23,7 +23,6 @@ import {
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useState } from "react";
-import { useGetTestOrderCancellationReasons } from "../apis/get-test-order-cancellation-reasons.api";
 import { useRemovePanelOrder } from "../apis/remove-panel-order.api";
 import { PanelOrderStatus, TestOrderStatus } from "../types";
 import { CancelModalAction } from "./cancel-test-order-modal";
@@ -92,15 +91,15 @@ export function PanelOrderCard({
                 rotate: panelOrder.id === showPanelTestsId ? 90 : 0,
               }}
             >
-              <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
+              <ChevronRightIcon className="w-5 h-5 hover:text-slate-700 text-slate-900" />
             </motion.div>
-            <h4 className="flex flex-col font-medium xl:space-x-2">
+            <h4 className="flex flex-col text-base font-medium xl:space-x-2">
               <div className="flex flex-col items-start">
-                <span className="hidden pt-1 sm:block text-start xl:pt-0">
+                <span className="hidden sm:block text-start xl:pt-0">
                   {panelOrder.panelName}
                 </span>
 
-                <p className="block text-xs font-semibold text-gray-400">
+                <p className="block font-semibold text-gray-400 text-2xs">
                   [{panelOrder.panelCode}]
                 </p>
                 <div className="flex items-start pt-2">

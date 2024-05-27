@@ -160,10 +160,10 @@ function OrganizationContacts({
               >
                 <div className="flex items-center justify-start flex-1 pr-2">
                   <div className="">
-                    <p className="font-medium">{name}</p>
-                    <p className="text-sm">{contact.email}</p>
+                    <p className="text-sm font-medium">{name}</p>
+                    <p className="text-xs">{contact.email}</p>
                     {contact.npi.length > 0 ? (
-                      <p className="text-sm text-slate-400">
+                      <p className="text-xs text-slate-400">
                         <span>#</span>
                         {contact.npi}
                       </p>
@@ -231,10 +231,10 @@ function AccessionContacts({
               >
                 <div className="flex items-center justify-start flex-1 pr-2">
                   <div className="">
-                    <p className="font-medium">{name}</p>
-                    <p className="text-sm">{contact.targetValue}</p>
+                    <p className="text-sm font-medium">{name}</p>
+                    <p className="text-xs">{contact.targetValue}</p>
                     {contact.npi?.length ?? 0 > 0 ? (
-                      <p className="text-sm text-slate-400">
+                      <p className="text-xs text-slate-400">
                         <span>#</span>
                         {contact.npi}
                       </p>

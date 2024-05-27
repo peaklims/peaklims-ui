@@ -6,6 +6,7 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useMemo, useState } from "react";
+import { Badge } from "../../../components/badge";
 import {
   useAddPanelToAccession,
   useAddTestOrderForTest,
@@ -285,15 +286,11 @@ function Panel({
                 rotate: panel.id === showPanelTestsId ? 90 : 0,
               }}
             >
-              <ChevronRightIcon className="w-6 h-6 hover:text-slate-700 text-slate-900" />
+              <ChevronRightIcon className="w-5 h-5 hover:text-slate-700 text-slate-900" />
             </motion.div>
             <h4 className="flex flex-col items-start font-medium xl:flex-row xl:flex xl:space-x-2">
-              <span
-                className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
-              >
-                {panel.panelCode}
-              </span>
-              <span className="hidden pt-1 sm:block text-start xl:pt-0">
+              <Badge text={panel.panelCode} variant="indigo" />
+              <span className="hidden pt-1 text-base sm:block text-start xl:pt-0">
                 {panel.panelName}
               </span>
             </h4>
@@ -354,12 +351,8 @@ function Test({
     >
       <div className="flex items-start justify-between w-full xl:items-center">
         <h4 className="flex flex-col items-start font-medium xl:flex-row xl:flex xl:space-x-2">
-          <span
-            className={`inline-flex ring-inset ring-1 items-center px-2 py-1 text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 ring-indigo-500/10`}
-          >
-            {test.testCode}
-          </span>
-          <span className="hidden pt-1 sm:inline-flex xl:pt-0">
+          <Badge text={test.testCode} variant="indigo" />
+          <span className="hidden pt-1 text-base sm:inline-flex xl:pt-0">
             {test.testName}
           </span>
         </h4>

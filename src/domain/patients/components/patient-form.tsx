@@ -86,7 +86,7 @@ export function PatientForm({
         onSubmit={patientForm.handleSubmit(onSubmit)}
         className="flex flex-col h-full"
       >
-        <div className="flex-1 space-y-4">
+        <div className="flex-1 space-y-2">
           <FormField
             control={patientForm.control}
             name="firstName"
@@ -113,7 +113,7 @@ export function PatientForm({
               </FormItem>
             )}
           />
-          <div className="grid w-full grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-4">
+          <div className="grid w-full grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-2">
             <div className="col-span-1">
               <FormField
                 control={patientForm.control}

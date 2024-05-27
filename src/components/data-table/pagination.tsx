@@ -75,6 +75,7 @@ export function PaginationControls({
 
       <div className="inline-flex items-center -space-x-[2px]">
         <Button
+          size={"xs"}
           aria-label="First page"
           variant="outline"
           className={cn("rounded-r-none")}
@@ -84,6 +85,7 @@ export function PaginationControls({
           {<ArrowLeftToLine className="w-5 h-5" />}
         </Button>
         <Button
+          size={"xs"}
           aria-label="Previous page"
           variant="outline"
           className={cn("rounded-none")}
@@ -97,6 +99,7 @@ export function PaginationControls({
           {<ChevronLeftIcon className="w-5 h-5" />}
         </Button>
         <Button
+          size={"xs"}
           aria-label="Next page"
           variant="outline"
           className={cn("rounded-none")}
@@ -110,6 +113,7 @@ export function PaginationControls({
           {<ChevronRightIcon className="w-5 h-5" />}
         </Button>
         <Button
+          size={"xs"}
           aria-label="Last page"
           variant="outline"
           className={cn("rounded-l-none")}

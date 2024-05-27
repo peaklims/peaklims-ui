@@ -100,25 +100,25 @@ function AccessionDetails({
       color="primary"
       variant="underlined"
       classNames={{
-        tab: "max-w-fit px-0 h-12",
+        tab: "max-w-fit px-2 h-10",
         tabList:
-          "gap-6 w-full relative rounded-none p-0 border-b border-divider",
+          "gap-4 w-full relative rounded-none p-0 border-b border-divider",
         panel:
-          "shadow-lg rounded-lg px-6 py-4 h-full min-h-[56-rem] min-h-[48rem]", // h-[56rem] sm:h-[48rem]
+          "shadow-lg rounded-lg px-6 py-2 h-full min-h-[56-rem] min-h-[48rem]", // h-[56rem] sm:h-[48rem]
       }}
       radius="lg"
     >
       <Tab
         key="organization"
         title={
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 text-sm">
             {/* https://iconbuddy.app/solar/hospital-bold */}
             <svg
               width="512"
               height="512"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
+              className="w-4 h-4"
             >
               <path
                 fill="currentColor"
@@ -146,14 +146,14 @@ function AccessionDetails({
       <Tab
         key="samples"
         title={
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 text-sm">
             {/* https://iconbuddy.app/fluent-emoji-high-contrast/test-tube */}
             <svg
               width="512"
               height="512"
               viewBox="0 0 32 32"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
+              className="w-4 h-4"
             >
               <path
                 fill="currentColor"
@@ -169,13 +169,13 @@ function AccessionDetails({
       <Tab
         key="panels-and-tests"
         title={
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 text-sm">
             <svg
               width="512"
               height="512"
               viewBox="0 0 48 48"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
+              className="w-4 h-4"
             >
               <g fill="none" stroke="currentColor" strokeWidth="4">
                 <rect width="30" height="36" x="9" y="8" rx="2" />
@@ -201,7 +201,7 @@ function AccessionDetails({
       <Tab
         key="attachments"
         title={
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 text-sm">
             <Paperclip className="w-5 h-5" />
             <span>Attachments</span>
           </div>
@@ -219,14 +219,14 @@ function AccessionDetails({
       <Tab
         key="comments"
         title={
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 text-sm">
             {/* https://iconbuddy.app/akar-icons/comment */}
             <svg
               width="512"
               height="512"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
+              className="w-4 h-4"
             >
               <g
                 fill="none"
@@ -251,14 +251,14 @@ function AccessionDetails({
       <Tab
         key="auditlog"
         title={
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 text-sm">
             {/* https://iconbuddy.app/akar-icons/history */}
             <svg
               width="512"
               height="512"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
+              className="w-4 h-4"
             >
               <path
                 fill="none"
