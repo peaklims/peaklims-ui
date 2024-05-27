@@ -58,6 +58,7 @@ export function Combobox({
       isOpen={open}
       onOpenChange={setOpen}
       triggerScaleOnOpen={false}
+      autoFocus={autoFocus ?? false}
     >
       <PopoverTrigger>
         <Button
@@ -70,7 +71,7 @@ export function Combobox({
             buttonProps?.className
           )}
         >
-          <div className="flex">
+          <div className="flex items-center justify-between">
             <p className="flex items-center justify-between flex-1 truncate">
               {displayText}
             </p>
