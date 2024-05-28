@@ -23,8 +23,8 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-8 px-2 py-1 text-sm",
-        xs: "h-8 px-2 text-xs",
-        sm: "h-8 px-3 text-sm",
+        xs: "h-7 px-2 text-xs",
+        sm: "h-8 px-2 text-sm",
         lg: "h-9 px-6 py-1.5 text-base",
         icon: "h-8 w-8",
       },
@@ -48,8 +48,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         className={cn(
-          buttonVariants({ variant, size, className }),
-          "rounded-md"
+          "rounded-md",
+          buttonVariants({ variant, size, className })
         )}
         ref={ref}
         {...props}

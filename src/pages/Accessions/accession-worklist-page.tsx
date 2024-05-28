@@ -14,7 +14,7 @@ export function AccessionWorklistPage() {
       <h1 className="text-4xl font-bold tracking-tight scroll-m-20">
         Accessioning Worklist
       </h1>
-      <div className="pt-6">
+      <div className="pt-4">
         <AccessioningWorklist />
       </div>
     </div>

@@ -180,7 +180,7 @@ export function AddSampleButton({
         aria-description="Add a Sample"
         onClick={() => setSampleFormIsOpen(true)}
       >
-        <PlusCircleIcon className="w-5 h-5" />
+        <PlusCircleIcon className="w-4.5 h-4.5" />
       </Button>
     </>
   );

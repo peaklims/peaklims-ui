@@ -60,7 +60,7 @@ export function PaginationControls({
         </span>
 
         {pageSize !== undefined && (
-          <div className="hidden w-32 sm:block">
+          <div className="hidden sm:block">
             <PaginationCombobox
               value={pageSize.toString()}
               onValueChange={(value) => {
@@ -155,7 +155,7 @@ function PaginationCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[150px] justify-between"
+          className=""
         >
           {value
             ? pageSizes.find((pageSize) => pageSize.value === value)?.label

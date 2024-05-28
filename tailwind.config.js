@@ -29,6 +29,12 @@ module.exports = {
         sans: ['Lexend', 'Inter', ...defaultTheme.fontFamily.sans],
         display: ['Lexend', ...defaultTheme.fontFamily.sans],
       },
+      width:{
+        "4.5": "1.125rem",
+      },
+      height:{
+        "4.5": "1.125rem",
+      },
       fontSize:{
         "2xs": "0.7rem",
         "xs": "0.7375rem",
@@ -36,6 +42,9 @@ module.exports = {
         "base": "0.875rem",
         "lg": "1rem",
         "xl": "1.125rem",
+        "2xl": "1.25rem",
+        "3xl": "1.5rem",
+        "4xl": "1.875rem",
       },
       colors: {
         border: "hsl(var(--border))",

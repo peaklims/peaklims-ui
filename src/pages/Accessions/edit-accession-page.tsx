@@ -48,7 +48,7 @@ export function EditAccessionPage() {
         )}
       </div>
 
-      <div className="pt-3 space-y-10">
+      <div className="pt-3 space-y-6">
         <div className="flex items-center justify-center w-full sm:justify-start">
           <h2 className="sr-only">Accession Patient</h2>
           <ManageAccessionPatientCard accession={accession} />
@@ -118,7 +118,7 @@ function AccessionDetails({
               height="512"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4"
+              className="w-4.5 h-4.5"
             >
               <path
                 fill="currentColor"
@@ -153,7 +153,7 @@ function AccessionDetails({
               height="512"
               viewBox="0 0 32 32"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4"
+              className="w-4.5 h-4.5"
             >
               <path
                 fill="currentColor"
@@ -175,7 +175,7 @@ function AccessionDetails({
               height="512"
               viewBox="0 0 48 48"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4"
+              className="w-4.5 h-4.5"
             >
               <g fill="none" stroke="currentColor" strokeWidth="4">
                 <rect width="30" height="36" x="9" y="8" rx="2" />
@@ -226,7 +226,7 @@ function AccessionDetails({
               height="512"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4"
+              className="w-4.5 h-4.5"
             >
               <g
                 fill="none"
@@ -258,7 +258,7 @@ function AccessionDetails({
               height="512"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4"
+              className="w-4.5 h-4.5"
             >
               <path
                 fill="none"

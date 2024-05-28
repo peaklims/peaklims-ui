@@ -31,7 +31,7 @@ export function SearchExistingPatientsButton() {
         variant="outline"
         onClick={() => setSearchExistingPatientsDialogIsOpen(true)}
       >
-        <SearchIcon className="w-5 h-5" />
+        <SearchIcon className="w-4.5 h-4.5" />
       </Button>
     </>
   );

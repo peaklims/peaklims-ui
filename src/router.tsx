@@ -1,5 +1,5 @@
 import { Notification } from "@/components/notifications";
-import { AuthLayout } from "@/layouts/new-layout";
+import { AuthLayout } from "@/layouts/auth-layout";
 import { ReactQueryDevtools, TanStackRouterDevtools } from "@/lib/dev-tools";
 import { siteConfig } from "@/lib/site-config";
 import { AccessionWorklistPage } from "@/pages/accessions";

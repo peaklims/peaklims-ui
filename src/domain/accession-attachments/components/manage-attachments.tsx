@@ -141,7 +141,7 @@ export function ManageAttachments({
                     <img
                       src={attachment.preSignedUrl}
                       alt={attachment.filename}
-                      className="w-20 h-20 rounded-lg aspect-square"
+                      className="w-20 h-20 text-base rounded-lg aspect-square"
                     />
                   </a>
                 ) : (
@@ -151,7 +151,7 @@ export function ManageAttachments({
                 )}
                 <div className="flex flex-col w-full pl-6">
                   <div className="flex w-full">
-                    <div className="flex flex-1 text-lg font-medium">
+                    <div className="flex flex-1 text-base font-medium">
                       {attachment.displayName}
                     </div>
                     <div className="flex items-center pr-2 space-x-5 transition-all duration-200 opacity-0 group-hover:opacity-100">

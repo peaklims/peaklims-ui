@@ -1,13 +1,11 @@
 "use client";
 
-import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAddAccession } from "@/domain/accessions/apis/add-accession";
+import { useNewAccession } from "@/domain/accessions";
 import { FilterControl } from "@/domain/accessions/features/worklist/accession-worklist-filter-control";
 import { useAccessioningWorklistTableStore } from "@/domain/accessions/features/worklist/accession-worklist.store";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { RegisteredRoutesInfo, useNavigate } from "@tanstack/react-router";
 import { CircleIcon, PlusCircle, TimerIcon, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AccessionStatus } from "../../types";
@@ -25,26 +23,7 @@ export function AccessionWorklistToolbar() {
     }
   }, [debouncedFilterInput, resetFilters, setFilterInput]);
 
-  const navigate = useNavigate();
-  const createAccessionApi = useAddAccession();
-  function createAccession() {
-    createAccessionApi
-      .mutateAsync()
-      .then((data) => {
-        // formMode = "Edit";
-        // AccessionData = data;
-        navigate({
-          to: `/accessions/${data.id}` as RegisteredRoutesInfo["routePaths"],
-        });
-      })
-      .then(() => {
-        Notification.success("Accession created successfully");
-      })
-      .catch((e) => {
-        Notification.error("There was an error creating the Accession");
-        console.error(e);
-      });
-  }
+  const createAccession = useNewAccession();
 
   return (
     <div className="flex-col space-y-3 sm:flex-row sm:flex sm:items-center sm:justify-between sm:flex-1 sm:space-y-0">

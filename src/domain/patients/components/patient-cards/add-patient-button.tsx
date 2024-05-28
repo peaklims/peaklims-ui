@@ -27,7 +27,7 @@ export function AddPatientButton() {
   return (
     <>
       <Modal
-        size="3xl"
+        size="xl"
         isOpen={addPatientDialogIsOpen}
         onOpenChange={setAddPatientDialogIsOpen}
       >
@@ -36,7 +36,7 @@ export function AddPatientButton() {
             Add a Patient
           </ModalHeader>
           <div className="px-6 pb-2 overflow-y-auto grow gap-y-5">
-            <div className="pt-6">
+            <div className="pt-0">
               <PatientForm
                 onSubmit={(value) => {
                   const dto = {
@@ -64,7 +64,7 @@ export function AddPatientButton() {
         variant="outline"
         onClick={() => setAddPatientDialogIsOpen(true)}
       >
-        <PlusCircleIcon className="w-5 h-5" />
+        <PlusCircleIcon className="w-4.5 h-4.5" />
       </Button>
     </>
   );
