@@ -1,25 +1,8 @@
 import logo from "@/assets/logo.svg";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  LogOut,
-  PackageOpen,
-  SearchIcon,
-  Settings,
-  UserIcon,
-} from "lucide-react";
-
+import { Kbd, TooltipHotkey } from "@/components";
 import {
   Sidebar,
   SidebarBody,
-  SidebarDivider,
   SidebarFooter,
   SidebarHeader,
   SidebarHeading,
@@ -32,13 +15,32 @@ import {
 } from "@/components/sidebar";
 import { CreateNew, Lightbulb } from "@/components/svgs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { SelectQuickActionButton } from "@/domain/quick-actions/select-quick-action-button";
+import { useActionButtonKey } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useAuthUser } from "@/services/auth";
 import { Tooltip } from "@nextui-org/react";
-import { Link, Outlet } from "@tanstack/react-router";
-import { HomeIcon, MailQuestion } from "lucide-react";
+import { Link, Outlet, useNavigate } from "@tanstack/react-router";
+import {
+  HomeIcon,
+  LogOut,
+  MailQuestion,
+  PackageOpen,
+  SearchIcon,
+  Settings,
+  UserIcon,
+} from "lucide-react";
 import { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 const sideNavWidth = "lg:w-52";
 function ProfileManagement({
@@ -110,14 +112,29 @@ function ProfileManagement({
 
 export function AuthLayout() {
   const { user, logoutUrl } = useAuthUser();
-  const [isOpen, setIsOpen] = useState(false);
+  const [quickActionIsOpen, setQuickActionIsOpen] = useState(false);
+
+  const navigate = useNavigate();
+  useHotkeys("g+a", () => {
+    navigate({
+      to: `/accessions` as RegisteredRoutesInfo["routePaths"],
+    });
+  });
+  useHotkeys("c", () => {
+    setQuickActionIsOpen(true);
+  });
+  const actionKey = useActionButtonKey();
+  useHotkeys(`meta+k`, () => {
+    alert("search");
+  });
+
   return (
     <SidebarProvider>
       <SidebarLayout
         navbar={<></>}
         sidebar={
           <Sidebar>
-            <SidebarHeader>
+            <SidebarHeader className="px-4 py-2">
               <div className="flex items-center justify-between">
                 <Link to="/">
                   <div className="flex items-center flex-1 space-x-3">
@@ -130,20 +147,17 @@ export function AuthLayout() {
                     <p className="text-sm font-medium">Peak LIMS</p>
                   </div>
                 </Link>
-              </div>
-            </SidebarHeader>
-            <SidebarBody>
-              <SidebarSection className="-mt-3">
+
                 <div className="flex items-center justify-end">
                   <Tooltip
                     placement="bottom"
                     closeDelay={0}
+                    delay={600}
                     content={
-                      <div className="px-1 py-1">
-                        <p className="text-xs font-semibold">
-                          Quick search with `CMD+K`
-                        </p>
-                      </div>
+                      <TooltipHotkey>
+                        Quick search with <Kbd command={`${actionKey}`} /> then{" "}
+                        <Kbd command={"K"} />
+                      </TooltipHotkey>
                     }
                   >
                     <SidebarItem onClick={() => alert("search")}>
@@ -153,21 +167,20 @@ export function AuthLayout() {
                   </Tooltip>
 
                   <SelectQuickActionButton
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen}
+                    isOpen={quickActionIsOpen}
+                    setIsOpen={setQuickActionIsOpen}
                   >
                     <Tooltip
                       placement="bottom"
                       closeDelay={0}
+                      delay={600}
                       content={
-                        <div className="px-1 py-1">
-                          <p className="text-xs font-semibold">
-                            Create new items with `C`
-                          </p>
-                        </div>
+                        <TooltipHotkey>
+                          Create new items with <Kbd command={"C"} />
+                        </TooltipHotkey>
                       }
                     >
-                      <SidebarItem onClick={() => setIsOpen(true)}>
+                      <SidebarItem onClick={() => setQuickActionIsOpen(true)}>
                         <SidebarLabel className="sr-only">
                           Quick Add
                         </SidebarLabel>
@@ -176,21 +189,33 @@ export function AuthLayout() {
                     </Tooltip>
                   </SelectQuickActionButton>
                 </div>
-              </SidebarSection>
-              <SidebarDivider className="my-1" />
+              </div>
+            </SidebarHeader>
+            <SidebarBody>
+              {/* <SidebarSection className="-mt-3">
+              </SidebarSection> */}
+              {/* <SidebarDivider className="my-1" /> */}
               <SidebarSection className="min-h-[25svh]">
                 <SidebarItem href="/">
                   <HomeIcon data-slot="icon" />
                   <SidebarLabel>Home</SidebarLabel>
                 </SidebarItem>
-                {/* <SidebarItem href="/events">
-                <Square2StackIcon />
-                <SidebarLabel>Events</SidebarLabel>
-              </SidebarItem> */}
-                <SidebarItem href="/accessions">
-                  <PackageOpen data-slot="icon" />
-                  <SidebarLabel>Accessioning</SidebarLabel>
-                </SidebarItem>
+                <Tooltip
+                  placement="right"
+                  closeDelay={0}
+                  delay={600}
+                  content={
+                    <TooltipHotkey>
+                      Accessioning <Kbd command={"G"} /> then{" "}
+                      <Kbd command={"A"} />
+                    </TooltipHotkey>
+                  }
+                >
+                  <SidebarItem href="/accessions">
+                    <PackageOpen data-slot="icon" />
+                    <SidebarLabel>Accessioning</SidebarLabel>
+                  </SidebarItem>
+                </Tooltip>
               </SidebarSection>
               <SidebarSection className="max-lg:hidden">
                 <SidebarHeading>Upcoming Events</SidebarHeading>

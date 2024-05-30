@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useNewAccession } from "@/domain/accessions";
 import { FilterControl } from "@/domain/accessions/features/worklist/accession-worklist-filter-control";
 import { useAccessioningWorklistTableStore } from "@/domain/accessions/features/worklist/accession-worklist.store";
-import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { CircleIcon, PlusCircle, TimerIcon, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AccessionStatus } from "../../types";

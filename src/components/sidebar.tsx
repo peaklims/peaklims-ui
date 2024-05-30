@@ -58,7 +58,7 @@ export function Sidebar({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"nav">) {
-  return <nav {...props} className={cn(className, "flex h-full flex-col")} />;
+  return <nav {...props} className={cn("flex h-full flex-col", className)} />;
 }
 
 export function SidebarHeader({
@@ -69,8 +69,8 @@ export function SidebarHeader({
     <div
       {...props}
       className={cn(
-        className,
-        "flex flex-col border-b border-zinc-950/5 p-4 dark:border-white/5 [&>[data-slot=section]+[data-slot=section]]:mt-2.5"
+        "flex flex-col border-b border-zinc-950/5 p-4 dark:border-white/5 [&>[data-slot=section]+[data-slot=section]]:mt-2.5",
+        className
       )}
     />
   );
@@ -84,8 +84,8 @@ export function SidebarBody({
     <div
       {...props}
       className={cn(
-        className,
-        "flex flex-1 flex-col overflow-y-auto p-4 [&>[data-slot=section]+[data-slot=section]]:mt-8"
+        "flex flex-1 flex-col overflow-y-auto p-4 [&>[data-slot=section]+[data-slot=section]]:mt-8",
+        className
       )}
     />
   );
@@ -99,8 +99,8 @@ export function SidebarFooter({
     <div
       {...props}
       className={cn(
-        className,
-        "flex flex-col border-t border-zinc-950/5 p-4 dark:border-white/5 [&>[data-slot=section]+[data-slot=section]]:mt-2.5"
+        "flex flex-col border-t border-zinc-950/5 p-4 dark:border-white/5 [&>[data-slot=section]+[data-slot=section]]:mt-2.5",
+        className
       )}
     />
   );
@@ -117,7 +117,7 @@ export function SidebarSection({
       <div
         {...props}
         data-slot="section"
-        className={cn(className, "flex flex-col gap-0.5")}
+        className={cn("flex flex-col gap-0.5", className)}
       />
     </LayoutGroup>
   );
@@ -146,7 +146,7 @@ export function SidebarSpacer({
     <div
       aria-hidden="true"
       {...props}
-      className={cn(className, "mt-8 flex-1")}
+      className={cn("mt-8 flex-1", className)}
     />
   );
 }
@@ -159,8 +159,8 @@ export function SidebarHeading({
     <h3
       {...props}
       className={cn(
-        className,
-        "mb-1 px-2 text-xs/6 font-medium text-zinc-500 dark:text-zinc-400"
+        "mb-1 px-2 text-xs/6 font-medium text-zinc-500 dark:text-zinc-400",
+        className
       )}
     />
   );
@@ -177,7 +177,7 @@ export const SidebarItem = React.forwardRef(function SidebarItem(
     className?: string;
     children: React.ReactNode;
   } & Omit<React.ComponentPropsWithoutRef<typeof Link>, "type" | "className">, // | Omit<Headless.ButtonProps, "className">
-  ref: React.ForwardedRef<HTMLButtonElement>
+  ref: React.ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
 ) {
   let classes = cn(
     // Base
@@ -223,8 +223,9 @@ export const SidebarItem = React.forwardRef(function SidebarItem(
           to={props.href}
           onClick={() => setShowSidebar(false)}
           {...props}
-          className={classes}
+          className={cn(classes)}
           data-current={isCurrent ? "true" : undefined}
+          ref={ref as React.ForwardedRef<HTMLAnchorElement>}
         >
           <TouchTarget>{children}</TouchTarget>
         </Link>
@@ -234,7 +235,7 @@ export const SidebarItem = React.forwardRef(function SidebarItem(
           {...props}
           className={cn("cursor-default", classes)}
           data-current={current ? "true" : undefined}
-          ref={ref}
+          ref={ref as React.ForwardedRef<HTMLButtonElement>}
         >
           <TouchTarget>{children}</TouchTarget>
         </Button>

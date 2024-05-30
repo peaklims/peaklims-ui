@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/react-router";
 import { StrictMode, Suspense } from "react";
 import ReactDOM from "react-dom/client";
+import { HotkeysProvider } from "react-hotkeys-hook";
 import "./index.css";
 import { router } from "./router";
 
@@ -20,7 +21,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <Suspense fallback={null}>
       <QueryClientProvider client={queryClient}>
         <NextUIProvider>
-          <RouterProvider router={router} />
+          <HotkeysProvider>
+            <RouterProvider router={router} />
+          </HotkeysProvider>
         </NextUIProvider>
       </QueryClientProvider>
     </Suspense>

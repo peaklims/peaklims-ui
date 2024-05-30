@@ -3,6 +3,7 @@ import { useNewAccession } from "@/domain/accessions";
 import { Modal, ModalContent, ModalHeader } from "@nextui-org/react";
 import { PackageOpen } from "lucide-react";
 import { ReactNode } from "react";
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 
 export type PatientForCard = {
   id: string;
@@ -29,7 +30,17 @@ export function SelectQuickActionButton({
   const createAccessionAndClose = async () => {
     await createAccession();
     setIsOpen(false);
+    disableScope("quick-actions");
   };
+
+  const { disableScope } = useHotkeysContext();
+  useHotkeys(
+    "a",
+    () => {
+      createAccessionAndClose();
+    },
+    { scopes: ["quick-actions"], enabled: isOpen }
+  );
 
   return (
     <>
