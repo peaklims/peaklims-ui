@@ -27,7 +27,7 @@ export function AccessionWorklistToolbar() {
   }, [debouncedFilterInput, resetFilters, setFilterInput]);
 
   const createAccession = useNewAccession();
-  useHotkeys("a", () => {
+  useHotkeys("c", () => {
     createAccession();
   });
   const inputRef = useRef<HTMLInputElement>(null);
@@ -84,7 +84,7 @@ export function AccessionWorklistToolbar() {
         delay={600}
         content={
           <TooltipHotkey>
-            Create New Accession <Kbd command={"A"} />
+            Create New Accession <Kbd command={"c"} />
           </TooltipHotkey>
         }
       >

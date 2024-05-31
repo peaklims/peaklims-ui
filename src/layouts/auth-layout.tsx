@@ -120,7 +120,12 @@ export function AuthLayout() {
       to: `/accessions` as RegisteredRoutesInfo["routePaths"],
     });
   });
-  useHotkeys("c", () => {
+  useHotkeys("g+h", () => {
+    navigate({
+      to: `/` as RegisteredRoutesInfo["routePaths"],
+    });
+  });
+  useHotkeys("q", () => {
     setQuickActionIsOpen(true);
   });
   const actionKey = useActionButtonKey();
@@ -176,7 +181,7 @@ export function AuthLayout() {
                       delay={600}
                       content={
                         <TooltipHotkey>
-                          Create new items with <Kbd command={"C"} />
+                          Perform quick actions with <Kbd command={"Q"} />
                         </TooltipHotkey>
                       }
                     >
@@ -196,10 +201,22 @@ export function AuthLayout() {
               </SidebarSection> */}
               {/* <SidebarDivider className="my-1" /> */}
               <SidebarSection className="min-h-[25svh]">
-                <SidebarItem href="/">
-                  <HomeIcon data-slot="icon" />
-                  <SidebarLabel>Home</SidebarLabel>
-                </SidebarItem>
+                <Tooltip
+                  placement="right"
+                  closeDelay={0}
+                  delay={600}
+                  content={
+                    <TooltipHotkey>
+                      Accessioning <Kbd command={"G"} /> then{" "}
+                      <Kbd command={"h"} />
+                    </TooltipHotkey>
+                  }
+                >
+                  <SidebarItem href="/">
+                    <HomeIcon data-slot="icon" />
+                    <SidebarLabel>Home</SidebarLabel>
+                  </SidebarItem>
+                </Tooltip>
                 <Tooltip
                   placement="right"
                   closeDelay={0}
