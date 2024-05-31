@@ -32,14 +32,10 @@ export function AccessionWorklistToolbar() {
   });
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useHotkeys(
-    "f",
-    (event) => {
-      event.preventDefault();
-      inputRef.current?.focus();
-    },
-    { enableOnTags: ["INPUT", "TEXTAREA"] }
-  );
+  useHotkeys("f", (event) => {
+    event.preventDefault();
+    inputRef.current?.focus();
+  });
 
   return (
     <div className="flex-col space-y-3 sm:flex-row sm:flex sm:items-center sm:justify-between sm:flex-1 sm:space-y-0">
