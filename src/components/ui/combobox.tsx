@@ -10,6 +10,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { caseInsensitiveEquals } from "@/utils/strings";
@@ -85,35 +86,40 @@ export function Combobox({
         <Command filter={filterByLabel}>
           <CommandInput placeholder="Search item..." />
           <CommandEmpty>{emptyMessage}</CommandEmpty>
-          <CommandGroup {...dropdownProps}>
-            {items != undefined &&
-              items.map((item) => (
-                <CommandItem
-                  key={item.value}
-                  value={item.value}
-                  onSelect={(currentValue) => {
-                    if (onChange)
-                      onChange(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                  className={cn(
-                    item.label.length === 0 ? "hidden" : undefined,
-                    item.disabled ? "opacity-25 cursor-not-allowed" : undefined
-                  )}
-                  disabled={item?.disabled ?? false}
-                >
-                  <Check
+
+          <CommandList>
+            <CommandGroup {...dropdownProps}>
+              {items != undefined &&
+                items.map((item) => (
+                  <CommandItem
+                    key={item.value}
+                    value={item.value}
+                    onSelect={(currentValue) => {
+                      if (onChange)
+                        onChange(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                    }}
                     className={cn(
-                      "mr-2 h-4 w-4",
-                      caseInsensitiveEquals(value, item.value)
-                        ? "opacity-100"
-                        : "opacity-0"
+                      item.label.length === 0 ? "hidden" : undefined,
+                      item.disabled
+                        ? "opacity-25 cursor-not-allowed"
+                        : undefined
                     )}
-                  />
-                  {item.label}
-                </CommandItem>
-              ))}
-          </CommandGroup>
+                    disabled={item?.disabled ?? false}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        caseInsensitiveEquals(value, item.value)
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                    {item.label}
+                  </CommandItem>
+                ))}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
