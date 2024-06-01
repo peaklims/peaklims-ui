@@ -16,7 +16,7 @@ import { useDisposeSample } from "../apis/dispose-sample";
 import { SampleDto, SampleForCreationDto } from "../types/index";
 import { SampleForm } from "./sample-form";
 import { PatientSamples } from "./worklist/patient-samples";
-import { createColumns } from "./worklist/patient-samples-columns";
+import { sampleTableColumns } from "./worklist/patient-samples-columns";
 
 export function ManageAccessionSamples({
   patientId,
@@ -68,12 +68,7 @@ export function ManageAccessionSamples({
     setSampleIdToEdit(row.getValue("id"));
   };
 
-  const onEditAction = (row: Row<SampleDto>) => {
-    setSampleIdToEdit(row.getValue("id"));
-    alert(`Edit ${row.getValue("id")}`);
-  };
-
-  const columns = createColumns(onDeleteAction, onDisposeAction, onEditAction);
+  const columns = sampleTableColumns(onDeleteAction, onDisposeAction);
 
   const [sampleIdToEdit, setSampleIdToEdit] = useState<string | undefined>(
     undefined

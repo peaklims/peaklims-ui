@@ -8,7 +8,7 @@ interface SampleStatusBadgeProps {
   props?: React.HTMLProps<HTMLSpanElement>;
 }
 
-const SampleStatusBadge: React.FC<SampleStatusBadgeProps> = ({
+export const SampleStatusBadge: React.FC<SampleStatusBadgeProps> = ({
   status,
   className,
   props,
@@ -33,5 +33,3 @@ const SampleStatusBadge: React.FC<SampleStatusBadgeProps> = ({
     <Badge text={status} variant={variant} className={className} {...props} />
   );
 };
-
-export default SampleStatusBadge;

@@ -160,8 +160,7 @@ export function AuthLayout() {
                     delay={600}
                     content={
                       <TooltipHotkey>
-                        Quick search with <Kbd command={`${actionKey}`} /> then{" "}
-                        <Kbd command={"K"} />
+                        Quick search with <Kbd command={`${actionKey}K`} />
                       </TooltipHotkey>
                     }
                   >

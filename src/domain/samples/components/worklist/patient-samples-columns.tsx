@@ -8,23 +8,29 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  SampleDto,
+  SampleForUpdateDto,
+  SampleForm,
+  SampleStatus,
+  SampleStatusBadge,
+  useUpdateSample,
+} from "@/domain/samples";
 import { cn } from "@/lib/utils";
+import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef, Row } from "@tanstack/react-table";
+import { useState } from "react";
 import { DataTableColumnHeader } from "../../../../components/data-table/data-table-column-header";
-import { SampleDto, SampleStatus } from "../../types";
-import SampleStatusBadge from "../status-badge";
-
 type ColumnsWithDeleteCallback = ColumnDef<SampleDto> & {
   onDeleteAction?: (row: Row<SampleDto>) => void;
   onDisposeAction?: (row: Row<SampleDto>) => void;
   onEditAction?: (row: Row<SampleDto>) => void;
 };
 
-export const createColumns = (
+export const sampleTableColumns = (
   onDeleteAction: (row: Row<SampleDto>) => void,
-  onDisposeAction: (row: Row<SampleDto>) => void,
-  onEditAction: (row: Row<SampleDto>) => void
+  onDisposeAction: (row: Row<SampleDto>) => void
 ): ColumnsWithDeleteCallback[] => [
   {
     accessorKey: "id",
@@ -143,8 +149,12 @@ export const createColumns = (
     ),
     meta: { thClassName: "w-20" },
     cell: ({ row }) => {
+      const [isOpen, setIsOpen] = useState(false);
+      const sampleId = row.getValue("id") as string;
+      const updateSampleApi = useUpdateSample();
+
       return (
-        <div className="flex items-center justify-center w-8">
+        <div className="flex items-center justify-center w-8" key={sampleId}>
           {/* {canDeleteUser.hasPermission && ( */}
           {/* <TrashButton
             onClick={(e) => {
@@ -184,8 +194,7 @@ export const createColumns = (
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => {
-                    // alert(`Edit Sample ${row.getValue("id")}`);
-                    onEditAction(row);
+                    setIsOpen(true);
                   }}
                 >
                   <p>Edit Sample</p>
@@ -227,6 +236,35 @@ export const createColumns = (
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
+
+            <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
+              <ModalContent>
+                {(onClose) => (
+                  <>
+                    <ModalHeader className="flex flex-col gap-1">
+                      Edit Sample
+                    </ModalHeader>
+                    <ModalBody>
+                      <SampleForm
+                        sampleId={sampleId}
+                        // onSubmit={(values) => alert(JSON.stringify(values))}
+                        onSubmit={(value) => {
+                          const dto = { ...value } as SampleForUpdateDto;
+                          updateSampleApi
+                            .mutateAsync({ data: dto, id: sampleId })
+                            .then(() => {
+                              setIsOpen(false);
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        }}
+                      />
+                    </ModalBody>
+                  </>
+                )}
+              </ModalContent>
+            </Modal>
           </DropdownMenu>
         </div>
       );
