@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Kbd } from "@/components";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +21,7 @@ import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { DataTableColumnHeader } from "../../../../components/data-table/data-table-column-header";
 type ColumnsWithDeleteCallback = ColumnDef<SampleDto> & {
   onDeleteAction?: (row: Row<SampleDto>) => void;
@@ -150,8 +151,20 @@ export const sampleTableColumns = (
     meta: { thClassName: "w-20" },
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = useState(false);
+      const [isDropdownOpen, setIsDropdownOpen] = useState(false);
       const sampleId = row.getValue("id") as string;
       const updateSampleApi = useUpdateSample();
+
+      useHotkeys(
+        "e",
+        () => {
+          setIsOpen(true);
+          setIsDropdownOpen(false);
+        },
+        {
+          enabled: isDropdownOpen,
+        }
+      );
 
       return (
         <div className="flex items-center justify-center w-8" key={sampleId}>
@@ -163,9 +176,9 @@ export const sampleTableColumns = (
             }}
           /> */}
           {/* )} */}
-          <DropdownMenu>
+          <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
             <DropdownMenuTrigger asChild>
-              <Button
+              <div
                 className={cn(
                   "inline-flex items-center px-2 py-2 text-sm font-medium leading-5 transition duration-100 ease-in bg-white rounded-full hover:shadow",
                   "hover:bg-slate-100 hover:text-slate-800 hover:outline-none text-slate-700",
@@ -185,7 +198,7 @@ export const sampleTableColumns = (
                   <circle cx={416} cy={256} r={48} fill="currentColor" />
                   <circle cx={96} cy={256} r={48} fill="currentColor" />
                 </svg>
-              </Button>
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" side="right">
               <DropdownMenuLabel className="py-1 text-xs font-medium text-center">
@@ -197,7 +210,10 @@ export const sampleTableColumns = (
                     setIsOpen(true);
                   }}
                 >
-                  <p>Edit Sample</p>
+                  <div className="flex items-center justify-between w-full">
+                    <p>Edit Sample</p>
+                    <Kbd command={"E"} />
+                  </div>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               {/* <DropdownMenuSeparator /> */}
@@ -247,7 +263,6 @@ export const sampleTableColumns = (
                     <ModalBody>
                       <SampleForm
                         sampleId={sampleId}
-                        // onSubmit={(values) => alert(JSON.stringify(values))}
                         onSubmit={(value) => {
                           const dto = { ...value } as SampleForUpdateDto;
                           updateSampleApi
