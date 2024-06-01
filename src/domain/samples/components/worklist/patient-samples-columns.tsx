@@ -205,12 +205,21 @@ export const sampleTableColumns = (
               <DropdownItem
                 key="dispose"
                 className={cn(
-                  row.getValue("status") !== "Disposed" && "hidden"
+                  row.getValue("status") === "Disposed" && "hidden"
                 )}
               >
                 <p>Dispose Sample</p>
               </DropdownItem>
-              <DropdownItem key="delete" className="text-rose-500">
+              <DropdownItem
+                key="delete"
+                className={cn(
+                  "data-[hover]:bg-rose-200 data-[hover]:text-rose-700 data-[hover]:outline-none",
+                  "focus:bg-rose-200 focus:text-rose-700 focus:outline-none",
+                  "dark:border-slate-900 dark:bg-slate-800 dark:text-white dark:data-[hover]:bg-rose-800 dark:data-[hover]:text-rose-300 dark:data-[hover]:outline-none",
+                  "dark:data-[hover]:shadow dark:shadow-rose-400 dark:data-[hover]:shadow-rose-300",
+                  "flex items-center justify-start space-x-2 w-full text-rose-500"
+                )}
+              >
                 <p>Delete Sample</p>
               </DropdownItem>
             </DropdownMenu>
