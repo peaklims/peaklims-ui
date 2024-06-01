@@ -99,7 +99,7 @@ export function ManageAccessionComments({
           <textarea
             id="comment"
             rows={4}
-            ariaLabel="Add a comment"
+            aria-label="Add a comment"
             className={cn(
               "max-h-52 z-20 w-full px-5 py-4 -mt-[2px] border-2 rounded-bLg shadow-md focus:outline-none focus:border-emerald-400"
             )}
@@ -302,7 +302,7 @@ function ActionMenu({
           </button>
         </DropdownTrigger>
         <DropdownMenu
-          ariaLabel="Actions"
+          aria-label="Actions"
           onAction={(key) => {
             if (key === "copy") {
               navigator.clipboard.writeText(comment.comment);
