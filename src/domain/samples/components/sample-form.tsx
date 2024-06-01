@@ -1,4 +1,5 @@
 import { DateInput } from "@/components/date-input";
+import { Combobox, getLabelById } from "@/components/ui/combobox";
 import {
   Form,
   FormControl,
@@ -9,12 +10,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
+import { Item } from "react-stately";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/ui/combobox";
 import { useGetAllContainersForDropdown } from "@/domain/containers/apis/get-all-containers";
 import { parse } from "date-fns";
 import { useEffect } from "react";
@@ -112,7 +113,23 @@ export function SampleForm({
               <FormItem>
                 <FormLabel required={true}>Sample Type</FormLabel>
                 <FormControl>
-                  <Combobox items={sampleTypesDropdown} {...field} />
+                  <Combobox
+                    label={field.name}
+                    {...field}
+                    inputValue={getLabelById({
+                      id: field.value,
+                      data: sampleTypesDropdown,
+                    })}
+                    onInputChange={field.onChange}
+                    selectedKey={field.value}
+                    onSelectionChange={field.onChange}
+                  >
+                    {sampleTypesDropdown?.map((item) => (
+                      <Item key={item.value} textValue={item.label}>
+                        {item.label}
+                      </Item>
+                    ))}
+                  </Combobox>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -143,23 +160,23 @@ export function SampleForm({
                     <FormLabel required={false}>Container</FormLabel>
                     <FormControl>
                       <Combobox
+                        label={field.name}
                         {...field}
-                        items={
-                          onlyActiveContainersThatAreNotSelected as {
-                            value: string;
-                            label: string;
-                            disabled?: boolean;
-                          }[]
-                        }
-                        buttonProps={{
-                          // className: "w-[25rem]",
-                          disabled: containersAreLoading,
-                        }}
-                        dropdownProps={{ className: "w-[16rem] sm:w-[20rem]" }}
-                        onChange={(e) => {
-                          field.onChange(e);
-                        }}
-                      />
+                        isDisabled={containersAreLoading}
+                        inputValue={getLabelById({
+                          id: field.value,
+                          data: onlyActiveContainersThatAreNotSelected,
+                        })}
+                        onInputChange={field.onChange}
+                        selectedKey={field.value}
+                        onSelectionChange={field.onChange}
+                      >
+                        {onlyActiveContainersThatAreNotSelected?.map((item) => (
+                          <Item key={item.value} textValue={item.label}>
+                            {item.label}
+                          </Item>
+                        ))}
+                      </Combobox>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

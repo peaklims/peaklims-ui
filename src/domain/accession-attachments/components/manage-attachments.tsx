@@ -6,7 +6,7 @@ import {
   type FileState,
 } from "@/components/file-upload/multi-file-dropzone";
 import { Notification } from "@/components/notifications";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox, getLabelById } from "@/components/ui/combobox";
 import {
   Form,
   FormControl,
@@ -25,6 +25,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { EditIcon, ExternalLink, FileIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Item } from "react-stately";
 import { z } from "zod";
 import { AccessionAttachmentForUpdateDto } from "../accession-attachments.types";
 import { useDeleteAccessionAttachment } from "../apis/delete-attachment";
@@ -339,7 +340,23 @@ function AccessionAttachmentForm({
               <FormItem>
                 <FormLabel required={false}>Type</FormLabel>
                 <FormControl>
-                  <Combobox items={attachmentTypesDropdown} {...field} />
+                  <Combobox
+                    label={field.name}
+                    {...field}
+                    inputValue={getLabelById({
+                      id: field.value,
+                      data: attachmentTypesDropdown,
+                    })}
+                    onInputChange={field.onChange}
+                    selectedKey={field.value}
+                    onSelectionChange={field.onChange}
+                  >
+                    {attachmentTypesDropdown?.map((item) => (
+                      <Item key={item.value} textValue={item.label}>
+                        {item.label}
+                      </Item>
+                    ))}
+                  </Combobox>
                 </FormControl>
                 <FormMessage />
               </FormItem>

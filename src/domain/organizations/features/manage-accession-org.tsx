@@ -16,6 +16,7 @@ import { AccessionContactDto } from "@/domain/accessions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MailMinus, MailPlus } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { Item } from "react-stately";
 import { z } from "zod";
 import { useGetContactsByOrganization } from "../../organization-contacts/apis/get-all-contacts-by-organization";
 
@@ -65,7 +66,12 @@ export function AccessionOrganizationForm({
       organizationId: data.organization.toString(),
     });
   };
-
+  const getLabelById = (id) => {
+    const item = onlyActiveOrgsThatAreNotSelected?.find(
+      (org) => org.value === id
+    );
+    return item ? item.label : "";
+  };
   return (
     <div className="pt-3">
       <Form {...organizationForm}>
@@ -78,24 +84,26 @@ export function AccessionOrganizationForm({
                 <FormLabel required={false}>Organization</FormLabel>
                 <FormControl>
                   <Combobox
+                    classNames={{
+                      wrapper: "w-full md:w-[25rem]",
+                    }}
+                    isDisabled={orgsAreLoading}
+                    label={field.name}
                     {...field}
-                    items={
-                      onlyActiveOrgsThatAreNotSelected as {
-                        value: string;
-                        label: string;
-                        disabled?: boolean;
-                      }[]
-                    }
-                    buttonProps={{
-                      className: "w-[25rem]",
-                      disabled: orgsAreLoading,
-                    }}
-                    dropdownProps={{ className: "w-[25rem]" }}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      organizationForm.handleSubmit((data) => onSubmit(data))();
-                    }}
-                  />
+                    inputValue={getLabelById(field.value)}
+                    onInputChange={field.onChange}
+                    selectedKey={field.value}
+                    onSelectionChange={field.onChange}
+                    disabledKeys={orgs
+                      ?.filter((org) => org.disabled)
+                      .map((org) => org.value)}
+                  >
+                    {onlyActiveOrgsThatAreNotSelected?.map((org) => (
+                      <Item key={org.value} textValue={org.label}>
+                        {org.label}
+                      </Item>
+                    ))}
+                  </Combobox>
                 </FormControl>
                 <FormMessage />
               </FormItem>

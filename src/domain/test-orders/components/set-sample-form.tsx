@@ -1,6 +1,6 @@
 import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox, getLabelById } from "@/components/ui/combobox";
 import {
   Form,
   FormControl,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Item } from "react-stately";
 import * as z from "zod";
 import { useSetSample } from "../apis/set-sample.api";
 
@@ -70,7 +71,23 @@ export function SetSampleForm({
               <FormItem>
                 <FormLabel required={false}>Sample</FormLabel>
                 <FormControl>
-                  <Combobox items={sampleOptions} {...field} />
+                  <Combobox
+                    label={field.name}
+                    {...field}
+                    inputValue={getLabelById({
+                      id: field.value,
+                      data: sampleOptions,
+                    })}
+                    onInputChange={field.onChange}
+                    selectedKey={field.value}
+                    onSelectionChange={field.onChange}
+                  >
+                    {sampleOptions?.map((item) => (
+                      <Item key={item.value} textValue={item.label}>
+                        {item.label}
+                      </Item>
+                    ))}
+                  </Combobox>
                 </FormControl>
                 <FormMessage />
               </FormItem>

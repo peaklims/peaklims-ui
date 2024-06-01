@@ -14,9 +14,10 @@ import * as z from "zod";
 
 import { DateInput } from "@/components/date-input";
 import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox, getLabelById } from "@/components/ui/combobox";
 import { parse } from "date-fns";
 import { useEffect } from "react";
+import { Item } from "react-stately";
 import { useGetPatient } from "../apis/get-patient";
 import { ethnicitiesDropdown } from "../types/ethnicities";
 import { racesDropdown } from "../types/races";
@@ -141,7 +142,23 @@ export function PatientForm({
                   <FormItem>
                     <FormLabel required={true}>Sex</FormLabel>
                     <FormControl>
-                      <Combobox items={sexesDropdown} {...field} />
+                      <Combobox
+                        label={field.name}
+                        {...field}
+                        inputValue={getLabelById({
+                          id: field.value,
+                          data: sexesDropdown,
+                        })}
+                        onInputChange={field.onChange}
+                        selectedKey={field.value}
+                        onSelectionChange={field.onChange}
+                      >
+                        {sexesDropdown?.map((item) => (
+                          <Item key={item.value} textValue={item.label}>
+                            {item.label}
+                          </Item>
+                        ))}
+                      </Combobox>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -156,7 +173,23 @@ export function PatientForm({
                   <FormItem>
                     <FormLabel required={false}>Race</FormLabel>
                     <FormControl>
-                      <Combobox items={racesDropdown} {...field} />
+                      <Combobox
+                        label={field.name}
+                        {...field}
+                        inputValue={getLabelById({
+                          id: field.value,
+                          data: racesDropdown,
+                        })}
+                        onInputChange={field.onChange}
+                        selectedKey={field.value}
+                        onSelectionChange={field.onChange}
+                      >
+                        {racesDropdown?.map((item) => (
+                          <Item key={item.value} textValue={item.label}>
+                            {item.label}
+                          </Item>
+                        ))}
+                      </Combobox>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -171,7 +204,23 @@ export function PatientForm({
                   <FormItem>
                     <FormLabel required={false}>Ethnicity</FormLabel>
                     <FormControl>
-                      <Combobox items={ethnicitiesDropdown} {...field} />
+                      <Combobox
+                        label={field.name}
+                        {...field}
+                        inputValue={getLabelById({
+                          id: field.value,
+                          data: ethnicitiesDropdown,
+                        })}
+                        onInputChange={field.onChange}
+                        selectedKey={field.value}
+                        onSelectionChange={field.onChange}
+                      >
+                        {ethnicitiesDropdown?.map((item) => (
+                          <Item key={item.value} textValue={item.label}>
+                            {item.label}
+                          </Item>
+                        ))}
+                      </Combobox>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
