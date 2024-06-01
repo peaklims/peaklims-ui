@@ -77,7 +77,7 @@ export function SampleForm({
       "yyyy-MM-dd",
       new Date()
     );
-    console.log({ sampleData });
+
     sampleForm.reset({
       ...sampleForm.getValues(),
       type: sampleData?.type ?? "",
