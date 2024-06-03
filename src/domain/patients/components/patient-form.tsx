@@ -12,9 +12,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { DateInput } from "@/components/date-input";
 import { Button } from "@/components/ui/button";
 import { Combobox, getLabelById } from "@/components/ui/combobox";
+import { RichDatePicker } from "@/components/ui/rich-cal";
+import { CalendarDate } from "@internationalized/date";
 import { parse } from "date-fns";
 import { useEffect } from "react";
 import { Item } from "react-stately";
@@ -119,19 +120,34 @@ export function PatientForm({
               <FormField
                 control={patientForm.control}
                 name="dateOfBirth"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required={true}>Date of Birth</FormLabel>
-                    <FormControl>
-                      <DateInput
-                        {...field}
-                        buttonClassName="w-full"
-                        toYear={new Date().getFullYear()}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  if (field.value === undefined || field.value === null) {
+                    return <></>;
+                  }
+
+                  const year = field.value.getFullYear();
+                  const month = field.value.getMonth();
+                  const day = field.value.getDate();
+
+                  return (
+                    <FormItem>
+                      <FormLabel required={true}>Date of Birth</FormLabel>
+                      <FormControl>
+                        <RichDatePicker
+                          {...field}
+                          value={new CalendarDate(year, month, day)}
+                          onChange={(value) => {
+                            field.onChange(
+                              new Date(value.year, value.month, value.day)
+                            );
+                          }}
+                          maxValue={"today"}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
             <div className="col-span-1">

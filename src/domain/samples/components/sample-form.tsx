@@ -1,4 +1,3 @@
-import { DateInput } from "@/components/date-input";
 import { Combobox, getLabelById } from "@/components/ui/combobox";
 import {
   Form,
@@ -16,6 +15,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
+import {
+  RichDatePicker,
+  getDateControlOnChangeValue,
+  getDateControlValue,
+} from "@/components/ui/rich-cal";
 import { useGetAllContainersForDropdown } from "@/domain/containers/apis/get-all-containers";
 import { parse } from "date-fns";
 import { useEffect } from "react";
@@ -183,25 +187,36 @@ export function SampleForm({
                 )}
               />
             </div>
+
             <div className="col-span-1">
               <FormField
                 control={sampleForm.control}
                 name="receivedDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required={false}>Date Received</FormLabel>
-                    <FormControl>
-                      <DateInput
-                        {...field}
-                        buttonClassName="w-full"
-                        toYear={new Date().getFullYear()}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const year = field?.value?.getFullYear();
+                  const month = field?.value?.getMonth();
+                  const day = field?.value?.getDate();
+
+                  return (
+                    <FormItem>
+                      <FormLabel required={false}>Date Received</FormLabel>
+                      <FormControl>
+                        <RichDatePicker
+                          {...field}
+                          value={getDateControlValue(field.value)}
+                          onChange={(value) => {
+                            field.onChange(getDateControlOnChangeValue(value));
+                          }}
+                          maxValue={"today"}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
+
             <div className="col-span-1">
               <FormField
                 control={sampleForm.control}
@@ -210,10 +225,13 @@ export function SampleForm({
                   <FormItem>
                     <FormLabel required={false}>Collection Date</FormLabel>
                     <FormControl>
-                      <DateInput
+                      <RichDatePicker
                         {...field}
-                        buttonClassName="w-full"
-                        toYear={new Date().getFullYear()}
+                        value={getDateControlValue(field.value)}
+                        onChange={(value) => {
+                          field.onChange(getDateControlOnChangeValue(value));
+                        }}
+                        maxValue={"today"}
                       />
                     </FormControl>
                     <FormMessage />

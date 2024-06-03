@@ -8,7 +8,7 @@ export function Calendar({ className, ...props }: { className?: string }) {
       width={200}
       height={200}
       viewBox="0 0 24 24"
-      className={cn("w-3 h-3", className)}
+      className={cn("w-4 h-4", className)}
       {...props}
     >
       <path

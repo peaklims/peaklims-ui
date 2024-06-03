@@ -14,8 +14,12 @@ import {
   useOption,
   usePopover,
 } from "react-aria";
-// import { ComboBoxProps } from "react-aria-components";
-import type { ListState, Node, OverlayTriggerState } from "react-stately";
+import type {
+  ComboBoxStateOptions,
+  ListState,
+  Node,
+  OverlayTriggerState,
+} from "react-stately";
 import { useComboBoxState } from "react-stately";
 
 export function Combobox<T extends object>({
@@ -29,8 +33,7 @@ export function Combobox<T extends object>({
     // listBox?: string;
     // option?: string;
   };
-}) {
-  // & ComboBoxProps<T>
+} & ComboBoxStateOptions<T>) {
   let { contains } = useFilter({ sensitivity: "base" });
   let state = useComboBoxState({ ...props, defaultFilter: contains });
 
