@@ -22,18 +22,21 @@ import type {
 } from "react-stately";
 import { useComboBoxState } from "react-stately";
 
-export function Combobox<T extends object>({
-  classNames,
-  ...props
-}: {
-  classNames?: {
-    wrapper?: string;
-    input?: string;
-    button?: string;
-    // listBox?: string;
-    // option?: string;
-  };
-} & ComboBoxStateOptions<T>) {
+export const Combobox = React.forwardRef(function Combobox<T extends object>(
+  {
+    classNames,
+    ...props
+  }: {
+    classNames?: {
+      wrapper?: string;
+      input?: string;
+      button?: string;
+      // listBox?: string;
+      // option?: string;
+    };
+  } & ComboBoxStateOptions<T>,
+  ref: React.Ref<HTMLDivElement>
+) {
   let { contains } = useFilter({ sensitivity: "base" });
   let state = useComboBoxState({ ...props, defaultFilter: contains });
 
@@ -123,7 +126,7 @@ export function Combobox<T extends object>({
       )}
     </div>
   );
-}
+});
 
 interface ListBoxProps extends AriaListBoxOptions<unknown> {
   listBoxRef?: React.RefObject<HTMLUListElement>;
