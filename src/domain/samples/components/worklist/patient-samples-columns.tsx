@@ -97,7 +97,7 @@ export const sampleTableColumns = (
         <div className="flex flex-col">
           <p>{(type?.length ?? 0) > 0 ? <p>{type}</p> : "—"}</p>
           {containerType ? (
-            <p className="text-xs text-slate-700">{containerType}</p>
+            <span className="text-xs text-slate-700">{containerType}</span>
           ) : null}
         </div>
       );
