@@ -78,7 +78,9 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
         className={cn(
           `relative inline-flex h-8 flex-row overflow-hidden rounded-md border border-slate-300 text-sm shadow-sm placeholder:text-zinc-400`,
           "disabled:cursor-not-allowed disabled:opacity-50",
-          state.isFocused ? "border-emerald-500 border-2" : "border-slate-300"
+          state.isFocused
+            ? "border-emerald-500 ring-emerald-500 ring-1"
+            : "border-slate-300"
         )}
       >
         <input

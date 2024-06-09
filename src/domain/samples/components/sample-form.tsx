@@ -193,10 +193,6 @@ export function SampleForm({
                 control={sampleForm.control}
                 name="receivedDate"
                 render={({ field }) => {
-                  const year = field?.value?.getFullYear();
-                  const month = field?.value?.getMonth();
-                  const day = field?.value?.getDate();
-
                   return (
                     <FormItem>
                       <FormLabel required={false}>Date Received</FormLabel>

@@ -22,7 +22,7 @@ import {
 import { useFocusRing } from "@react-aria/focus";
 import { useLocale } from "@react-aria/i18n";
 import { mergeProps } from "@react-aria/utils";
-import { useRef, useState } from "react";
+import { Ref, forwardRef, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { useDateFormatter } from "@react-aria/i18n";
@@ -48,22 +48,25 @@ import {
   Popover,
 } from "react-aria-components";
 
-export function RichDatePicker({
-  minValue,
-  maxValue,
-  value,
-  onChange,
-  srLabel,
-  ...props
-}: {
-  minValue?: DateValue | undefined | "today";
-  maxValue?: DateValue | undefined | "today";
-  value: CalendarDate | CalendarDateTime | ZonedDateTime | null | undefined;
-  srLabel?: string;
-  onChange: (
-    value: CalendarDate | CalendarDateTime | ZonedDateTime | null | undefined
-  ) => void;
-}) {
+export const RichDatePicker = forwardRef(function RichDatePicker(
+  {
+    minValue,
+    maxValue,
+    value,
+    onChange,
+    srLabel,
+    ...props
+  }: {
+    minValue?: DateValue | undefined | "today";
+    maxValue?: DateValue | undefined | "today";
+    value: CalendarDate | CalendarDateTime | ZonedDateTime | null | undefined;
+    srLabel?: string;
+    onChange: (
+      value: CalendarDate | CalendarDateTime | ZonedDateTime | null | undefined
+    ) => void;
+  },
+  ref: Ref<HTMLDivElement> | null
+) {
   let { locale } = useLocale();
 
   const derivedMaxValue =
@@ -81,7 +84,6 @@ export function RichDatePicker({
     createCalendar,
   });
 
-  let ref = useRef<HTMLDivElement>(null);
   let { calendarProps, prevButtonProps, nextButtonProps } = useCalendar(
     props,
     state
@@ -163,7 +165,8 @@ export function RichDatePicker({
       </DatePickerPopover>
     </DatePicker>
   );
-}
+});
+
 export function toCalendarDate(date: Date) {
   return new CalendarDate(
     date.getFullYear(),
@@ -448,15 +451,18 @@ function YearDropdown({
   );
 }
 
-export function CalendarGrid({
-  state,
-  setIsOpen,
-  offset = {},
-}: {
-  state: ReturnType<typeof useCalendarState>;
-  setIsOpen: (isOpen: boolean) => void;
-  offset?: { months?: number; years?: number };
-}) {
+export const CalendarGrid = forwardRef(function CalendarGrid(
+  {
+    state,
+    setIsOpen,
+    offset = {},
+  }: {
+    state: ReturnType<typeof useCalendarState>;
+    setIsOpen: (isOpen: boolean) => void;
+    offset?: { months?: number; years?: number };
+  },
+  ref: Ref<HTMLDivElement> | null
+) {
   let { locale } = useLocale();
   let startDate = state.visibleRange.start.add(offset);
   let endDate = endOfMonth(startDate);
@@ -505,9 +511,9 @@ export function CalendarGrid({
       </tbody>
     </table>
   );
-}
+});
 
-export function getDateControlValue(value: Date | undefined | null) {
+export function getDateControlValue(value: Date | null | undefined) {
   if (value === undefined || value === null) return undefined;
 
   const year = value.getFullYear();
@@ -517,7 +523,9 @@ export function getDateControlValue(value: Date | undefined | null) {
   return new CalendarDate(year, month, day);
 }
 
-export function getDateControlOnChangeValue(value: DateValue) {
+export function getDateControlOnChangeValue(
+  value: CalendarDate | CalendarDateTime | ZonedDateTime | null | undefined
+) {
   if (value === undefined || value === null) return undefined;
 
   return new Date(value.year, value.month, value.day);
@@ -549,6 +557,9 @@ export function CalendarCell({
       <div
         {...mergeProps(buttonProps, focusProps)}
         onClick={(e) => {
+          if (state.isCellDisabled(date) || state.isCellUnavailable(date))
+            return;
+
           if (buttonProps?.onClick !== undefined) buttonProps.onClick(e);
 
           if (onClick !== undefined) onClick();
@@ -562,15 +573,15 @@ export function CalendarCell({
           "data-[today]:bg-emerald-200 data-[today]:text-emerald-800",
           "data-[selected]:bg-emerald-700 data-[selected]:text-white data-[selected]:ring-2 data-[selected]:ring-emerald-700",
           "data-[hovered]:bg-emerald-500 data-[hovered]:text-emerald-100",
-          "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
-          "data-[unavailable]:cursor-not-allowed data-[unavailable]:opacity-50 data-[unavailable]:data-[hovered]:bg-white"
+          "data-[unavailable]:cursor-not-allowed data-[unavailable]:opacity-50 data-[unavailable]:data-[hovered]:bg-white",
+          "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50"
         )}
       >
         <div
           className={cn(
             "w-full h-full rounded-full flex items-center justify-center cursor-default",
             {
-              "text-gray-400": isDisabled,
+              "cursor-not-allowed text-gray-400": isDisabled,
               // Focus ring, visible while the cell has keyboard focus.
               "ring-2 group-focus:z-2 ring-emerald-600 ring-offset-2":
                 isFocusVisible,
