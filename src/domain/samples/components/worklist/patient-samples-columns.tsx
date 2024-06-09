@@ -71,12 +71,11 @@ export const sampleTableColumns = (
       return (
         <div className="space-x-3">
           <div className="inline-flex flex-col">
-            <p className="block ">{sampleNumber}</p>
+            <p className="block">{sampleNumber}</p>
             {(externalId?.length ?? 0) > 0 && (
-              <p className="block text-xs text-slate-700">{externalId}</p>
+              <span className="block text-xs text-slate-700">{externalId}</span>
             )}
           </div>
-
           <SampleStatusBadge
             status={status as SampleStatus}
             className="hidden sm:inline-flex"
@@ -95,7 +94,7 @@ export const sampleTableColumns = (
       const containerType = row.getValue("containerType") as string;
       return (
         <div className="flex flex-col">
-          <p>{(type?.length ?? 0) > 0 ? <p>{type}</p> : "—"}</p>
+          {type?.length > 0 ? <p>{type}</p> : "—"}
           {containerType ? (
             <span className="text-xs text-slate-700">{containerType}</span>
           ) : null}
