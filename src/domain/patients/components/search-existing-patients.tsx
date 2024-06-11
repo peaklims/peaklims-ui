@@ -1,7 +1,6 @@
 import { PaginationControls } from "@/components/data-table/pagination";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { Button } from "@/components/ui/button";
-import { DatePicker } from "@/components/ui/date-picker";
 import {
   Form,
   FormControl,
@@ -11,6 +10,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  RichDatePicker,
+  getDateControlOnChangeValue,
+  getDateControlValue,
+} from "@/components/ui/rich-cal";
 import {
   SetAccessionPatient,
   useSetAccessionPatient,
@@ -150,7 +154,15 @@ or accession insensitive contains */}
               <FormItem>
                 <FormLabel>Date of Birth</FormLabel>
                 <FormControl>
-                  <DatePicker {...field} buttonClassName="w-full" disabled />
+                  <RichDatePicker
+                    {...field}
+                    value={getDateControlValue(field.value)}
+                    onChange={(value) => {
+                      field.onChange(getDateControlOnChangeValue(value));
+                    }}
+                    maxValue={"today"}
+                    isDisabled={true}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
