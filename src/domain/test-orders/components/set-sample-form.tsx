@@ -72,6 +72,7 @@ export function SetSampleForm({
                 <FormLabel required={false}>Sample</FormLabel>
                 <FormControl>
                   <Combobox
+                    autoFocus
                     label={field.name}
                     {...field}
                     inputValue={getLabelById({

@@ -93,7 +93,10 @@ export function AccessionOrganizationForm({
                     inputValue={getLabelById(field.value)}
                     onInputChange={field.onChange}
                     selectedKey={field.value}
-                    onSelectionChange={field.onChange}
+                    onSelectionChange={(e) => {
+                      field.onChange(e);
+                      organizationForm.handleSubmit((data) => onSubmit(data))();
+                    }}
                     disabledKeys={orgs
                       ?.filter((org) => org.disabled)
                       .map((org) => org.value)}

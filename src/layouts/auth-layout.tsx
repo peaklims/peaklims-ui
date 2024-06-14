@@ -234,13 +234,9 @@ export function AuthLayout() {
                 </Tooltip>
               </SidebarSection>
               <SidebarSection className="max-lg:hidden">
-                <SidebarHeading>Upcoming Events</SidebarHeading>
-                <SidebarItem href="/events/1">
-                  Bear Hug: Live in Concert
-                </SidebarItem>
-                <SidebarItem href="/events/2">Viking People</SidebarItem>
-                <SidebarItem href="/events/3">Six Fingers — DJ Set</SidebarItem>
-                <SidebarItem href="/events/4">We All Look The Same</SidebarItem>
+                <SidebarHeading>Runs Processing</SidebarHeading>
+                <SidebarItem href="/run/1">R68329201</SidebarItem>
+                <SidebarItem href="/run/2">R68329222</SidebarItem>
               </SidebarSection>
               <SidebarSpacer />
               <SidebarSection>

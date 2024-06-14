@@ -134,6 +134,7 @@ function FilterForm({
                 <FormControl>
                   <Input
                     {...field}
+                    autoFocus={true}
                     placeholder="Search by name or identifiers"
                   />
                 </FormControl>
