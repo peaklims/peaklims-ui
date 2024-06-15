@@ -235,7 +235,7 @@ export const sampleTableColumns = (
                   </ModalHeader>
                   <ModalBody>
                     <SampleForm
-                      sampleData={sampleData}
+                      data={sampleData}
                       onSubmit={(value) => {
                         const dto = { ...value } as SampleForUpdateDto;
                         updateSampleApi
