@@ -8,6 +8,7 @@ import {
   SampleForm,
   SampleStatus,
   SampleStatusBadge,
+  useGetSample,
   useUpdateSample,
 } from "@/domain/samples";
 import { cn } from "@/lib/utils";
@@ -155,6 +156,7 @@ export const sampleTableColumns = (
       const [isDropdownOpen, setIsDropdownOpen] = useState(false);
       const sampleId = row.getValue("id") as string;
       const updateSampleApi = useUpdateSample();
+      const { data: sampleData } = useGetSample(sampleId);
 
       useHotkeys(
         "e",
@@ -233,7 +235,7 @@ export const sampleTableColumns = (
                   </ModalHeader>
                   <ModalBody>
                     <SampleForm
-                      sampleId={sampleId}
+                      sampleData={sampleData}
                       onSubmit={(value) => {
                         const dto = { ...value } as SampleForUpdateDto;
                         updateSampleApi

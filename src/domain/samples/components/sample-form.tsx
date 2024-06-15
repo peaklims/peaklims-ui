@@ -23,7 +23,6 @@ import {
 import { useGetAllContainersForDropdown } from "@/domain/containers/apis/get-all-containers";
 import { parse } from "date-fns";
 import { useEffect } from "react";
-import { useGetSample } from "../apis/get-sample";
 import { sampleTypesDropdown } from "../types/sample-types";
 
 export const sampleFormSchema = z.object({
@@ -48,13 +47,25 @@ export const sampleFormSchema = z.object({
 export const FormMode = ["Add", "Edit"] as const;
 export function SampleForm({
   onSubmit,
-  sampleId,
+  data: sampleData,
 }: {
   onSubmit: (values: z.infer<typeof sampleFormSchema>) => void;
-  sampleId?: string | undefined;
+  data?:
+    | {
+        id: string;
+        sampleNumber: string;
+        externalId?: string | null;
+        status: string;
+        type: string;
+        collectionDate: Date | undefined | null;
+        receivedDate: Date | undefined | null;
+        collectionSite: string | undefined | null;
+        containerId: string | undefined | null;
+        containerType: string | undefined | null;
+        patientId: string;
+      }
+    | undefined;
 }) {
-  const { data: sampleData } = useGetSample(sampleId);
-
   const sampleForm = useForm<z.infer<typeof sampleFormSchema>>({
     resolver: zodResolver(sampleFormSchema),
     defaultValues: {
