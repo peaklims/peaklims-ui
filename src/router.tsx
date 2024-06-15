@@ -62,23 +62,23 @@ const appRoute = new RootRoute({
           <Notification />
           <div className="hidden md:block">
             <TanStackRouterDevtools
-              position="top-right"
+              position="bottom-right"
               toggleButtonProps={{
                 style: {
                   marginRight: "5rem",
-                  marginTop: "1.25rem",
+                  marginBottom: ".75rem",
                 },
               }}
             />
-            <ReactQueryDevtools buttonPosition="top-right" />
+            <ReactQueryDevtools buttonPosition="bottom-right" />
           </div>
           <div className="block md:hidden">
             <TanStackRouterDevtools
               position="bottom-left"
               toggleButtonProps={{
                 style: {
-                  // marginLeft: "5rem",
-                  marginBottom: "2rem",
+                  marginLeft: "5rem",
+                  marginBottom: ".75rem",
                 },
               }}
             />
