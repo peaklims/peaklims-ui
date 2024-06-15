@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { usePatientCardContext } from "@/domain/patients/components/patient-cards";
 import { Modal, ModalContent, ModalHeader } from "@nextui-org/react";
+import { useGetPatient } from "../../apis/get-patient";
 import { useUpdatePatient } from "../../apis/update-patient";
 import { PatientForUpdateDto } from "../../types/index";
 import { PatientForm } from "../patient-form";
@@ -21,6 +22,7 @@ export function EditPatientButton({ patientId }: { patientId: string }) {
   const { addPatientDialogIsOpen, setAddPatientDialogIsOpen } =
     usePatientCardContext();
   const updatePatientApi = useUpdatePatient();
+  const { data: patientData } = useGetPatient(patientId);
   return (
     <>
       <Modal
@@ -35,7 +37,7 @@ export function EditPatientButton({ patientId }: { patientId: string }) {
             </ModalHeader>
             <div className="px-6 pb-6 overflow-y-auto grow">
               <PatientForm
-                patientId={patientId}
+                patient={patientData}
                 onSubmit={(value) => {
                   const dto = { ...value } as PatientForUpdateDto;
                   updatePatientApi

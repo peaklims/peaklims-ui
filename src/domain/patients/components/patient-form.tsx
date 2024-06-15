@@ -22,7 +22,6 @@ import {
 import { parse } from "date-fns";
 import { useEffect } from "react";
 import { Item } from "react-stately";
-import { useGetPatient } from "../apis/get-patient";
 import { ethnicitiesDropdown } from "../types/ethnicities";
 import { racesDropdown } from "../types/races";
 import { sexesDropdown } from "../types/sexes";
@@ -45,45 +44,58 @@ export const patientFormSchema = z.object({
 export const FormMode = ["Add", "Edit"] as const;
 export function PatientForm({
   onSubmit,
-  patientId,
+  patient,
 }: {
   onSubmit: (values: z.infer<typeof patientFormSchema>) => void;
-  patientId?: string | undefined;
+  patient?: {
+    id: string;
+    firstName?: string;
+    lastName?: string;
+    age?: number;
+    dateOfBirth?: Date;
+    internalId: string;
+    sex: string;
+    race?: string;
+    ethnicity?: string;
+  };
 }) {
-  const { data: patientData } = useGetPatient(patientId);
-
+  const parsedDate = parse(
+    patient?.dateOfBirth?.toString() ?? "",
+    "yyyy-MM-dd",
+    new Date()
+  );
   const patientForm = useForm<z.infer<typeof patientFormSchema>>({
     resolver: zodResolver(patientFormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      sex: "",
-      dateOfBirth: undefined,
-      race: "Not Given",
-      ethnicity: "Not Given",
+      firstName: patient?.firstName ?? "",
+      lastName: patient?.lastName ?? "",
+      sex: patient?.sex ?? "",
+      dateOfBirth: patient?.dateOfBirth ? parsedDate : undefined,
+      race: patient?.race ?? "Not Given",
+      ethnicity: patient?.ethnicity ?? "Not Given",
     },
   });
 
   useEffect(() => {
-    if (patientData === undefined) {
+    if (patient === undefined) {
       return;
     }
 
     const parsedDate = parse(
-      patientData?.dateOfBirth?.toString() ?? "",
+      patient?.dateOfBirth?.toString() ?? "",
       "yyyy-MM-dd",
       new Date()
     );
     patientForm.reset({
       ...patientForm.getValues(),
-      firstName: patientData?.firstName ?? "",
-      lastName: patientData?.lastName ?? "",
-      sex: patientData?.sex ?? "",
-      dateOfBirth: patientData?.dateOfBirth ? parsedDate : undefined,
-      race: patientData?.race ?? "Not Given",
-      ethnicity: patientData?.ethnicity ?? "Not Given",
+      firstName: patient?.firstName ?? "",
+      lastName: patient?.lastName ?? "",
+      sex: patient?.sex ?? "",
+      dateOfBirth: patient?.dateOfBirth ? parsedDate : undefined,
+      race: patient?.race ?? "Not Given",
+      ethnicity: patient?.ethnicity ?? "Not Given",
     });
-  }, [patientForm, patientData]);
+  }, [patientForm, patient]);
 
   return (
     <Form {...patientForm}>
