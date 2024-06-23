@@ -10,7 +10,7 @@ export interface QueryParams {
 export type AccessionWorklistDto = {
   id: string;
   accessionNumber: string;
-  status: string;
+  status: AccessionStatus;
   organizationName: string;
   patient: {
     firstName?: string;
@@ -22,7 +22,7 @@ export type AccessionWorklistDto = {
 export type EditableAccessionDto = {
   id: string;
   accessionNumber: string;
-  status: string;
+  status: AccessionStatus;
   organizationId: string | undefined;
   patient:
     | {

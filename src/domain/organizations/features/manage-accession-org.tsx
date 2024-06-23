@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { useAddAccessionContact } from "@/domain/accession-contacts/apis/add-accession-contact";
 import { useRemoveAccessionContact } from "@/domain/accession-contacts/apis/remove-accession-contact";
+import { useGetAccessionForEdit } from "@/domain/accessions";
 import { useSetAccessionOrganization } from "@/domain/accessions/apis/set-accession-org";
 import { AccessionContactDto } from "@/domain/accessions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,6 +73,10 @@ export function AccessionOrganizationForm({
     );
     return item ? item.label : "";
   };
+
+  const { data: accession } = useGetAccessionForEdit(accessionId);
+  const isDraftAccession = accession?.status === "Draft";
+
   return (
     <div className="pt-3">
       <Form {...organizationForm}>
@@ -87,7 +92,7 @@ export function AccessionOrganizationForm({
                     classNames={{
                       wrapper: "w-full md:w-[25rem]",
                     }}
-                    isDisabled={orgsAreLoading}
+                    isDisabled={orgsAreLoading || !isDraftAccession}
                     label={field.name}
                     {...field}
                     inputValue={getLabelById(field.value)}

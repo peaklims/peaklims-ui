@@ -86,7 +86,11 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
         <input
           {...inputProps}
           ref={inputRef}
-          className={cn("w-full px-3 py-1 outline-none", classNames?.input)}
+          className={cn(
+            "w-full px-3 py-1 outline-none",
+            "disabled:text-slate-400 disabled:cursor-not-allowed disabled:select-none",
+            classNames?.input
+          )}
         />
         <button
           {...buttonProps}
@@ -96,6 +100,7 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
             state.isFocused
               ? "border-emerald-500 text-emerald-600 border-l-2"
               : "border-slate-300 text-gray-500",
+            "disabled:text-slate-400 disabled:cursor-not-allowed",
             classNames?.button
           )}
         >
