@@ -1,15 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { Pagination } from "@/types/apis";
-import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/react";
 import {
   ArrowLeftToLine,
   ArrowRightFromLine,
-  Check,
   ChevronLeftIcon,
   ChevronRightIcon,
-  ChevronsUpDown,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -21,9 +23,10 @@ interface PaginationControlsProps {
   setPageSize: (size: number) => void;
   setPageNumber: (page: number) => void;
   className?: string;
+  orientation?: "between" | "left" | "right";
 }
 
-const PageSizeOptions = [1, 10, 20, 30, 40, 50] as const;
+const PageSizeOptions = [10, 20, 50, 100, 200] as const;
 // type PageSize = (typeof PageSizeOptions)[number];
 export function PaginationControls({
   entityPlural,
@@ -33,6 +36,7 @@ export function PaginationControls({
   setPageSize,
   setPageNumber,
   className,
+  orientation = "between",
 }: PaginationControlsProps) {
   const [totalPages, setTotalPages] = useState(apiPagination?.totalPages);
   const pageInfo = `${pageNumber} ${
@@ -43,16 +47,25 @@ export function PaginationControls({
     if (apiPagination?.totalPages != null)
       setTotalPages(apiPagination?.totalPages);
   }, [apiPagination?.totalPages, totalPages]);
+
   return (
     <div
       className={cn(
-        "flex items-center justify-between px-3 py-2 bg-white dark:bg-slate-700 sm:rounded-b-lg",
+        "flex items-center bg-white px-3 py-2 dark:bg-slate-700 sm:rounded-b-lg",
+        orientation === "left" && "justify-start",
+        orientation === "right" && "justify-end",
+        orientation === "between" && "justify-between",
         className
       )}
       aria-label={`Table navigation for ${entityPlural} table`}
     >
-      <div className="flex items-center flex-1 space-x-5">
-        <span className="flex text-sm font-normal text-slate-500 dark:text-slate-400 min-w-[4rem]">
+      <div
+        className={cn(
+          "flex items-center space-x-5",
+          orientation === "between" && "flex-1"
+        )}
+      >
+        <span className="flex min-w-[4rem] text-sm font-normal text-slate-500 dark:text-slate-400">
           <div>Page</div>
           <span className="pl-1 font-semibold text-slate-900 dark:text-white">
             {pageInfo}
@@ -60,7 +73,7 @@ export function PaginationControls({
         </span>
 
         {pageSize !== undefined && (
-          <div className="hidden sm:block">
+          <div className="hidden w-32 sm:block">
             <PaginationCombobox
               value={pageSize.toString()}
               onValueChange={(value) => {
@@ -75,7 +88,6 @@ export function PaginationControls({
 
       <div className="inline-flex items-center -space-x-[2px]">
         <Button
-          size={"xs"}
           aria-label="First page"
           variant="outline"
           className={cn("rounded-r-none")}
@@ -85,7 +97,6 @@ export function PaginationControls({
           {<ArrowLeftToLine className="w-5 h-5" />}
         </Button>
         <Button
-          size={"xs"}
           aria-label="Previous page"
           variant="outline"
           className={cn("rounded-none")}
@@ -99,7 +110,6 @@ export function PaginationControls({
           {<ChevronLeftIcon className="w-5 h-5" />}
         </Button>
         <Button
-          size={"xs"}
           aria-label="Next page"
           variant="outline"
           className={cn("rounded-none")}
@@ -113,7 +123,6 @@ export function PaginationControls({
           {<ChevronRightIcon className="w-5 h-5" />}
         </Button>
         <Button
-          size={"xs"}
           aria-label="Last page"
           variant="outline"
           className={cn("rounded-l-none")}
@@ -143,49 +152,29 @@ function PaginationCombobox({
     value: selectedPageSize.toString(),
     label: `Show ${selectedPageSize}`,
   }));
+
   return (
-    <Popover
-      placement="bottom"
-      isOpen={open}
-      onOpenChange={setOpen}
-      triggerScaleOnOpen={false}
-    >
-      <PopoverTrigger>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className=""
-        >
+    <Dropdown isOpen={open} onOpenChange={setOpen}>
+      <DropdownTrigger>
+        <Button variant="outline">
           {value
             ? pageSizes.find((pageSize) => pageSize.value === value)?.label
             : "Select page size..."}
-          <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[150px] p-0">
-        <Command>
-          <CommandGroup>
-            {pageSizes.map((pageSize) => (
-              <CommandItem
-                key={pageSize.value}
-                onSelect={() => {
-                  onValueChange(pageSize.value === value ? "" : pageSize.value);
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === pageSize.value ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {pageSize.label}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Page Size">
+        {pageSizes.map((pageSize) => (
+          <DropdownItem
+            key={pageSize.value}
+            onClick={() => {
+              onValueChange(pageSize.value === value ? "" : pageSize.value);
+              setOpen(false);
+            }}
+          >
+            {pageSize.label}
+          </DropdownItem>
+        ))}
+      </DropdownMenu>
+    </Dropdown>
   );
 }
