@@ -14,8 +14,13 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { AccessionStatus } from "../../types";
 
 export function AccessionWorklistToolbar() {
-  const { filterInput, setFilterInput, isFiltered, resetFilters } =
-    useAccessioningWorklistTableStore();
+  const {
+    filterInput,
+    setFilterInput,
+    isFiltered,
+    resetFilters,
+    setPageNumber,
+  } = useAccessioningWorklistTableStore();
   const [liveValue, setLiveValue] = useState(filterInput);
   const [debouncedFilterInput] = useDebouncedValue(liveValue, 400);
 
@@ -48,6 +53,7 @@ export function AccessionWorklistToolbar() {
               value={(liveValue as string) ?? ""}
               onChange={(event) => {
                 setLiveValue(event.currentTarget.value);
+                setPageNumber(1);
               }}
               className="w-48 lg:w-54"
             />
@@ -63,6 +69,7 @@ export function AccessionWorklistToolbar() {
               variant="ghost"
               onClick={() => {
                 setLiveValue(null);
+                setPageNumber(1);
                 resetFilters();
               }}
               className="h-8 px-2 lg:px-3"
