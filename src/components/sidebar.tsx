@@ -277,7 +277,7 @@ function MobileSidebar({
     <div className={direction === "bottom" ? "sm:hidden" : "hidden sm:block"}>
       <Drawer open={isOpen} onOpenChange={setIsOpen} direction={direction}>
         {/* Navbar on mobile */}
-        <header className="flex items-center px-4 lg:hidden">
+        <header className="flex items-center h-0 px-4 sm:h-auto lg:hidden">
           <div className="py-2.5">
             <button
               onClick={() => setIsOpen(true)}
@@ -285,7 +285,7 @@ function MobileSidebar({
             >
               <DrawerTrigger asChild>
                 <div
-                  className="absolute z-10 block p-1 rounded-full bottom-4 right-4 bg-slate-100 sm:hidden sm:p-2"
+                  className="fixed z-10 block p-1 rounded-full bottom-4 right-4 bg-slate-100 sm:hidden sm:p-2"
                   data-testid="mobile-menu-hamburger"
                 >
                   <div className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-slate-500 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">

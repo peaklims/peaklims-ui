@@ -57,7 +57,7 @@ const appRoute = new RootRoute({
           <meta property="twitter:image" content={siteConfig.ogImage} /> */}
         </Helmet>
 
-        <div className="h-full min-h-screen font-sans antialiased scroll-smooth debug-screens [font-feature-settings:'ss01'] ">
+        <div className="min-h-svh font-sans antialiased scroll-smooth debug-screens [font-feature-settings:'ss01'] ">
           <Outlet />
           <Notification />
           <div className="hidden md:block">
