@@ -99,7 +99,7 @@ export function SidebarFooter({
     <div
       {...props}
       className={cn(
-        "flex flex-col border-t border-zinc-950/5 p-4 dark:border-white/5 [&>[data-slot=section]+[data-slot=section]]:mt-2.5",
+        "flex flex-col border-t border-zinc-950/5 px-4 py-2 dark:border-white/5 [&>[data-slot=section]+[data-slot=section]]:mt-2.5",
         className
       )}
     />
