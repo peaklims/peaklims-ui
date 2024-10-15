@@ -1,4 +1,4 @@
-import logo from "@/assets/logo.svg";
+import logo from "@/assets/logo-with-name.svg";
 import { Kbd, TooltipHotkey } from "@/components";
 import {
   Sidebar,
@@ -147,7 +147,6 @@ export function AuthLayout() {
                       src={logo}
                       alt="Peak LIMS"
                     />
-                    <p className="text-sm font-medium">Peak LIMS</p>
                   </div>
                 </Link>
 
