@@ -14,7 +14,7 @@ export const cancelTestOrder = async (
   data: TestOrderCancellationDto
 ) => {
   return peakLimsApi
-    .put(`/testOrders/${testOrderId}/cancel`, data)
+    .put(`/v1/testOrders/${testOrderId}/cancel`, data)
     .then((response) => response.data);
 };
 

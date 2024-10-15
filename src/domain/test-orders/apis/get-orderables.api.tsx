@@ -5,7 +5,7 @@ import { TestOrderKeys } from "./test-order.keys";
 
 export const GetOrderables = async () => {
   return peakLimsApi
-    .get(`/testOrders/orderablePanelsAndTests`)
+    .get(`/v1/testOrders/orderablePanelsAndTests`)
     .then(
       (response: AxiosResponse<OrderablePanelsAndTestsDto>) => response.data
     );

@@ -11,7 +11,7 @@ import { AccessionKeys } from "./accession.keys";
 
 const addAccession = async () => {
   return peakLimsApi
-    .post("/accessions")
+    .post("/v1/accessions")
     .then((response) => response.data as AccessionDto);
 };
 

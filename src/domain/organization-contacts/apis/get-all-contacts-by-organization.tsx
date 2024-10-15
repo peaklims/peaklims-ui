@@ -6,7 +6,7 @@ import { OrganizationContactKeys } from "./organization-contact.keys";
 
 export const getContactsByOrganization = async (organizationId: string) => {
   return peakLimsApi
-    .get(`/healthcareorganizationcontacts/byorganization/${organizationId}`)
+    .get(`/v1/healthcareorganizationcontacts/byorganization/${organizationId}`)
     .then((response: AxiosResponse<OrganizationContactDto[]>) => response.data);
 };
 

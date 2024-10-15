@@ -27,7 +27,7 @@ const getExistingPatientSearch = async ({
 
   const [json] = await Promise.all([
     peakLimsApi
-      .get(`/patients/searchExistingPatients${queryString}`)
+      .get(`/v1/patients/searchExistingPatients${queryString}`)
       .then((response: AxiosResponse<PatientSearchResultDto[]>) => {
         return {
           data: response.data as PatientSearchResultDto[],

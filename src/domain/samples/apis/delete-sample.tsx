@@ -9,7 +9,7 @@ import { AxiosError } from "axios";
 import { SampleKeys } from "./sample.keys";
 
 async function deleteSample({ sampleId }: { sampleId: string }) {
-  return peakLimsApi.delete(`/samples/${sampleId}`).then(() => {});
+  return peakLimsApi.delete(`/v1/samples/${sampleId}`).then(() => {});
 }
 
 type SampleMutationContext = {

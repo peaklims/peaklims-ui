@@ -6,7 +6,7 @@ import { ContainerKeys } from "./container.keys";
 
 export const getAllContainers = async () => {
   return peakLimsApi
-    .get(`/containers/all`)
+    .get(`/v1/containers/all`)
     .then((response: AxiosResponse<ContainerDto[]>) => response.data);
 };
 
@@ -19,7 +19,7 @@ export const useGetAllContainers = () => {
 
 export const getAllContainersForDropdown = async () => {
   return peakLimsApi
-    .get(`/containers/all`)
+    .get(`/v1/containers/all`)
     .then((response: AxiosResponse<ContainerDto[]>) => response.data)
     .then((Containers) =>
       Containers.map((Container) => ({

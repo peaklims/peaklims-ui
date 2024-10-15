@@ -22,7 +22,7 @@ const setAccessionPatient = async (data: SetAccessionPatient) => {
       ethnicity: data.patientForCreation?.ethnicity,
     },
   };
-  await peakLimsApi.put("/accessions/setPatient", body);
+  await peakLimsApi.put("/v1/accessions/setPatient", body);
 };
 
 export type SetAccessionPatient = {

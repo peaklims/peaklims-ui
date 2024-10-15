@@ -24,7 +24,9 @@ export const addSample = async (data: SampleForCreationDto) => {
     collectionDate: collectionDate,
     receivedDate: receivedDate,
   };
-  return peakLimsApi.post(`/samples`, data).then((response) => response.data);
+  return peakLimsApi
+    .post(`/v1/samples`, data)
+    .then((response) => response.data);
 };
 
 type SampleMutationContext = {

@@ -15,7 +15,7 @@ const removeTestOrder = async ({
   testOrderId: string;
 }) => {
   return await peakLimsApi
-    .put(`/accessions/${accessionId}/removeTestOrder/${testOrderId}`)
+    .put(`/v1/accessions/${accessionId}/removeTestOrder/${testOrderId}`)
     .then((response) => response.data);
 };
 

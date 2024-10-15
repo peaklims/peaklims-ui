@@ -10,11 +10,15 @@ export const getPatientSamples = async ({
   patientId: string;
 }) => {
   return peakLimsApi
-    .get(`/samples/byPatient/${patientId}`)
+    .get(`/v1/samples/byPatient/${patientId}`)
     .then((response: AxiosResponse<SampleDto[]>) => response.data);
 };
 
-export const useGetPatientSamples = ({ patientId }: { patientId: string | null }) => {
+export const useGetPatientSamples = ({
+  patientId,
+}: {
+  patientId: string | null;
+}) => {
   return useQuery({
     queryKey: SampleKeys.byPatient(patientId!),
     queryFn: () => getPatientSamples({ patientId: patientId! }),

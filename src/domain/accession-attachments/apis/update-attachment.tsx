@@ -13,7 +13,7 @@ export const updateAccessionAttachment = async (
   data: AccessionAttachmentForUpdateDto
 ) => {
   return peakLimsApi
-    .put(`/accessionAttachments/${id}`, data)
+    .put(`/v1/accessionAttachments/${id}`, data)
     .then((response) => response.data);
 };
 

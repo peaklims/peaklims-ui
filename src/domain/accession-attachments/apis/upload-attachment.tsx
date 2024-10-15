@@ -12,7 +12,7 @@ export const uploadAccessionAttachment = async (
   formData.append("file", file);
 
   return await peakLimsApi
-    .post(`/accessionAttachments/uploadTo/${accessionId}`, formData, {
+    .post(`/v1/accessionAttachments/uploadTo/${accessionId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

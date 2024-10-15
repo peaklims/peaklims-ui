@@ -6,7 +6,7 @@ import { AccessionKeys } from "./accession.keys";
 
 export const getAccessionForEdit = async (id: string) => {
   return peakLimsApi
-    .get(`/accessions/${id}/forAggregateEdit`)
+    .get(`/v1/accessions/${id}/forAggregateEdit`)
     .then((response: AxiosResponse<EditableAccessionDto>) => response.data);
 };
 

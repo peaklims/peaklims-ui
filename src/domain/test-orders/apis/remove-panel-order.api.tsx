@@ -15,7 +15,7 @@ const removePanelOrder = async ({
   panelOrderId: string;
 }) => {
   return await peakLimsApi
-    .put(`/accessions/${accessionId}/removePanelOrder/${panelOrderId}`)
+    .put(`/v1/accessions/${accessionId}/removePanelOrder/${panelOrderId}`)
     .then((response) => response.data);
 };
 

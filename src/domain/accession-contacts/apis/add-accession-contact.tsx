@@ -18,7 +18,7 @@ const addAccessionContact = async ({
   organizationContactId: string;
 }): Promise<AccessionContactDto> => {
   return await peakLimsApi
-    .post(`/accessions/${accessionId}/addContact/${organizationContactId}`)
+    .post(`/v1/accessions/${accessionId}/addContact/${organizationContactId}`)
     .then((response) => response.data as AccessionContactDto);
 };
 

@@ -9,7 +9,7 @@ import { AxiosError } from "axios";
 import { SampleKeys } from "./sample.keys";
 
 async function disposeSample({ sampleId }: { sampleId: string }) {
-  return peakLimsApi.put(`/samples/${sampleId}/dispose`).then(() => {});
+  return peakLimsApi.put(`/v1/samples/${sampleId}/dispose`).then(() => {});
 }
 
 type SampleMutationContext = {

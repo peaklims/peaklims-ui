@@ -6,7 +6,7 @@ import { AccessionCommentKeys } from "./accession-comment.keys";
 
 export const getAccessionComment = async (accessionId: string) => {
   return peakLimsApi
-    .get(`/accessionComments/byAccession/${accessionId}`)
+    .get(`/v1/accessionComments/byAccession/${accessionId}`)
     .then((response: AxiosResponse<AccessionCommentViewDto>) => response.data);
 };
 

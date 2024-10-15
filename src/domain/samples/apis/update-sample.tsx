@@ -17,7 +17,7 @@ export const updateSample = async (id: string, data: SampleForUpdateDto) => {
     receivedDate: toDateOnly(data.receivedDate),
   };
   return peakLimsApi
-    .put(`/samples/${id}`, data)
+    .put(`/v1/samples/${id}`, data)
     .then((response) => response.data);
 };
 

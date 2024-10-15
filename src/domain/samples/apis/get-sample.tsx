@@ -6,7 +6,7 @@ import { SampleKeys } from "./sample.keys";
 
 export const getSample = async (sampleId: string) => {
   return peakLimsApi
-    .get(`/samples/${sampleId}`)
+    .get(`/v1/samples/${sampleId}`)
     .then((response: AxiosResponse<SampleDto>) => response.data);
 };
 

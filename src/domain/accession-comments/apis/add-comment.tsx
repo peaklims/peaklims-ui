@@ -12,7 +12,7 @@ export const addAccessionComment = async (
   data: AccessionCommentForCreationDto
 ) => {
   return peakLimsApi
-    .post(`/accessionComments`, data)
+    .post(`/v1/accessionComments`, data)
     .then((response) => response.data);
 };
 

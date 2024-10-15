@@ -16,7 +16,7 @@ const setAccessionOrganization = async ({
   organizationId: string;
 }) => {
   await peakLimsApi.put(
-    `/accessions/${accessionId}/setOrganization/${organizationId}`
+    `/v1/accessions/${accessionId}/setOrganization/${organizationId}`
   );
 };
 

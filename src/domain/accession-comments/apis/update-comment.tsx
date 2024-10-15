@@ -12,7 +12,7 @@ export const updateAccessionComment = async (
   newComment: string
 ) => {
   return peakLimsApi
-    .put(`/accessionComments/${commentId}`, { comment: newComment })
+    .put(`/v1/accessionComments/${commentId}`, { comment: newComment })
     .then((response) => response.data);
 };
 

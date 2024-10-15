@@ -17,7 +17,7 @@ const addTestOrder = async ({
   testOrderForCreation: TestOrderForCreationDto;
 }): Promise<TestOrderDto> => {
   return await peakLimsApi
-    .post(`/testOrders/${accessionId}`, testOrderForCreation)
+    .post(`/v1/testOrders/${accessionId}`, testOrderForCreation)
     .then((response) => response.data as TestOrderDto);
 };
 
@@ -69,7 +69,9 @@ const addPanelToAccession = async ({
   panelId: string;
 }) => {
   return await peakLimsApi
-    .post(`/panels/toAccession?accessionId=${accessionId}&panelId=${panelId}`)
+    .post(
+      `/v1/panels/toAccession?accessionId=${accessionId}&panelId=${panelId}`
+    )
     .then((response) => response.data);
 };
 

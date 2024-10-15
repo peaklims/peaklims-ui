@@ -15,10 +15,10 @@ export const setSample = async (
   if ((sampleId?.length ?? 0) <= 0) sampleId = null;
   return sampleId === null
     ? peakLimsApi
-        .put(`/testOrders/${testOrderId}/clearSample`)
+        .put(`/v1/testOrders/${testOrderId}/clearSample`)
         .then((response) => response.data)
     : peakLimsApi
-        .put(`/testOrders/${testOrderId}/setSample/${sampleId}`)
+        .put(`/v1/testOrders/${testOrderId}/setSample/${sampleId}`)
         .then((response) => response.data);
 };
 

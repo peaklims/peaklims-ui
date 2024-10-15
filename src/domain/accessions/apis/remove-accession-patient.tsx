@@ -9,7 +9,7 @@ import { AxiosError } from "axios";
 import { AccessionKeys } from "./accession.keys";
 
 const removeAccessionPatient = async (accessionId: string) => {
-  await peakLimsApi.put(`/accessions/${accessionId}/removePatient`);
+  await peakLimsApi.put(`/v1/accessions/${accessionId}/removePatient`);
 };
 
 type MutationContext = { accessionId: string };

@@ -13,7 +13,7 @@ import { PatientKeys } from "./patient.keys";
 export const updatePatient = async (id: string, data: PatientForUpdateDto) => {
   data = { ...data, dateOfBirth: toDateOnly(data.dateOfBirth) };
   return peakLimsApi
-    .put(`/patients/${id}`, data)
+    .put(`/v1/patients/${id}`, data)
     .then((response) => response.data);
 };
 

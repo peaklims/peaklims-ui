@@ -27,7 +27,7 @@ const getAccessions = async ({
 
   const [json] = await Promise.all([
     peakLimsApi
-      .get(`/accessions/worklist${queryString}`)
+      .get(`/v1/accessions/worklist${queryString}`)
       .then((response: AxiosResponse<AccessionWorklistDto[]>) => {
         return {
           data: response.data as AccessionWorklistDto[],

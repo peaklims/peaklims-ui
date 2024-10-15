@@ -18,7 +18,7 @@ const removeAccessionContact = async ({
   accessionContactId: string;
 }): Promise<AccessionContactDto> => {
   return await peakLimsApi
-    .put(`/accessions/${accessionId}/removeContact/${accessionContactId}`)
+    .put(`/v1/accessions/${accessionId}/removeContact/${accessionContactId}`)
     .then((response) => response.data as AccessionContactDto);
 };
 

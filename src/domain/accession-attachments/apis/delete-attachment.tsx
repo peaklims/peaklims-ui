@@ -13,7 +13,7 @@ async function deleteAccessionAttachment({
   attachmentId: string;
 }) {
   return peakLimsApi
-    .delete(`/accessionAttachments/${attachmentId}`)
+    .delete(`/v1/accessionAttachments/${attachmentId}`)
     .then(() => {});
 }
 

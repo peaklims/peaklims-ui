@@ -6,7 +6,7 @@ import { PatientKeys } from "./patient.keys";
 
 export const getPatient = async (patientId: string) => {
   return peakLimsApi
-    .get(`/patients/${patientId}`)
+    .get(`/v1/patients/${patientId}`)
     .then((response: AxiosResponse<PatientDto>) => response.data);
 };
 

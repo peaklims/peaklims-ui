@@ -6,7 +6,7 @@ import { OrganizationKeys } from "./organization.keys";
 
 export const getAllOrganizations = async () => {
   return peakLimsApi
-    .get(`/healthcareOrganizations/all`)
+    .get(`/v1/healthcareOrganizations/all`)
     .then((response: AxiosResponse<OrganizationDto[]>) => response.data);
 };
 
@@ -19,7 +19,7 @@ export const useGetAllOrganizations = () => {
 
 export const getAllOrganizationsForDropdown = async () => {
   return peakLimsApi
-    .get(`/healthcareOrganizations/all`)
+    .get(`/v1/healthcareOrganizations/all`)
     .then((response: AxiosResponse<OrganizationDto[]>) => response.data)
     .then((organizations) =>
       organizations.map((organization) => ({

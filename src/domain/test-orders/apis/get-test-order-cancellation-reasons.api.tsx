@@ -5,7 +5,7 @@ import { TestOrderKeys } from "./test-order.keys";
 
 export const GetTestOrderCancellationReasons = async () => {
   return peakLimsApi
-    .get(`/testOrders/cancellationReasons`)
+    .get(`/v1/testOrders/cancellationReasons`)
     .then((response: AxiosResponse<string[]>) => response.data);
 };
 
