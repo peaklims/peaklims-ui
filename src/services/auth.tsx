@@ -44,6 +44,9 @@ function useAuthUser() {
   const firstName = claims?.find((claim) => claim.type === "given_name");
   const lastName = claims?.find((claim) => claim.type === "family_name");
   const email = claims?.find((claim) => claim.type === "email");
+  const organizationId = claims?.find(
+    (claim) => claim.type === "organization_id"
+  );
   const name = `${firstName?.value || ""} ${lastName?.value || ""}`;
   const initials = `${firstName?.value?.[0] || ""}${
     lastName?.value?.[0] || ""
@@ -56,6 +59,7 @@ function useAuthUser() {
     email: email?.value || "",
     initials,
     name,
+    organizationId: organizationId?.value || "",
   };
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -78,6 +82,7 @@ export type User = {
   email: string;
   initials: string;
   name: string;
+  organizationId: string;
 };
 
 export { useAuthUser };

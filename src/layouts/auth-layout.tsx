@@ -24,12 +24,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useGetUserPeakOrganization } from "@/domain/peak-organizations/apis/get-peak-organization";
 import { SelectQuickActionButton } from "@/domain/quick-actions/select-quick-action-button";
 import { useActionButtonKey } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useAuthUser } from "@/services/auth";
 import { Tooltip } from "@nextui-org/react";
-import { Link, Outlet, useNavigate } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  RegisteredRoutesInfo,
+  useNavigate,
+} from "@tanstack/react-router";
 import {
   LogOut,
   MailQuestion,
@@ -131,6 +137,11 @@ export function AuthLayout() {
     alert("search");
   });
 
+  const { data: organizationInfo, isLoading: isLoadingOrganizationInfo } =
+    useGetUserPeakOrganization({
+      hasArtificialDelay: true,
+      delayInMs: 400,
+    });
   return (
     <SidebarProvider>
       <SidebarLayout
@@ -190,6 +201,13 @@ export function AuthLayout() {
                     </Tooltip>
                   </SelectQuickActionButton>
                 </div>
+              </div>
+              <div className="flex items-center justify-center pt-2 text-xs font-semibold text-center uppercase ">
+                {isLoadingOrganizationInfo ? (
+                  <div className="w-3/4 h-2 rounded-full bg-input" />
+                ) : (
+                  <>{organizationInfo?.name}</>
+                )}
               </div>
             </SidebarHeader>
             <SidebarBody>
