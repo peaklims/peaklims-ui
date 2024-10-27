@@ -5,6 +5,8 @@ const ContainerKeys = {
     [...ContainerKeys.lists(), { queryParams }] as const,
   full: () => [...ContainerKeys.lists(), "full"] as const,
   fullDropdown: () => [...ContainerKeys.full(), "dropdown"] as const,
+  fullDropdownForSampleType: (sampleType: string | null) =>
+    [...ContainerKeys.full(), "dropdown", sampleType] as const,
   details: () => [...ContainerKeys.all, "detail"] as const,
   detail: (ContainerId: string) =>
     [...ContainerKeys.details(), ContainerId] as const,

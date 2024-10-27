@@ -107,12 +107,13 @@ export function SampleForm({
     });
   }, [sampleForm, sampleData]);
 
-  const containerId = sampleForm.getValues("containerId");
+  const sampleType = sampleForm.watch("type");
   const { data: containers, isLoading: containersAreLoading } =
-    useGetAllContainersForDropdown();
-  const onlyActiveContainersThatAreNotSelected = containers?.filter(
-    (container) => !container.disabled || container.value === containerId
-  );
+    useGetAllContainersForDropdown(sampleType);
+
+  useEffect(() => {
+    sampleForm.setValue("containerId", "");
+  }, [sampleType, sampleForm]);
 
   return (
     <Form {...sampleForm}>
@@ -180,13 +181,13 @@ export function SampleForm({
                         isDisabled={containersAreLoading}
                         inputValue={getLabelById({
                           id: field.value,
-                          data: onlyActiveContainersThatAreNotSelected,
+                          data: containers ?? [],
                         })}
                         onInputChange={field.onChange}
                         selectedKey={field.value}
                         onSelectionChange={field.onChange}
                       >
-                        {onlyActiveContainersThatAreNotSelected?.map((item) => (
+                        {containers?.map((item) => (
                           <Item key={item.value} textValue={item.label}>
                             {item.label}
                           </Item>

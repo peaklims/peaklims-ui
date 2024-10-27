@@ -17,22 +17,33 @@ export const useGetAllContainers = () => {
   });
 };
 
-export const getAllContainersForDropdown = async () => {
-  return peakLimsApi
-    .get(`/v1/containers/all`)
-    .then((response: AxiosResponse<ContainerDto[]>) => response.data)
-    .then((Containers) =>
-      Containers.map((Container) => ({
-        label: Container.type,
-        value: Container.id,
-        disabled: Container.status === "Inactive",
-      }))
-    );
+export const getAllContainersForDropdown = async (
+  sampleType: string | null
+) => {
+  return sampleType === null || sampleType === undefined || sampleType === ""
+    ? peakLimsApi
+        .get(`/v1/containers/all`)
+        .then((response: AxiosResponse<ContainerDto[]>) => response.data)
+        .then((Containers) =>
+          Containers.map((Container) => ({
+            label: Container.type,
+            value: Container.id,
+          }))
+        )
+    : peakLimsApi
+        .get(`/v1/containers/all?sampleType=${sampleType}`)
+        .then((response: AxiosResponse<ContainerDto[]>) => response.data)
+        .then((Containers) =>
+          Containers.map((Container) => ({
+            label: Container.type,
+            value: Container.id,
+          }))
+        );
 };
 
-export const useGetAllContainersForDropdown = () => {
+export const useGetAllContainersForDropdown = (sampleType: string | null) => {
   return useQuery({
-    queryKey: ContainerKeys.fullDropdown(),
-    queryFn: () => getAllContainersForDropdown(),
+    queryKey: ContainerKeys.fullDropdownForSampleType(sampleType),
+    queryFn: () => getAllContainersForDropdown(sampleType),
   });
 };
