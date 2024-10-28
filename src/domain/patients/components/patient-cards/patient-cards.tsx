@@ -83,12 +83,14 @@ export function PatientCard({ patientInfo }: { patientInfo: PatientForCard }) {
                   {patientInfo?.dateOfBirth?.toString()}
                 </p>
               </div>
-              <p className="font-medium text-2xs text-slate-600">{raceEth}</p>
+              <p className="pr-2 font-medium text-2xs text-slate-600">
+                {raceEth}
+              </p>
             </div>
             <div className="flex items-center justify-between pt-3 space-x-2 md:pt-0 md:justify-end md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
               <EditPatientButton patientId={patientInfo.id} />
               <Button
-                className="w-[48%]"
+                className="w-[48%] px-3"
                 size="sm"
                 variant="outline"
                 onClick={removePatientFromAccession}
