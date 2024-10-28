@@ -60,7 +60,7 @@ function ProfileManagement({
       <DropdownMenuTrigger>
         <div
           className={
-            "flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 lg:pr-6 lg:py-1 gap-x-4 hover:bg-slate-200 rounded-lg"
+            "flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 lg:pr-6 lg:py-1 gap-x-4 hover:bg-slate-200 rounded-lg overflow-hidden text-ellipsis"
           }
         >
           <Avatar>
@@ -71,12 +71,6 @@ function ProfileManagement({
             <span className="sr-only">Your profile</span>
             <span aria-hidden="true" className="inline">
               {user?.name}
-            </span>
-            <span
-              aria-hidden="true"
-              className="inline text-xs font-normal text-slate-500"
-            >
-              {user?.email}
             </span>
           </div>
         </div>
