@@ -1,8 +1,12 @@
+import { ConfirmModal } from "@/components/confirm-modal";
+import { Button } from "@/components/ui/button";
 import { ManageAttachments } from "@/domain/accession-attachments/components/manage-attachments";
 import { useGetAccessionComment } from "@/domain/accession-comments/apis/get-accession-comments";
 import { ManageAccessionComments } from "@/domain/accession-comments/feature/manage-comments";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
 import AccessionStatusBadge from "@/domain/accessions/components/status-badge";
+
+import { Notification } from "@/components/notifications";
 import {
   AccessionAttachmentDto,
   AccessionContactDto,
@@ -16,10 +20,11 @@ import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples"
 import { ManageAccessionSamples } from "@/domain/samples/components/manage-accession-samples";
 import { useGetOrderables } from "@/domain/test-orders/apis/get-orderables.api";
 import { ManageAccessionTestOrders } from "@/domain/test-orders/features/manage-accession-test-orders";
-import { Tab, Tabs } from "@nextui-org/react";
+import { Tab, Tabs, useDisclosure } from "@nextui-org/react";
 import { useParams } from "@tanstack/react-router";
 import { Paperclip } from "lucide-react";
 import { Helmet } from "react-helmet";
+import { useSubmitAccession } from "../../domain/accessions/apis/submit-accession";
 
 export function EditAccessionPage() {
   const queryParams = useParams({
@@ -39,13 +44,24 @@ export function EditAccessionPage() {
       </Helmet>
 
       <div className="flex items-center justify-start w-full space-x-4">
-        <h1 className="flex items-center justify-start text-4xl font-bold tracking-tight scroll-m-20">
-          Edit Accession
-          <span className="pl-3 text-2xl">({accession?.accessionNumber})</span>
-        </h1>
-        {accession && (
-          <AccessionStatusBadge status={accession?.status as AccessionStatus} />
-        )}
+        <div className="flex items-center justify-start w-full space-x-4">
+          <h1 className="flex items-center justify-start text-4xl font-bold tracking-tight scroll-m-20">
+            Edit Accession
+            <span className="pl-3 text-2xl">
+              ({accession?.accessionNumber})
+            </span>
+          </h1>
+          {accession && (
+            <AccessionStatusBadge
+              status={accession?.status as AccessionStatus}
+            />
+          )}
+        </div>
+        <SubmitAccession
+          accessionId={accessionId}
+          accessionNumber={accessionNumber}
+          accessionStatus={accession?.status}
+        />
       </div>
 
       <div className="pt-3 space-y-6">
@@ -70,6 +86,61 @@ export function EditAccessionPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function SubmitAccession({
+  accessionId,
+  accessionNumber,
+  accessionStatus,
+}: {
+  accessionId: string | undefined;
+  accessionNumber: string | undefined;
+  accessionStatus: AccessionStatus | undefined;
+}) {
+  const submitAccessionApi = useSubmitAccession();
+  const {
+    isOpen: disposeModalIsOpen,
+    onOpen: onDisposeModalOpen,
+    onOpenChange: onDisposeModalOpenChange,
+  } = useDisclosure();
+
+  if (accessionStatus !== "Draft") return null;
+
+  return (
+    <>
+      <Button className="" color="primary" onClick={() => onDisposeModalOpen()}>
+        Submit
+      </Button>
+      <ConfirmModal
+        content={<p>Are you sure you want to submit this accession?</p>}
+        labels={{
+          confirm: "Yes",
+          cancel: "Cancel",
+        }}
+        confirmationType="primary"
+        onConfirm={() => {
+          if (accessionId === undefined) return;
+
+          submitAccessionApi
+            .mutateAsync({ accessionId })
+            .then(() => {
+              Notification.success(`Accession ${accessionNumber} submitted`);
+              onDisposeModalOpen();
+            })
+            .catch((err) => {
+              const statusCode = err?.response?.status;
+              if (statusCode != 422) {
+                Notification.error(`Error submitting accession`);
+              }
+            });
+        }}
+        onCancel={() => {}}
+        isOpen={disposeModalIsOpen}
+        onOpenChange={onDisposeModalOpenChange}
+        title={`Submit Accession ${accessionNumber}?`}
+      />
+    </>
   );
 }
 
