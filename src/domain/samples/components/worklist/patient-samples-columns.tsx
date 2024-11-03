@@ -70,17 +70,19 @@ export const sampleTableColumns = (
       const status = row.getValue("status");
       const externalId = row.getValue("externalId") as string;
       return (
-        <div className="space-x-3">
+        <div className="inline-flex space-x-3">
           <div className="inline-flex flex-col">
-            <p className="block">{sampleNumber}</p>
+            <div className="flex items-center space-x-3">
+              <p className="block">{sampleNumber}</p>
+              <SampleStatusBadge
+                status={status as SampleStatus}
+                className="hidden sm:inline-flex"
+              />
+            </div>
             {(externalId?.length ?? 0) > 0 && (
               <span className="block text-xs text-slate-700">{externalId}</span>
             )}
           </div>
-          <SampleStatusBadge
-            status={status as SampleStatus}
-            className="hidden sm:inline-flex"
-          />
         </div>
       );
     },
