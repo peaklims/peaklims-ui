@@ -12,6 +12,7 @@ import {
   Route,
   Router,
 } from "@tanstack/react-router";
+import { ClickToComponent } from "click-to-react-component";
 import { Helmet } from "react-helmet";
 import { z } from "zod";
 import { LoadingSpinner } from "./components/loading-spinner";
@@ -60,6 +61,7 @@ const appRoute = new RootRoute({
         <div className="min-h-svh font-sans antialiased scroll-smooth debug-screens [font-feature-settings:'ss01'] ">
           <Outlet />
           <Notification />
+          <ClickToComponent />
           <div className="hidden md:block">
             <TanStackRouterDevtools
               position="bottom-right"
