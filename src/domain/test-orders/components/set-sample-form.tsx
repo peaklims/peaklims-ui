@@ -74,6 +74,7 @@ export function SetSampleForm({
                   <Combobox
                     autoFocus
                     label={field.name}
+                    clearable={true}
                     {...field}
                     inputValue={getLabelById({
                       id: field.value,
