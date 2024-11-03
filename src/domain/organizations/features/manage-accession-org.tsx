@@ -15,7 +15,7 @@ import { useGetAccessionForEdit } from "@/domain/accessions";
 import { useSetAccessionOrganization } from "@/domain/accessions/apis/set-accession-org";
 import { AccessionContactDto } from "@/domain/accessions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MailMinus, MailPlus } from "lucide-react";
+import { MailMinus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Item } from "react-stately";
@@ -76,6 +76,53 @@ export function AccessionOrganizationForm({
   const { data: accession } = useGetAccessionForEdit(accessionId);
   const isDraftAccession = accession?.status === "Draft";
 
+  const { data: orgContacts } = useGetContactsByOrganization(
+    organizationId ?? ""
+  );
+
+  const accessionContactIds = new Set(
+    accessionContacts?.map((contact) => contact.organizationContactId)
+  );
+
+  const filteredOrgContacts = orgContacts?.filter(
+    (orgContact) => !accessionContactIds.has(orgContact.id)
+  );
+
+  const contactOptions = filteredOrgContacts?.map((contact) => ({
+    value: contact.id,
+    label: `${contact.firstName} ${contact.lastName}`.trim(),
+  }));
+
+  const contactFormSchema = z.object({
+    contactId: z.string().nonempty("Please select a contact"),
+  });
+
+  const contactForm = useForm({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      contactId: "",
+    },
+  });
+
+  const addAccessionContactApi = useAddAccessionContact();
+
+  const onContactSubmit = (data: { contactId: string }) => {
+    addAccessionContactApi
+      .mutateAsync({
+        accessionId: accessionId ?? "",
+        organizationContactId: data.contactId,
+      })
+      .then(() => {
+        contactForm.reset();
+      })
+      .catch((err) => {
+        Notification.error(
+          "There was an error adding this contact to the Accession"
+        );
+        console.error(err);
+      });
+  };
+
   return (
     <div className="pt-3">
       <Form {...organizationForm}>
@@ -127,17 +174,54 @@ export function AccessionOrganizationForm({
         </form>
       </Form>
 
-      <div className="flex flex-col items-center justify-start w-full pt-3 space-y-12 sm:space-x-6 sm:flex-row sm:space-y-0">
-        <div className="space-y-1 h-[16rem] sm:h-[36rem] w-full">
+      <div className="flex flex-col items-center justify-start w-full pt-3 space-y-12 sm:space-y-4">
+        <div className="w-full">
           <h4 className="text-lg font-medium">Organization Contacts</h4>
-          <OrganizationContacts
-            accessionContacts={accessionContacts}
-            organizationId={organizationId}
-            accessionId={accessionId ?? ""}
-          />
+          <Form {...contactForm}>
+            <form
+              onSubmit={contactForm.handleSubmit(onContactSubmit)}
+              className="flex items-end w-full pt-1 space-x-2"
+            >
+              <FormField
+                control={contactForm.control}
+                name="contactId"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel required={false}>Select Contact</FormLabel>
+                    <FormControl>
+                      <Combobox
+                        classNames={{
+                          wrapper: "w-full",
+                        }}
+                        isDisabled={!organizationId}
+                        label={field.name}
+                        selectedKey={field.value}
+                        onSelectionChange={(key) => field.onChange(key)}
+                        placeholder="Select a contact"
+                      >
+                        {contactOptions?.map((contact) => (
+                          <Item key={contact.value} textValue={contact.label}>
+                            {contact.label}
+                          </Item>
+                        ))}
+                      </Combobox>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                className="mt-2"
+                disabled={!organizationId || contactOptions?.length === 0}
+              >
+                Add Contact
+              </Button>
+            </form>
+          </Form>
         </div>
 
-        <div className="space-y-1 h-[16rem] sm:h-[36rem] w-full">
+        <div className="w-full space-y-1">
           <h4 className="text-lg font-medium">Accession Contacts</h4>
           <AccessionContacts
             accessionContacts={accessionContacts}
@@ -145,88 +229,6 @@ export function AccessionOrganizationForm({
           />
         </div>
       </div>
-    </div>
-  );
-}
-
-function OrganizationContacts({
-  accessionContacts,
-  organizationId,
-  accessionId,
-}: {
-  accessionContacts: AccessionContactDto[] | undefined;
-  organizationId: string | undefined;
-  accessionId: string;
-}) {
-  const { data: orgContacts } = useGetContactsByOrganization(
-    organizationId ?? ""
-  );
-  const accessionContactIds = new Set(
-    accessionContacts?.map((contact) => contact.organizationContactId)
-  );
-  const filteredOrgContacts = orgContacts?.filter(
-    (orgContact) => !accessionContactIds.has(orgContact.id)
-  );
-
-  const addAccessionContactApi = useAddAccessionContact();
-  return (
-    <div className="w-full h-full p-3 overflow-auto border rounded-md shadow-md bg-slate-50">
-      {filteredOrgContacts !== undefined &&
-      (filteredOrgContacts?.length ?? 0) > 0 ? (
-        <div className="flex flex-col items-start w-full h-full space-y-2 ">
-          {filteredOrgContacts.map((contact) => {
-            const name = [contact.firstName, contact.lastName].join(" ").trim();
-            return (
-              <div
-                key={contact.id}
-                className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0"
-              >
-                <div className="flex items-center justify-start flex-1 pr-2">
-                  <div className="">
-                    <p className="text-sm font-medium">{name}</p>
-                    <p className="text-xs">{contact.email}</p>
-                    {contact.npi.length > 0 ? (
-                      <p className="text-xs text-slate-400">
-                        <span>#</span>
-                        {contact.npi}
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="flex items-center justify-center w-full h-full sm:w-auto">
-                  <Button
-                    variant="outline"
-                    className="flex items-center justify-center w-full sm:w-auto"
-                    onClick={() => {
-                      addAccessionContactApi
-                        .mutateAsync({
-                          accessionId: accessionId ?? "",
-                          organizationContactId: contact.id,
-                        })
-                        .catch((err) => {
-                          Notification.error(
-                            "There was an error adding this contact to the Accession"
-                          );
-                          console.error(err);
-                        });
-                    }}
-                  >
-                    <MailPlus className="w-4 h-4 shrink-0" />
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="flex items-center justify-center w-full h-full">
-          <p className="text-center">
-            {accessionContacts?.length ?? 0 > 0
-              ? "There are no more organization contacts to assign"
-              : "This organization does not have any assignable contacts"}
-          </p>
-        </div>
-      )}
     </div>
   );
 }
