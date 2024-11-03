@@ -1,11 +1,19 @@
 import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Combobox, getLabelById } from "@/components/ui/combobox";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { TestOrderDto } from "@/domain/accessions/types";
-import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { motion } from "framer-motion";
-import { ChevronRightIcon } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Item } from "react-stately";
+import { z } from "zod";
 import { Badge } from "../../../components/badge";
 import {
   useAddPanelToAccession,
@@ -27,7 +35,7 @@ export function ManageAccessionTestOrders({
   patientId: string | null;
 }) {
   return (
-    <div className="flex h-full space-x-12">
+    <div className="flex-col h-full space-y-6">
       <Orderables orderables={orderables} accessionId={accessionId} />
       <OrdersPlaced
         testOrders={testOrders}
@@ -144,14 +152,25 @@ function Orderables({
   orderables: OrderablePanelsAndTestsDto | undefined;
   accessionId: string;
 }) {
-  const [liveSearchInput, setLiveSearchInput] = useState<string>("");
-  const [debouncedSearchInput] = useDebouncedValue(liveSearchInput, 400);
+  const orderPanelApi = useAddPanelToAccession();
+  const orderTestApi = useAddTestOrderForTest();
 
-  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLiveSearchInput(event.target.value);
-  };
+  const orderableFormSchema = z.object({
+    orderableId: z.string().min(1, "Please select an orderable"),
+    type: z.string().min(1),
+  });
 
-  const filteredItems = useMemo(() => {
+  type OrderableFormData = z.infer<typeof orderableFormSchema>;
+
+  const orderableForm = useForm<OrderableFormData>({
+    resolver: zodResolver(orderableFormSchema),
+    defaultValues: {
+      orderableId: "",
+      type: "",
+    },
+    mode: "onSubmit",
+  });
+  const orderablesForDropdown = useMemo(() => {
     const panels = orderables?.panels || [];
     const tests = orderables?.tests || [];
 
@@ -160,173 +179,128 @@ function Orderables({
       ...tests.map((test) => ({ type: "test", data: test } as const)),
     ];
 
-    return allItems
-      .filter((item) => {
-        const name =
-          item.type === "panel" ? item.data.panelName : item.data.testName;
-        const code =
-          item.type === "panel" ? item.data.panelCode : item.data.testCode;
-        return (
-          name.toLowerCase().includes(debouncedSearchInput.toLowerCase()) ||
-          code.toLowerCase().includes(debouncedSearchInput.toLowerCase())
-        );
-      })
-      .sort((a, b) => {
-        const nameA = a.type === "panel" ? a.data.panelName : a.data.testName;
-        const nameB = b.type === "panel" ? b.data.panelName : b.data.testName;
-        return nameA.localeCompare(nameB);
+    // Map the items to the desired format
+    const mappedItems = allItems.map((item) => ({
+      value: item.data.id,
+      type: item.type,
+      orderCode:
+        item.type === "panel" ? item.data.panelCode : item.data.testCode,
+      name: item.type === "panel" ? item.data.panelName : item.data.testName,
+      label:
+        item.type === "panel"
+          ? `${item.data.panelCode} - ${item.data.panelName}`
+          : `${item.data.testCode} - ${item.data.testName}`,
+    }));
+
+    const sortedItems = mappedItems.sort((a, b) => {
+      if (a.orderCode < b.orderCode) return -1;
+      if (a.orderCode > b.orderCode) return 1;
+      return 0;
+    });
+
+    return sortedItems;
+  }, [orderables]);
+
+  const [inputValue, setInputValue] = useState("");
+
+  const assignOrderable = async (data: OrderableFormData) => {
+    try {
+      if (data.type === "panel") {
+        await orderPanelApi.mutateAsync({
+          accessionId: accessionId,
+          panelId: data.orderableId,
+        });
+      } else {
+        await orderTestApi.mutateAsync({
+          accessionId: accessionId,
+          testId: data.orderableId,
+        });
+      }
+
+      orderableForm.reset({
+        orderableId: "",
+        type: "",
       });
-  }, [orderables, debouncedSearchInput]);
-  const orderPanelApi = useAddPanelToAccession();
-  const orderTestApi = useAddTestOrderForTest();
+      setInputValue("");
+    } catch (e) {
+      Notification.error(`There was an error ordering the ${data.type}`);
+      console.error(e);
+    }
+  };
 
   return (
-    <div className="w-full h-full col-span-1 space-y-4">
+    <div className="w-full h-full col-span-1 space-y-2">
       <h3 className="text-xl font-semibold tracking-tight">
         Orderable Panels and Tests
       </h3>
-      <Input
-        autoFocus
-        placeholder="Search"
-        value={liveSearchInput}
-        onChange={handleSearchInput}
-      />
-      <div className="h-full p-4 space-y-4 overflow-auto bg-white border rounded-lg shadow">
-        {filteredItems.map((item) => {
-          return item.type === "panel" ? (
-            <Panel
-              key={item.data.id}
-              panel={item.data}
-              actionText="Assign"
-              actionFn={(panelId) =>
-                orderPanelApi
-                  .mutateAsync({
-                    accessionId: accessionId,
-                    panelId: panelId,
-                  })
-                  .catch((e) => {
-                    Notification.error(
-                      "There was an error assigning the Panel"
-                    );
-                    console.error(e);
-                  })
-              }
-            />
-          ) : (
-            <Test
-              key={item.data.id}
-              test={item.data}
-              actionText="Assign"
-              actionFn={() => {
-                orderTestApi
-                  .mutateAsync({
-                    accessionId: accessionId,
-                    testId: item.data.id,
-                  })
-                  .catch((e) => {
-                    Notification.error("There was an error assigning the Test");
-                    console.error(e);
-                  });
-              }}
-            />
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+      <Form {...orderableForm}>
+        <form
+          className="flex items-end justify-between w-full space-x-3"
+          onSubmit={orderableForm.handleSubmit(assignOrderable)}
+        >
+          <FormField
+            control={orderableForm.control}
+            name="orderableId"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel required={false} className="sr-only text-slate-800">
+                  Select a panel or test
+                </FormLabel>
+                <FormControl>
+                  <Combobox
+                    autoFocus={true}
+                    classNames={{
+                      wrapper: "w-full",
+                      input: "w-full",
+                    }}
+                    placeholder="Select a panel or test"
+                    label={field.name}
+                    inputValue={inputValue}
+                    onInputChange={(value) => {
+                      setInputValue(value);
+                    }}
+                    selectedKey={field.value}
+                    onSelectionChange={(key) => {
+                      field.onChange(key);
+                      setInputValue(
+                        getLabelById({
+                          id: key?.toString() ?? "",
+                          data: orderablesForDropdown ?? [],
+                        })
+                      );
 
-function Panel({
-  panel,
-  actionText,
-  actionFn,
-}: {
-  panel: {
-    id: string;
-    panelCode: string;
-    panelName: string;
-    type: string;
-    version: number;
-    tests: {
-      id: string;
-      testCode: string;
-      testName: string;
-    }[];
-  };
-  actionText: string;
-  actionFn: (panelId: string) => void;
-}) {
-  const [showPanelTestsId, setShowPanelTestsId] = useState<string | undefined>(
-    undefined
-  );
-  const detailSectionVariants = {
-    open: { opacity: 1, height: "100%" },
-    closed: { opacity: 0, height: "0%" },
-  };
-  return (
-    <div
-      key={panel.id}
-      className="flex items-center py-3 pl-1 pr-3 border rounded-lg shadow-md"
-    >
-      <div className="flex flex-col w-full">
-        <div className="flex items-start justify-between w-full xl:items-center">
-          <button
-            className={
-              "flex items-start xl:items-center h-full px-2 py-1 space-x-2"
-            }
-            onClick={() =>
-              setShowPanelTestsId(
-                panel.id === showPanelTestsId ? undefined : panel.id
-              )
-            }
-          >
-            <motion.div
-              initial={false}
-              animate={{
-                rotate: panel.id === showPanelTestsId ? 90 : 0,
-              }}
-            >
-              <ChevronRightIcon className="w-5 h-5 hover:text-slate-700 text-slate-900" />
-            </motion.div>
-            <h4 className="flex flex-col items-start font-medium xl:flex-row xl:flex xl:space-x-2">
-              <Badge text={panel.panelCode} variant="indigo" />
-              <span className="hidden pt-1 text-base sm:block text-start xl:pt-0">
-                {panel.panelName}
-              </span>
-            </h4>
-          </button>
-
+                      // Update the 'type' field in the form state
+                      const selectedItem = orderablesForDropdown.find(
+                        (item) => item.value === key
+                      );
+                      if (selectedItem) {
+                        orderableForm.setValue("type", selectedItem.type);
+                      }
+                    }}
+                  >
+                    {orderablesForDropdown?.map((item) => (
+                      <Item key={item.value} textValue={item.label}>
+                        <div className="flex space-x-2">
+                          <span className="font-bold">{item.orderCode}</span>
+                          <span className="">-</span>
+                          <p className="">{item.name}</p>
+                        </div>
+                      </Item>
+                    ))}
+                  </Combobox>
+                </FormControl>
+              </FormItem>
+            )}
+          />
           <Button
-            className="max-w-[8rem] w-[48%] md:max-w-[5rem]"
-            size="sm"
+            type="submit"
             variant="outline"
-            onClick={() => actionFn(panel.id)}
+            disabled={!orderableForm.watch("orderableId")}
           >
-            {actionText}
+            Assign
           </Button>
-        </div>
-        {panel.id === showPanelTestsId &&
-          panel.tests?.map((test, k) => {
-            return (
-              <motion.div
-                className="flex flex-col pt-2 pl-12 space-y-3"
-                key={k}
-                variants={detailSectionVariants}
-                initial="closed"
-                animate={panel.id === showPanelTestsId ? "open" : "closed"}
-              >
-                <div className="flex flex-col pl-2 space-y-2 border-indigo-600 border-l-3">
-                  <h5 className="text-sm font-semibold tracking-tight">
-                    <p className="block">{test.testName}</p>
-                    <p className="block text-xs text-gray-400">
-                      [{test.testCode}]
-                    </p>
-                  </h5>
-                </div>
-              </motion.div>
-            );
-          })}
-      </div>
+        </form>
+      </Form>
     </div>
   );
 }
