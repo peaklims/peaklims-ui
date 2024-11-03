@@ -23,13 +23,7 @@ export const useGetPeakOrganization = (
   });
 };
 
-export const useGetUserPeakOrganization = ({
-  hasArtificialDelay = false,
-  delayInMs = 0,
-}: DelayProps = {}) => {
+export const useGetUserPeakOrganization = () => {
   const { user } = useAuthUser();
-  return useGetPeakOrganization(user?.organizationId, {
-    hasArtificialDelay,
-    delayInMs,
-  });
+  return useGetPeakOrganization(user?.organizationId);
 };
