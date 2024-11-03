@@ -25,6 +25,8 @@ import { useComboBoxState } from "react-stately";
 export const Combobox = React.forwardRef(function Combobox<T extends object>(
   {
     classNames,
+    clearable = false,
+    onClear,
     ...props
   }: {
     classNames?: {
@@ -34,6 +36,8 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
       // listBox?: string;
       // option?: string;
     };
+    clearable?: boolean;
+    onClear?: () => void;
   } & ComboBoxStateOptions<T>,
   ref: React.Ref<HTMLDivElement>
 ) {
@@ -69,6 +73,14 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
     }
   }, [state.isOpen, inputRef.current, popoverRef.current]);
 
+  const handleClear = React.useCallback(() => {
+    state.setSelectedKey(null);
+    state.setInputValue("");
+    if (onClear) {
+      onClear();
+    }
+  }, [state, onClear]);
+
   return (
     <div className={cn("relative flex flex-col w-full", classNames?.wrapper)}>
       <label {...labelProps} className="sr-only">
@@ -92,6 +104,34 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
             classNames?.input
           )}
         />
+        {clearable && state.inputValue && (
+          <button
+            onClick={handleClear}
+            className={cn(
+              `cursor-pointer bg-transparent px-1`,
+              state.isFocused
+                ? "border-emerald-500 text-emerald-600 hover:text-emerald-500"
+                : "text-slate-500 hover:text-slate-400",
+              "disabled:text-slate-400 disabled:cursor-not-allowed"
+            )}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={200}
+              height={200}
+              viewBox="0 0 24 24"
+              className="w-5 h-5"
+            >
+              <path
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth={2}
+                d="M17 17L7 7m10 0L7 17"
+              />
+            </svg>
+          </button>
+        )}
         <button
           {...buttonProps}
           ref={buttonRef}
@@ -104,6 +144,7 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
             classNames?.button
           )}
         >
+          {/* Dropdown arrow icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={200}
@@ -222,7 +263,7 @@ function Option({ item, state }: OptionProps) {
     >
       {item.rendered}
       {isSelected && (
-        // <Check aria-hidden="true" className="w-5 h-5 text-emerald-600" />
+        // Checkmark icon
         <svg
           aria-hidden="true"
           className="w-4 h-4 text-emerald-600"

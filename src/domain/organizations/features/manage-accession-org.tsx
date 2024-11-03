@@ -1,6 +1,6 @@
 import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox, getLabelById } from "@/components/ui/combobox";
 import {
   Form,
   FormControl,
@@ -16,13 +16,17 @@ import { useSetAccessionOrganization } from "@/domain/accessions/apis/set-access
 import { AccessionContactDto } from "@/domain/accessions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MailMinus, MailPlus } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Item } from "react-stately";
 import { z } from "zod";
 import { useGetContactsByOrganization } from "../../organization-contacts/apis/get-all-contacts-by-organization";
 
 const orgFormSchema = z.object({
-  organization: z.string().optional(),
+  organization: z.string({
+    required_error: "Organization is required",
+    invalid_type_error: "Organization is required",
+  }),
 });
 
 type OrgFormData = z.infer<typeof orgFormSchema>;
@@ -67,12 +71,7 @@ export function AccessionOrganizationForm({
       organizationId: data.organization.toString(),
     });
   };
-  const getLabelById = (id) => {
-    const item = onlyActiveOrgsThatAreNotSelected?.find(
-      (org) => org.value === id
-    );
-    return item ? item.label : "";
-  };
+  const [inputValue, setInputValue] = useState<string | undefined>();
 
   const { data: accession } = useGetAccessionForEdit(accessionId);
   const isDraftAccession = accession?.status === "Draft";
@@ -94,12 +93,20 @@ export function AccessionOrganizationForm({
                     }}
                     isDisabled={orgsAreLoading || !isDraftAccession}
                     label={field.name}
-                    {...field}
-                    inputValue={getLabelById(field.value)}
-                    onInputChange={field.onChange}
+                    clearable={true}
+                    inputValue={inputValue}
+                    onInputChange={(value) => {
+                      setInputValue(value);
+                    }}
                     selectedKey={field.value}
-                    onSelectionChange={(e) => {
-                      field.onChange(e);
+                    onSelectionChange={(key) => {
+                      field.onChange(key);
+                      setInputValue(
+                        getLabelById({
+                          id: key?.toString() ?? "",
+                          data: onlyActiveOrgsThatAreNotSelected ?? [],
+                        })
+                      );
                       organizationForm.handleSubmit((data) => onSubmit(data))();
                     }}
                     disabledKeys={orgs
