@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/rich-cal";
 import { useGetAllContainersForDropdown } from "@/domain/containers/apis/get-all-containers";
 import { parse } from "date-fns";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { sampleTypesDropdown } from "../types/sample-types";
 
 export const sampleFormSchema = z.object({
@@ -111,8 +111,15 @@ export function SampleForm({
   const { data: containers, isLoading: containersAreLoading } =
     useGetAllContainersForDropdown(sampleType);
 
+  const [sampleTypeInputValue, setSampleTypeInputValue] = useState<
+    string | undefined
+  >();
+  const [sampleContainerInputValue, setSampleContainerInputValue] = useState<
+    string | undefined
+  >();
   useEffect(() => {
     sampleForm.setValue("containerId", "");
+    setSampleContainerInputValue(undefined);
   }, [sampleType, sampleForm]);
 
   return (
@@ -131,14 +138,22 @@ export function SampleForm({
                 <FormControl>
                   <Combobox
                     label={field.name}
+                    clearable={true}
                     {...field}
-                    inputValue={getLabelById({
-                      id: field.value,
-                      data: sampleTypesDropdown,
-                    })}
-                    onInputChange={field.onChange}
+                    inputValue={sampleTypeInputValue}
+                    onInputChange={(value) => {
+                      setSampleTypeInputValue(value);
+                    }}
                     selectedKey={field.value}
-                    onSelectionChange={field.onChange}
+                    onSelectionChange={(key) => {
+                      field.onChange(key);
+                      setSampleTypeInputValue(
+                        getLabelById({
+                          id: key?.toString() ?? "",
+                          data: sampleTypesDropdown,
+                        })
+                      );
+                    }}
                   >
                     {sampleTypesDropdown?.map((item) => (
                       <Item key={item.value} textValue={item.label}>
@@ -178,14 +193,22 @@ export function SampleForm({
                       <Combobox
                         label={field.name}
                         {...field}
-                        isDisabled={containersAreLoading}
-                        inputValue={getLabelById({
-                          id: field.value,
-                          data: containers ?? [],
-                        })}
-                        onInputChange={field.onChange}
+                        clearable={true}
+                        isDisabled={containersAreLoading || !sampleType}
+                        inputValue={sampleContainerInputValue}
+                        onInputChange={(value) => {
+                          setSampleContainerInputValue(value);
+                        }}
                         selectedKey={field.value}
-                        onSelectionChange={field.onChange}
+                        onSelectionChange={(key) => {
+                          field.onChange(key);
+                          setSampleContainerInputValue(
+                            getLabelById({
+                              id: key?.toString() ?? "",
+                              data: containers ?? [],
+                            })
+                          );
+                        }}
                       >
                         {containers?.map((item) => (
                           <Item key={item.value} textValue={item.label}>
