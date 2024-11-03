@@ -71,7 +71,7 @@ export function PanelOrderCard({
   return (
     <div
       key={panelOrder.id}
-      className="flex items-center py-3 pl-1 pr-3 border rounded-lg shadow-md"
+      className="flex items-center py-3 pl-1 pr-3 bg-white border rounded-lg"
     >
       <div className="flex flex-col w-full">
         <div className="flex items-start justify-between w-full xl:items-center">

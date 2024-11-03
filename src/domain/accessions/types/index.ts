@@ -61,6 +61,7 @@ export type TestOrderDto = {
     panelName: string;
     type: string;
     version: number;
+    status: string;
     panelOrderId: string;
   };
   testCode: string;

@@ -19,8 +19,8 @@ import {
   useAddPanelToAccession,
   useAddTestOrderForTest,
 } from "../apis/add-test-order.api";
-import { useRemoveTestOrder } from "../apis/remove-test-order.api";
 import { PanelOrderCard } from "../components/panel-order-card";
+import { TestOrderCard } from "../components/test-order-card";
 import { OrderablePanelsAndTestsDto } from "../types";
 
 export function ManageAccessionTestOrders({
@@ -35,7 +35,7 @@ export function ManageAccessionTestOrders({
   patientId: string | null;
 }) {
   return (
-    <div className="flex-col h-full space-y-6">
+    <div className="flex-col h-full space-y-4">
       <Orderables orderables={orderables} accessionId={accessionId} />
       <OrdersPlaced
         testOrders={testOrders}
@@ -56,53 +56,47 @@ function OrdersPlaced({
   patientId: string | null;
 }) {
   const panelsArray = useGroupedPanels(testOrders || []);
-  const removeTestOrderApi = useRemoveTestOrder();
 
   return (
-    <div className="w-full h-full col-span-1 space-y-4">
-      <h3 className="text-xl font-semibold tracking-tight">Selected Orders</h3>
-
-      <div className="p-4 space-y-4 overflow-auto bg-white border rounded-lg shadow">
+    <div className="w-full h-full col-span-1 space-y-2">
+      <div className="overflow-hidden border rounded-lg shadow bg-slate-100">
+        <div className="flex-1 px-3 pt-2 pb-1 bg-slate-100">
+          <h3 className="text-xl font-semibold tracking-tight">
+            Selected Orders
+          </h3>
+        </div>
         {testOrders?.length === 0 || !testOrders ? (
-          <div className="flex items-center justify-center h-full text-center">
+          <div className="flex items-center justify-center h-full p-4 text-center bg-white">
             No panels or tests have been selected for this accession
           </div>
         ) : (
-          <>
-            {testOrders
-              ?.filter((testOrder) => !testOrder.isPartOfPanel)
-              ?.map((testOrder) => {
-                return (
-                  <Test
-                    key={testOrder.id}
-                    test={testOrder}
-                    actionText="Remove"
-                    actionFn={(testId) => {
-                      removeTestOrderApi
-                        .mutateAsync({
-                          accessionId: accessionId,
-                          testOrderId: testId,
-                        })
-                        .catch((e) => {
-                          Notification.error(
-                            "There was an error removing the Test"
-                          );
-                          console.error(e);
-                        });
-                    }}
-                  />
-                );
-              })}
-
-            {panelsArray.map((panel) => (
-              <PanelOrderCard
-                key={panel.id}
-                panel={panel}
-                accessionId={accessionId}
-                patientId={patientId}
-              />
-            ))}
-          </>
+          <div className="m-1 bg-white border rounded-lg">
+            <div className="p-4 space-y-4 overflow-auto">
+              {patientId && (
+                <>
+                  {testOrders
+                    ?.filter((testOrder) => !testOrder.isPartOfPanel)
+                    ?.map((testOrder) => {
+                      return (
+                        <TestOrderCard
+                          key={testOrder.id}
+                          test={testOrder}
+                          patientId={patientId}
+                        />
+                      );
+                    })}
+                  {panelsArray.map((panel) => (
+                    <PanelOrderCard
+                      key={panel.id}
+                      panel={panel}
+                      accessionId={accessionId}
+                      patientId={patientId}
+                    />
+                  ))}
+                </>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>
@@ -117,10 +111,14 @@ function useGroupedPanels(testOrders: TestOrderDto[]) {
     panelOrderId: string;
     type: string;
     version: number;
+    status: string;
     tests: {
       id: string;
       testCode: string;
       testName: string;
+      status: string;
+      cancellationReason: string | null;
+      cancellationComments: string | null;
       sample: {
         id: string | null;
         sampleNumber: string | null;
