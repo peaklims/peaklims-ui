@@ -113,11 +113,10 @@ function FilterForm({
       setFilterValue("");
       return;
     }
-    setFilterValue(`FirstName @=* "${filterInputValue}" 
-      || LastName @=* "${filterInputValue}" 
-      || InternalId @=* "${filterInputValue}"`);
-    // || InternalId @=* "${filterInputValue}"
-    // || accessionNumber @=* "${filterInputValue}"`);
+    setFilterValue(`firstName @=* "${filterInputValue}" 
+      || lastName @=* "${filterInputValue}" 
+      || internalId @=* "${filterInputValue}"
+      || accessionNumber @=* "${filterInputValue}"`);
   };
   return (
     <div className="flex space-x-3">
