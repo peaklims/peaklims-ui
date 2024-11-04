@@ -70,32 +70,30 @@ function OrdersPlaced({
             No panels or tests have been selected for this accession
           </div>
         ) : (
-          <div className="m-1 bg-white border rounded-lg">
-            <div className="p-4 space-y-4 overflow-auto">
-              {patientId && (
-                <>
-                  {testOrders
-                    ?.filter((testOrder) => !testOrder.isPartOfPanel)
-                    ?.map((testOrder) => {
-                      return (
-                        <TestOrderCard
-                          key={testOrder.id}
-                          test={testOrder}
-                          patientId={patientId}
-                        />
-                      );
-                    })}
-                  {panelsArray.map((panel) => (
-                    <PanelOrderCard
-                      key={panel.id}
-                      panel={panel}
-                      accessionId={accessionId}
-                      patientId={patientId}
-                    />
-                  ))}
-                </>
-              )}
-            </div>
+          <div className="px-2 pb-2 space-y-2 overflow-auto">
+            {patientId && (
+              <>
+                {testOrders
+                  ?.filter((testOrder) => !testOrder.isPartOfPanel)
+                  ?.map((testOrder) => {
+                    return (
+                      <TestOrderCard
+                        key={testOrder.id}
+                        test={testOrder}
+                        patientId={patientId}
+                      />
+                    );
+                  })}
+                {panelsArray.map((panel) => (
+                  <PanelOrderCard
+                    key={panel.id}
+                    panel={panel}
+                    accessionId={accessionId}
+                    patientId={patientId}
+                  />
+                ))}
+              </>
+            )}
           </div>
         )}
       </div>

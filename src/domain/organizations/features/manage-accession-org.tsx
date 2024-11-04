@@ -124,7 +124,7 @@ export function AccessionOrganizationForm({
   };
 
   return (
-    <div className="pt-3">
+    <div className="pt-1">
       <Form {...organizationForm}>
         <form onSubmit={organizationForm.handleSubmit(onSubmit)}>
           <FormField
@@ -221,12 +221,14 @@ export function AccessionOrganizationForm({
           </Form>
         </div>
 
-        <div className="w-full space-y-1">
-          <h4 className="text-lg font-medium">Accession Contacts</h4>
-          <AccessionContacts
-            accessionContacts={accessionContacts}
-            accessionId={accessionId ?? ""}
-          />
+        <div className="w-full px-1 pt-2 pb-1 space-y-1 overflow-hidden border rounded-lg shadow bg-slate-100">
+          <h4 className="pl-2 text-lg font-medium">Accession Contacts</h4>
+          <div className="p-1">
+            <AccessionContacts
+              accessionContacts={accessionContacts}
+              accessionId={accessionId ?? ""}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -243,7 +245,7 @@ function AccessionContacts({
   const removeAccessionContactApi = useRemoveAccessionContact();
 
   return (
-    <div className="w-full h-full p-3 border rounded-md shadow-md bg-slate-50">
+    <>
       {accessionContacts !== undefined &&
       (accessionContacts?.length ?? 0) > 0 ? (
         <div className="flex flex-col items-start w-full h-full space-y-2 ">
@@ -252,7 +254,7 @@ function AccessionContacts({
             return (
               <div
                 key={contact.id}
-                className="flex flex-col w-full px-3 py-2 space-y-3 bg-white rounded-md shadow-md sm:flex-row sm:space-y-0"
+                className="flex flex-col w-full px-3 py-2 space-y-3 bg-white border rounded-md sm:flex-row sm:space-y-0"
               >
                 <div className="flex items-center justify-start flex-1 pr-2">
                   <div className="">
@@ -298,6 +300,6 @@ function AccessionContacts({
           </p>
         </div>
       )}
-    </div>
+    </>
   );
 }
