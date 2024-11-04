@@ -1,11 +1,11 @@
 import { NextUIProvider } from "@nextui-org/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider } from "@tanstack/react-router";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { HotkeysProvider } from "react-hotkeys-hook";
 import "./index.css";
-import { router } from "./router";
+import { routeTree } from "./routeTree.gen";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,6 +15,18 @@ const queryClient = new QueryClient({
     },
   },
 });
+// Set up a Router instance
+const router = createRouter({
+  routeTree,
+  defaultPreload: "intent",
+});
+
+// Register things for typesafety
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>

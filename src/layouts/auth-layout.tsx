@@ -32,7 +32,6 @@ import { useAuthUser } from "@/services/auth";
 import { Tooltip } from "@nextui-org/react";
 import {
   Link,
-  Outlet,
   RegisteredRoutesInfo,
   useNavigate,
 } from "@tanstack/react-router";
@@ -108,7 +107,7 @@ function ProfileManagement({
   );
 }
 
-export function AuthLayout() {
+export function AuthLayout({ children }: { children: React.ReactNode }) {
   const { user, logoutUrl } = useAuthUser();
   const [quickActionIsOpen, setQuickActionIsOpen] = useState(false);
 
@@ -421,7 +420,7 @@ export function AuthLayout() {
           </Sidebar>
         }
       >
-        <Outlet />
+        {children}
       </SidebarLayout>
     </SidebarProvider>
   );

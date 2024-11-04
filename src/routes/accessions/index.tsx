@@ -1,10 +1,15 @@
-import { useAccessioningWorklist } from "@/domain/accessions/apis/get-accession-worklist";
-import { AccessionWorklist } from "@/domain/accessions/features/worklist/accession-worklist";
-import { useAccessioningWorklistTableStore } from "@/domain/accessions/features/worklist/accession-worklist.store";
-import { Helmet } from "react-helmet";
-import { columns } from "../../domain/accessions/features/worklist/accession-worklist-columns";
+import { useAccessioningWorklist } from '@/domain/accessions/apis/get-accession-worklist'
+import { AccessionWorklist } from '@/domain/accessions/features/worklist/accession-worklist'
+import { columns } from '@/domain/accessions/features/worklist/accession-worklist-columns'
+import { useAccessioningWorklistTableStore } from '@/domain/accessions/features/worklist/accession-worklist.store'
+import { createFileRoute } from '@tanstack/react-router'
+import { Helmet } from 'react-helmet'
 
-export function AccessionWorklistPage() {
+export const Route = createFileRoute('/accessions/')({
+  component: AccessionWorklistPage,
+})
+
+function AccessionWorklistPage() {
   return (
     <div className="">
       <Helmet>
@@ -18,19 +23,19 @@ export function AccessionWorklistPage() {
         <AccessioningWorklist />
       </div>
     </div>
-  );
+  )
 }
 
 function AccessioningWorklist() {
   const { sorting, pageSize, pageNumber, queryKit } =
-    useAccessioningWorklistTableStore();
+    useAccessioningWorklistTableStore()
   const { data, isLoading } = useAccessioningWorklist({
     sortOrder: sorting,
     pageSize,
     pageNumber,
     filters: queryKit.filterValue(),
     delayInMs: 450,
-  });
+  })
   return (
     <AccessionWorklist
       columns={columns}
@@ -38,5 +43,5 @@ function AccessioningWorklist() {
       pagination={data?.pagination}
       isLoading={isLoading}
     />
-  );
+  )
 }

@@ -7,6 +7,7 @@ import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-ag
 import AccessionStatusBadge from "@/domain/accessions/components/status-badge";
 
 import { Notification } from "@/components/notifications";
+import { useSubmitAccession } from "@/domain/accessions/apis/submit-accession";
 import {
   AccessionAttachmentDto,
   AccessionContactDto,
@@ -21,14 +22,17 @@ import { ManageAccessionSamples } from "@/domain/samples/components/manage-acces
 import { useGetOrderables } from "@/domain/test-orders/apis/get-orderables.api";
 import { ManageAccessionTestOrders } from "@/domain/test-orders/features/manage-accession-test-orders";
 import { Tab, Tabs, useDisclosure } from "@nextui-org/react";
-import { useParams } from "@tanstack/react-router";
+import { createFileRoute, useParams } from "@tanstack/react-router";
 import { Paperclip } from "lucide-react";
 import { Helmet } from "react-helmet";
-import { useSubmitAccession } from "../../domain/accessions/apis/submit-accession";
 
-export function EditAccessionPage() {
+export const Route = createFileRoute("/accessions/$accessionId")({
+  component: EditAccessionPage,
+});
+
+function EditAccessionPage() {
   const queryParams = useParams({
-    from: "/auth-layout/accessions/$accessionId",
+    from: "/accessions/$accessionId",
   });
   const accessionId = queryParams.accessionId;
   const { data: accession } = useGetAccessionForEdit(accessionId);

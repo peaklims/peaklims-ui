@@ -115,8 +115,9 @@ function FilterForm({
     }
     setFilterValue(`FirstName @=* "${filterInputValue}" 
       || LastName @=* "${filterInputValue}" 
-      || InternalId @=* "${filterInputValue}" 
-      || accessions.AccessionNumber @=* "${filterInputValue}"`);
+      || InternalId @=* "${filterInputValue}"`);
+    // || InternalId @=* "${filterInputValue}"
+    // || accessionNumber @=* "${filterInputValue}"`);
   };
   return (
     <div className="flex space-x-3">
