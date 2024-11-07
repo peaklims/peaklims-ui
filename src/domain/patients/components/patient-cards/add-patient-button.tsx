@@ -38,6 +38,8 @@ export function AddPatientButton() {
           <div className="px-6 pb-2 overflow-y-auto grow gap-y-5">
             <div className="pt-0">
               <PatientForm
+                accessionId={accessionId}
+                onClose={() => setAddPatientDialogIsOpen(false)}
                 onSubmit={(value) => {
                   const dto = {
                     accessionId,

@@ -19,9 +19,12 @@ import {
   getDateControlOnChangeValue,
   getDateControlValue,
 } from "@/components/ui/rich-cal";
+import { useSetAccessionPatient } from "@/domain/accessions/apis/set-accession-patient";
+import { useDebounce } from "@/hooks/use-debounce";
 import { parse } from "date-fns";
 import { useEffect } from "react";
 import { Item } from "react-stately";
+import { useExistingPatientSearch } from "../apis/search-existing-patients";
 import { ethnicitiesDropdown } from "../types/ethnicities";
 import { racesDropdown } from "../types/races";
 import { sexesDropdown } from "../types/sexes";
@@ -42,22 +45,27 @@ export const patientFormSchema = z.object({
 });
 
 export const FormMode = ["Add", "Edit"] as const;
+type PatientFormData = {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  age?: number;
+  dateOfBirth?: Date;
+  internalId: string;
+  sex: string;
+  race?: string;
+  ethnicity?: string;
+};
 export function PatientForm({
   onSubmit,
   patient,
+  accessionId,
+  onClose,
 }: {
   onSubmit: (values: z.infer<typeof patientFormSchema>) => void;
-  patient?: {
-    id: string;
-    firstName?: string;
-    lastName?: string;
-    age?: number;
-    dateOfBirth?: Date;
-    internalId: string;
-    sex: string;
-    race?: string;
-    ethnicity?: string;
-  };
+  patient?: PatientFormData;
+  accessionId?: string;
+  onClose?: () => void;
 }) {
   const parsedDate = parse(
     patient?.dateOfBirth?.toString() ?? "",
@@ -130,7 +138,7 @@ export function PatientForm({
               </FormItem>
             )}
           />
-          <div className="grid w-full grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-2">
+          <div className="grid w-full grid-cols-1 gap-y-2 gap-x-3 sm:grid-cols-2">
             <div className="col-span-1">
               <FormField
                 control={patientForm.control}
@@ -250,11 +258,86 @@ export function PatientForm({
             </div>
           </div>
         </div>
+        <div className="pt-2">
+          <ExistingPatientsDisplay
+            patientForm={patientForm}
+            accessionId={accessionId}
+            patient={patient}
+            onClose={onClose}
+          />
+        </div>
 
         <div className="flex items-center justify-end pt-8">
           <Button type="submit">Submit</Button>
         </div>
       </form>
     </Form>
+  );
+}
+
+function ExistingPatientsDisplay({
+  patientForm,
+  accessionId,
+  patient,
+  onClose,
+}: {
+  patientForm: any;
+  accessionId: string | undefined;
+  patient: PatientFormData | undefined;
+  onClose: any;
+}) {
+  const firstName = patientForm.watch("firstName");
+  const lastName = patientForm.watch("lastName");
+
+  const debouncedFirstName = useDebounce(firstName, 300);
+  const debouncedLastName = useDebounce(lastName, 300);
+
+  const searchQuery = {
+    filters:
+      debouncedFirstName && debouncedLastName
+        ? `firstName@=*${debouncedFirstName} && lastName@=*${debouncedLastName}`
+        : undefined,
+    pageSize: 5,
+    pageNumber: 1,
+  };
+
+  const { data: searchResults } = useExistingPatientSearch(searchQuery);
+
+  const setAccessionPatient = useSetAccessionPatient();
+  return (
+    <>
+      {searchResults?.data &&
+        searchResults.data.length > 0 &&
+        accessionId !== undefined &&
+        patient === undefined && (
+          <div className="px-2 py-4 my-2 border-y">
+            <div className="mb-2 text-sm font-medium">
+              Potential existing patient matches:
+            </div>
+            <div className="space-y-2">
+              {searchResults.data.map((match) => (
+                <div
+                  key={match.id}
+                  className="flex items-center justify-between p-2 border rounded-md cursor-pointer hover:bg-slate-100 border-md"
+                  onClick={() => {
+                    setAccessionPatient.mutate({
+                      accessionId,
+                      patientId: match.id,
+                    });
+                    onClose?.();
+                  }}
+                >
+                  <div>
+                    {match.firstName} {match.lastName} ({match.internalId})
+                  </div>
+                  <div className="text-sm text-slate-500">
+                    DOB: {match?.dateOfBirth?.toString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+    </>
   );
 }
