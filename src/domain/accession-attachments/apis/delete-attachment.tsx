@@ -43,7 +43,7 @@ export function useDeleteAccessionAttachment(
       return { attachmentId, accessionId };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(AccessionKeys.forEdits());
+      queryClient.invalidateQueries({ queryKey: AccessionKeys.forEdits() });
     },
     ...options,
   });

@@ -49,10 +49,10 @@ export const useUploadAccessionAttachment = () => {
     },
     onSettled: (_, __, context: MutationContext | undefined) => {
       if (context && !context.skipQueryInvalidation) {
-        queryClient.invalidateQueries(AccessionKeys.lists());
-        queryClient.invalidateQueries(
-          AccessionKeys.forEdit(context.accessionId)
-        );
+        queryClient.invalidateQueries({ queryKey: AccessionKeys.lists() });
+        queryClient.invalidateQueries({
+          queryKey: AccessionKeys.forEdit(context.accessionId),
+        });
       }
     },
   });

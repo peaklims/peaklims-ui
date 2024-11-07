@@ -27,10 +27,10 @@ export function useRemoveAccessionPatient(
     },
     onSuccess: (_, __, context: MutationContext | undefined) => {
       if (context) {
-        queryClient.invalidateQueries(AccessionKeys.lists());
-        queryClient.invalidateQueries(
-          AccessionKeys.forEdit(context.accessionId)
-        );
+        queryClient.invalidateQueries({ queryKey: AccessionKeys.lists() });
+        queryClient.invalidateQueries({
+          queryKey: AccessionKeys.forEdit(context.accessionId),
+        });
       }
     },
     ...options,

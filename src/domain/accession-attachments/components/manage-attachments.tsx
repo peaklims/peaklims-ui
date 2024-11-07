@@ -117,8 +117,10 @@ export function ManageAttachments({
 
             // doing invalidation here because the batch api call isn't able to track
             // progress independently as is and refactoring to it was taking too long
-            queryClient.invalidateQueries(AccessionKeys.lists());
-            queryClient.invalidateQueries(AccessionKeys.forEdit(accessionId));
+            queryClient.invalidateQueries({ queryKey: AccessionKeys.lists() });
+            queryClient.invalidateQueries({
+              queryKey: AccessionKeys.forEdit(accessionId),
+            });
           }}
         />
       </div>
