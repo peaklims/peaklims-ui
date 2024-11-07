@@ -68,6 +68,8 @@ export const useExistingPatientSearch = ({
         delayInMs,
       }),
     enabled: filters !== undefined && (filters?.length ?? 0) > 0,
+    gcTime: 1000 * 30,
+    staleTime: 1000 * 30,
   });
 };
 

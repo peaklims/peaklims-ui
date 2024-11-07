@@ -1,4 +1,5 @@
 // import { generateSieveSortOrder } from "@/utils/sorting";
+import { PatientKeys } from "@/domain/patients/apis/patient.keys";
 import { peakLimsApi } from "@/services/api-client";
 import { toDateOnly } from "@/utils/dates";
 import {
@@ -57,10 +58,13 @@ export function useSetAccessionPatient(
     },
     onSuccess: (_, __, context: MutationContext | undefined) => {
       if (context) {
-        queryClient.invalidateQueries(AccessionKeys.lists());
-        queryClient.invalidateQueries(
-          AccessionKeys.forEdit(context.data.accessionId)
-        );
+        queryClient.invalidateQueries({ queryKey: AccessionKeys.lists() });
+        queryClient.invalidateQueries({
+          queryKey: AccessionKeys.forEdit(context.data.accessionId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: PatientKeys.searchExistingPatients(),
+        });
       }
     },
     ...options,

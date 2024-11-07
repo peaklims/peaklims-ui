@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
+import { PaginationControls } from "@/components/data-table/pagination";
 import { Button } from "@/components/ui/button";
 import { Combobox, getLabelById } from "@/components/ui/combobox";
 import {
@@ -22,7 +23,7 @@ import {
 import { useSetAccessionPatient } from "@/domain/accessions/apis/set-accession-patient";
 import { useDebounce } from "@/hooks/use-debounce";
 import { parse } from "date-fns";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Item } from "react-stately";
 import { useExistingPatientSearch } from "../apis/search-existing-patients";
 import { ethnicitiesDropdown } from "../types/ethnicities";
@@ -288,6 +289,8 @@ function ExistingPatientsDisplay({
 }) {
   const firstName = patientForm.watch("firstName");
   const lastName = patientForm.watch("lastName");
+  const [pageSize, setPageSize] = useState(10);
+  const [pageNumber, setPageNumber] = useState(1);
 
   const debouncedFirstName = useDebounce(firstName, 300);
   const debouncedLastName = useDebounce(lastName, 300);
@@ -297,8 +300,8 @@ function ExistingPatientsDisplay({
       debouncedFirstName && debouncedLastName
         ? `firstName@=*${debouncedFirstName} && lastName@=*${debouncedLastName}`
         : undefined,
-    pageSize: 5,
-    pageNumber: 1,
+    pageSize,
+    pageNumber,
   };
 
   const { data: searchResults } = useExistingPatientSearch(searchQuery);
@@ -316,9 +319,10 @@ function ExistingPatientsDisplay({
             </div>
             <div className="space-y-2">
               {searchResults.data.map((match) => (
-                <div
+                <Button
                   key={match.id}
-                  className="flex items-center justify-between p-2 border rounded-md cursor-pointer hover:bg-slate-100 border-md"
+                  variant={"ghost"}
+                  className="flex items-center justify-between w-full p-2 border rounded-md cursor-pointer hover:bg-slate-100 border-md"
                   onClick={() => {
                     setAccessionPatient.mutate({
                       accessionId,
@@ -333,8 +337,19 @@ function ExistingPatientsDisplay({
                   <div className="text-sm text-slate-500">
                     DOB: {match?.dateOfBirth?.toString()}
                   </div>
-                </div>
+                </Button>
               ))}
+            </div>
+            <div className="mt-4">
+              <PaginationControls
+                entityPlural="Patients"
+                pageNumber={pageNumber}
+                apiPagination={searchResults.pagination}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                setPageNumber={setPageNumber}
+                orientation="between"
+              />
             </div>
           </div>
         )}
