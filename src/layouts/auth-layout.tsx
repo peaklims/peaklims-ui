@@ -30,11 +30,7 @@ import { useActionButtonKey } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useAuthUser } from "@/services/auth";
 import { Tooltip } from "@nextui-org/react";
-import {
-  Link,
-  RegisteredRoutesInfo,
-  useNavigate,
-} from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   LogOut,
   MailQuestion,
@@ -51,7 +47,10 @@ function ProfileManagement({
   user,
   logoutUrl,
 }: {
-  user: UserType;
+  user: {
+    name: string;
+    initials: string;
+  };
   logoutUrl: string | undefined;
 }) {
   return (
@@ -114,12 +113,12 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   useHotkeys("g+a", () => {
     navigate({
-      to: `/accessions` as RegisteredRoutesInfo["routePaths"],
+      to: `/accessions`,
     });
   });
   useHotkeys("g+h", () => {
     navigate({
-      to: `/` as RegisteredRoutesInfo["routePaths"],
+      to: `/`,
     });
   });
   useHotkeys("q", () => {
@@ -131,10 +130,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
   });
 
   const { data: organizationInfo, isLoading: isLoadingOrganizationInfo } =
-    useGetUserPeakOrganization({
-      hasArtificialDelay: true,
-      delayInMs: 400,
-    });
+    useGetUserPeakOrganization();
   return (
     <SidebarProvider>
       <SidebarLayout

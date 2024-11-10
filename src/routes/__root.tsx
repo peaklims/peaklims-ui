@@ -3,6 +3,7 @@ import { Notification } from "@/components/notifications";
 import { AuthLayout } from "@/layouts/auth-layout";
 import { ReactQueryDevtools } from "@/lib/dev-tools";
 import { siteConfig } from "@/lib/site-config";
+import { cn } from "@/lib/utils";
 import { useAuthUser } from "@/services/auth";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
@@ -20,6 +21,8 @@ function Loading() {
 export const Route = createRootRoute({
   component: RootComponent,
 });
+
+const runInDemoMode = false;
 
 function RootComponent() {
   const { isLoading } = useAuthUser();
@@ -52,38 +55,47 @@ function RootComponent() {
         <meta property="twitter:image" content={siteConfig.ogImage} /> */}
       </Helmet>
 
-      <div className="min-h-svh font-sans antialiased scroll-smooth debug-screens [font-feature-settings:'ss01'] ">
+      <div
+        className={cn(
+          "min-h-svh font-sans antialiased scroll-smooth [font-feature-settings:'ss01']",
+          !runInDemoMode && "debug-screens"
+        )}
+      >
         <AuthLayout>
           <Outlet />
         </AuthLayout>
         <Notification />
         <ClickToComponent />
-        <div className="hidden md:block">
-          <TanStackRouterDevtools
-            position="bottom-right"
-            toggleButtonProps={{
-              style: {
-                marginRight: "5rem",
-                marginBottom: ".75rem",
-              },
-            }}
-          />
-          <ReactQueryDevtools buttonPosition="bottom-right" />
-        </div>
-        <div className="block md:hidden">
-          <TanStackRouterDevtools
-            position="bottom-left"
-            toggleButtonProps={{
-              style: {
-                marginLeft: "5rem",
-                marginBottom: ".75rem",
-              },
-            }}
-          />
-          <div className="mb-6 ml-24">
-            <ReactQueryDevtools buttonPosition="bottom-left" />
-          </div>
-        </div>
+        {!runInDemoMode && (
+          <>
+            <div className="hidden md:block">
+              <TanStackRouterDevtools
+                position="bottom-right"
+                toggleButtonProps={{
+                  style: {
+                    marginRight: "5rem",
+                    marginBottom: ".75rem",
+                  },
+                }}
+              />
+              <ReactQueryDevtools buttonPosition="bottom-right" />
+            </div>
+            <div className="block md:hidden">
+              <TanStackRouterDevtools
+                position="bottom-left"
+                toggleButtonProps={{
+                  style: {
+                    marginLeft: "5rem",
+                    marginBottom: ".75rem",
+                  },
+                }}
+              />
+              <div className="mb-6 ml-24">
+                <ReactQueryDevtools buttonPosition="bottom-left" />
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

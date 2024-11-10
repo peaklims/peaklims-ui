@@ -62,7 +62,7 @@ function OrdersPlaced({
       <div className="overflow-hidden border rounded-lg shadow bg-slate-100">
         <div className="flex-1 px-3 pt-2 pb-1 bg-slate-100">
           <h3 className="text-xl font-semibold tracking-tight">
-            Selected Orders
+            Accession Orders
           </h3>
         </div>
         {testOrders?.length === 0 || !testOrders ? (
