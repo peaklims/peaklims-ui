@@ -5,7 +5,6 @@ import {
   AriaListBoxOptions,
   AriaPopoverProps,
   DismissButton,
-  Overlay,
   useButton,
   useComboBox,
   useFilter,
@@ -255,10 +254,10 @@ function Option({ item, state }: OptionProps) {
       {...optionProps}
       ref={ref}
       className={cn(
-        `m-1 flex cursor-default items-center justify-between rounded-md px-2 py-1 text-sm outline-none text-gray-700`,
-        isFocused ? "bg-emerald-100 text-emerald-600" : "",
+        `flex justify-between items-center px-2 py-1 m-1 text-sm text-gray-700 rounded-md cursor-default outline-none`,
+        isFocused ? "text-emerald-600 bg-emerald-100" : "",
         isSelected ? "font-semibold text-emerald-600" : "",
-        isDisabled ? "opacity-40 text-slate-700 cursor-not-allowed" : ""
+        isDisabled ? "opacity-40 cursor-not-allowed text-slate-700" : ""
       )}
     >
       {item.rendered}
@@ -306,18 +305,18 @@ export function Popover(props: PopoverProps) {
   );
 
   return (
-    <Overlay>
+    <>
       {!isNonModal && <div {...underlayProps} className="fixed inset-0" />}
       <div
         {...popoverProps}
         ref={popoverRef}
-        className={`z-10 mt-2 rounded-md border border-gray-300 bg-white shadow-lg ${className}`}
+        className={`z-500 mt-2 rounded-md border border-gray-300 bg-white shadow-lg ${className}`}
       >
         {!isNonModal && <DismissButton onDismiss={state.close} />}
         {children}
         <DismissButton onDismiss={state.close} />
       </div>
-    </Overlay>
+    </>
   );
 }
 

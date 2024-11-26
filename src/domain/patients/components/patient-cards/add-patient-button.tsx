@@ -30,12 +30,15 @@ export function AddPatientButton() {
         size="xl"
         isOpen={addPatientDialogIsOpen}
         onOpenChange={setAddPatientDialogIsOpen}
+        classNames={{
+          base: "overflow-y-visible",
+        }}
       >
         <ModalContent>
           <ModalHeader className="text-2xl font-semibold scroll-m-20">
             Add a Patient
           </ModalHeader>
-          <div className="px-6 pb-2 overflow-y-auto grow gap-y-5">
+          <div className="px-6 pb-2 grow gap-y-5">
             <div className="pt-0">
               <PatientForm
                 accessionId={accessionId}

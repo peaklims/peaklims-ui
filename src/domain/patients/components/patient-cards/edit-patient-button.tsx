@@ -29,13 +29,16 @@ export function EditPatientButton({ patientId }: { patientId: string }) {
         className="w-full max-w-3xl"
         isOpen={addPatientDialogIsOpen}
         onOpenChange={setAddPatientDialogIsOpen}
+        classNames={{
+          base: "overflow-y-visible",
+        }}
       >
         <div className="relative inset-0 flex">
           <ModalContent>
             <ModalHeader className="text-2xl font-semibold scroll-m-20">
               Edit Patient
             </ModalHeader>
-            <div className="px-6 pb-6 overflow-y-auto grow">
+            <div className="px-6 pb-6 grow">
               <PatientForm
                 patient={patientData}
                 onSubmit={(value) => {

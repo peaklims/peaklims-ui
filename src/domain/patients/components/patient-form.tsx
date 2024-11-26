@@ -173,6 +173,7 @@ export function PatientForm({
                     <FormLabel required={true}>Sex</FormLabel>
                     <FormControl>
                       <Combobox
+                        clearable={true}
                         label={field.name}
                         {...field}
                         inputValue={getLabelById({
@@ -204,6 +205,7 @@ export function PatientForm({
                     <FormLabel required={false}>Race</FormLabel>
                     <FormControl>
                       <Combobox
+                        clearable={true}
                         label={field.name}
                         {...field}
                         inputValue={getLabelById({
@@ -214,11 +216,13 @@ export function PatientForm({
                         selectedKey={field.value}
                         onSelectionChange={field.onChange}
                       >
-                        {racesDropdown?.map((item) => (
-                          <Item key={item.value} textValue={item.label}>
-                            {item.label}
-                          </Item>
-                        ))}
+                        {racesDropdown
+                          ?.filter((item) => item.value !== "Not Given")
+                          ?.map((item) => (
+                            <Item key={item.value} textValue={item.label}>
+                              {item.label}
+                            </Item>
+                          ))}
                       </Combobox>
                     </FormControl>
                     <FormMessage />
@@ -235,6 +239,7 @@ export function PatientForm({
                     <FormLabel required={false}>Ethnicity</FormLabel>
                     <FormControl>
                       <Combobox
+                        clearable={true}
                         label={field.name}
                         {...field}
                         inputValue={getLabelById({
@@ -245,11 +250,13 @@ export function PatientForm({
                         selectedKey={field.value}
                         onSelectionChange={field.onChange}
                       >
-                        {ethnicitiesDropdown?.map((item) => (
-                          <Item key={item.value} textValue={item.label}>
-                            {item.label}
-                          </Item>
-                        ))}
+                        {ethnicitiesDropdown
+                          ?.filter((item) => item.value !== "Not Given")
+                          .map((item) => (
+                            <Item key={item.value} textValue={item.label}>
+                              {item.label}
+                            </Item>
+                          ))}
                       </Combobox>
                     </FormControl>
                     <FormMessage />
