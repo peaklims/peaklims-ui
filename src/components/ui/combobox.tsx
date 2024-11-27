@@ -106,6 +106,7 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
         {clearable && state.inputValue && (
           <button
             onClick={handleClear}
+            disabled={props.isDisabled}
             className={cn(
               `cursor-pointer bg-transparent px-1`,
               state.isFocused
