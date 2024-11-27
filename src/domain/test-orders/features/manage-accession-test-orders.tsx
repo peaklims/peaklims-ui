@@ -8,6 +8,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { useGetAccessionForEdit } from "@/domain/accessions";
 import { TestOrderDto } from "@/domain/accessions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
@@ -224,6 +225,9 @@ function Orderables({
     }
   };
 
+  const { data: accession } = useGetAccessionForEdit(accessionId);
+  const isDraftAccession = accession?.status === "Draft";
+
   return (
     <div className="w-full h-full col-span-1 space-y-2">
       <h3 className="text-xl font-semibold tracking-tight">
@@ -249,6 +253,7 @@ function Orderables({
                       wrapper: "w-full",
                       input: "w-full",
                     }}
+                    isDisabled={!isDraftAccession}
                     placeholder="Select a panel or test"
                     label={field.name}
                     inputValue={inputValue}
