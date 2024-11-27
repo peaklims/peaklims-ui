@@ -1,6 +1,13 @@
 "use client";
 
 import { Kbd, TooltipHotkey } from "@/components";
+import { Abandoned } from "@/components/svgs/abandoned";
+import { Cancelled } from "@/components/svgs/cancelled";
+import { Completed } from "@/components/svgs/completed";
+import { Qns } from "@/components/svgs/qns";
+import { ReadyForTesting } from "@/components/svgs/ready-for-testing";
+import { ReportCompleted } from "@/components/svgs/report-completed";
+import { Testing } from "@/components/svgs/testing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNewAccession } from "@/domain/accessions";
@@ -112,17 +119,12 @@ const statuses = [
   {
     value: "Ready For Testing",
     label: "Ready For Testing",
-    icon: TimerIcon,
+    icon: ReadyForTesting,
   },
   {
     value: "Testing",
     label: "Testing",
-    icon: TimerIcon,
-  },
-  {
-    value: "Testing Complete",
-    label: "Testing Complete",
-    icon: TimerIcon,
+    icon: Testing,
   },
   {
     value: "Report Pending",
@@ -132,26 +134,26 @@ const statuses = [
   {
     value: "Report Complete",
     label: "Report Complete",
-    icon: TimerIcon,
+    icon: ReportCompleted,
   },
   {
     value: "Completed",
     label: "Completed",
-    icon: TimerIcon,
+    icon: Completed,
   },
   {
     value: "Abandoned",
     label: "Abandoned",
-    icon: TimerIcon,
+    icon: Abandoned,
   },
   {
     value: "Cancelled",
     label: "Cancelled",
-    icon: TimerIcon,
+    icon: Cancelled,
   },
   {
     value: "Qns",
     label: "QNS",
-    icon: TimerIcon,
+    icon: Qns,
   },
 ] as { value: AccessionStatus; label: string; icon: any }[];
