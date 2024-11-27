@@ -8,15 +8,15 @@ import {
 import { AxiosError } from "axios";
 import { AccessionKeys } from "./accession.keys";
 
-const submitAccession = async ({ accessionId }: { accessionId: string }) => {
-  await peakLimsApi.put(`/v1/accessions/${accessionId}/submit`);
+const abandonAccession = async ({ accessionId }: { accessionId: string }) => {
+  await peakLimsApi.put(`/v1/accessions/${accessionId}/abandon`);
 };
 
 type MutationContext = {
   accessionId: string;
 };
 
-export function useSubmitAccession(
+export function useAbandonAccession(
   options?: UseMutationOptions<
     void,
     AxiosError,
@@ -33,7 +33,7 @@ export function useSubmitAccession(
     MutationContext
   >({
     mutationFn: ({ accessionId }: { accessionId: string }) => {
-      return submitAccession({ accessionId });
+      return abandonAccession({ accessionId });
     },
     onMutate: (variables) => {
       // make `data` available for cache key

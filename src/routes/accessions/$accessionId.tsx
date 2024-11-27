@@ -7,6 +7,7 @@ import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-ag
 import AccessionStatusBadge from "@/domain/accessions/components/status-badge";
 
 import { Notification } from "@/components/notifications";
+import { useAbandonAccession } from "@/domain/accessions/apis/abandon-accession";
 import { useSubmitAccession } from "@/domain/accessions/apis/submit-accession";
 import {
   AccessionAttachmentDto,
@@ -62,6 +63,11 @@ function EditAccessionPage() {
           )}
         </div>
         <SubmitAccession
+          accessionId={accessionId}
+          accessionNumber={accessionNumber}
+          accessionStatus={accession?.status}
+        />
+        <AbandonAccession
           accessionId={accessionId}
           accessionNumber={accessionNumber}
           accessionStatus={accession?.status}
@@ -143,6 +149,65 @@ function SubmitAccession({
         isOpen={disposeModalIsOpen}
         onOpenChange={onDisposeModalOpenChange}
         title={`Submit Accession ${accessionNumber}?`}
+      />
+    </>
+  );
+}
+
+function AbandonAccession({
+  accessionId,
+  accessionNumber,
+  accessionStatus,
+}: {
+  accessionId: string | undefined;
+  accessionNumber: string | undefined;
+  accessionStatus: AccessionStatus | undefined;
+}) {
+  const clearAccessionApi = useAbandonAccession();
+  const {
+    isOpen: disposeModalIsOpen,
+    onOpen: onDisposeModalOpen,
+    onOpenChange: onDisposeModalOpenChange,
+  } = useDisclosure();
+
+  if (accessionStatus !== "Draft") return null;
+
+  return (
+    <>
+      <Button
+        className=""
+        variant="outline"
+        onClick={() => onDisposeModalOpen()}
+      >
+        Abandon
+      </Button>
+      <ConfirmModal
+        content={<p>Are you sure you want to abandon this accession?</p>}
+        labels={{
+          confirm: "Yes",
+          cancel: "Cancel",
+        }}
+        confirmationType="primary"
+        onConfirm={() => {
+          if (accessionId === undefined) return;
+
+          clearAccessionApi
+            .mutateAsync({ accessionId })
+            .then(() => {
+              Notification.success(`Accession ${accessionNumber} abandoned`);
+              onDisposeModalOpen();
+            })
+            .catch((err) => {
+              const statusCode = err?.response?.status;
+              if (statusCode != 422) {
+                Notification.error(`Error abandoning accession`);
+              }
+            });
+        }}
+        onCancel={() => {}}
+        isOpen={disposeModalIsOpen}
+        onOpenChange={onDisposeModalOpenChange}
+        title={`Abandon Accession ${accessionNumber}?`}
       />
     </>
   );
