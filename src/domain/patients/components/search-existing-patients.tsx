@@ -11,11 +11,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  RichDatePicker,
-  getDateControlOnChangeValue,
-  getDateControlValue,
-} from "@/components/ui/rich-cal";
-import {
   SetAccessionPatient,
   useSetAccessionPatient,
 } from "@/domain/accessions/apis/set-accession-patient";
@@ -142,13 +137,8 @@ function FilterForm({
               </FormItem>
             )}
           />
-          {/* first name sounds like
-or last name sounds like 
-or full name sounds like
-or internal id insensitive contains
-or accession insensitive contains */}
 
-          <FormField
+          {/* <FormField
             control={filterForm.control}
             name="dateOfBirth"
             render={({ field }) => (
@@ -168,7 +158,7 @@ or accession insensitive contains */}
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <div className="-space-x-px">
             <Button
               type="submit"
