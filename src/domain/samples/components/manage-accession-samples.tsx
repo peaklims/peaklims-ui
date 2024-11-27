@@ -137,13 +137,16 @@ export function AddSampleButton({
         className="w-full max-w-3xl"
         isOpen={sampleFormIsOpen}
         onOpenChange={setSampleFormIsOpen}
+        classNames={{
+          base: "overflow-y-visible",
+        }}
       >
         <div className="relative inset-0 flex">
           <ModalContent>
             <ModalHeader className="text-2xl font-semibold scroll-m-20">
               Add a Sample
             </ModalHeader>
-            <div className="px-6 pb-2 overflow-y-auto grow gap-y-5">
+            <div className="px-6 pb-2 grow gap-y-5">
               <SampleForm
                 onSubmit={(value) => {
                   if (patientId === undefined) return;
