@@ -8,27 +8,23 @@ import {
 import { AxiosError } from "axios";
 import { AccessionKeys } from "./accession.keys";
 
-const setAccessionOrganization = async ({
+const clearAccessionOrganization = async ({
   accessionId,
-  organizationId,
 }: {
   accessionId: string;
-  organizationId: string;
 }) => {
-  await peakLimsApi.put(
-    `/v1/accessions/${accessionId}/setOrganization/${organizationId}`
-  );
+  await peakLimsApi.put(`/v1/accessions/${accessionId}/clearOrganization`);
 };
 
 type MutationContext = {
   accessionId: string;
 };
 
-export function useSetAccessionOrganization(
+export function useClearAccessionOrganization(
   options?: UseMutationOptions<
     void,
     AxiosError,
-    { accessionId: string; organizationId: string },
+    { accessionId: string },
     MutationContext
   >
 ) {
@@ -37,17 +33,11 @@ export function useSetAccessionOrganization(
   return useMutation<
     void,
     AxiosError,
-    { accessionId: string; organizationId: string },
+    { accessionId: string },
     MutationContext
   >({
-    mutationFn: ({
-      accessionId,
-      organizationId,
-    }: {
-      accessionId: string;
-      organizationId: string;
-    }) => {
-      return setAccessionOrganization({ accessionId, organizationId });
+    mutationFn: ({ accessionId }: { accessionId: string }) => {
+      return clearAccessionOrganization({ accessionId });
     },
     onMutate: (variables) => {
       // make `data` available for cache key

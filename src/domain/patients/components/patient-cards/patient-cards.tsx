@@ -30,11 +30,13 @@ export function PatientCard({ patientInfo }: { patientInfo: PatientForCard }) {
   const accessionId = usePatientCardContext().accessionId;
   const removeAccessionApi = useRemoveAccessionPatient();
   function removePatientFromAccession() {
-    removeAccessionApi.mutateAsync(accessionId!).catch((e) => {
-      Notification.error(
-        "There was an error removing the patient from this accession"
-      );
-      console.error(e);
+    removeAccessionApi.mutateAsync(accessionId!).catch((err) => {
+      const statusCode = err?.response?.status;
+      if (statusCode != 422) {
+        Notification.error(
+          "There was an error removing the patient from this accession"
+        );
+      }
     });
   }
 

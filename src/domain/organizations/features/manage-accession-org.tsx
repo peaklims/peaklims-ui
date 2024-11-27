@@ -12,6 +12,7 @@ import {
 import { useAddAccessionContact } from "@/domain/accession-contacts/apis/add-accession-contact";
 import { useRemoveAccessionContact } from "@/domain/accession-contacts/apis/remove-accession-contact";
 import { useGetAccessionForEdit } from "@/domain/accessions";
+import { useClearAccessionOrganization } from "@/domain/accessions/apis/clear-accession-org";
 import { useSetAccessionOrganization } from "@/domain/accessions/apis/set-accession-org";
 import { AccessionContactDto } from "@/domain/accessions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -63,8 +64,8 @@ export function AccessionOrganizationForm({
 
   const setOrganizationApi = useSetAccessionOrganization();
   const onSubmit = (data: OrgFormData) => {
-    console.log("data", data);
-    if (!data.organization || accessionId === undefined) return;
+    console.log({ data });
+    if (accessionId === undefined) return;
 
     setOrganizationApi.mutateAsync({
       accessionId: accessionId,
@@ -105,7 +106,7 @@ export function AccessionOrganizationForm({
   });
 
   const addAccessionContactApi = useAddAccessionContact();
-
+  const clearAccessionOrgApi = useClearAccessionOrganization();
   const onContactSubmit = (data: { contactId: string }) => {
     addAccessionContactApi
       .mutateAsync({
@@ -138,12 +139,20 @@ export function AccessionOrganizationForm({
                     classNames={{
                       wrapper: "w-full md:w-[25rem]",
                     }}
+                    autoFocus={true}
                     isDisabled={orgsAreLoading || !isDraftAccession}
                     label={field.name}
                     clearable={true}
                     inputValue={inputValue}
                     onInputChange={(value) => {
                       setInputValue(value);
+                    }}
+                    onClear={() => {
+                      field.onChange("");
+                      setInputValue("");
+                      clearAccessionOrgApi.mutateAsync({
+                        accessionId: accessionId ?? "",
+                      });
                     }}
                     selectedKey={field.value}
                     onSelectionChange={(key) => {
