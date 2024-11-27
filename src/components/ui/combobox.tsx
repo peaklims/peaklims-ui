@@ -43,10 +43,10 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
   let { contains } = useFilter({ sensitivity: "base" });
   let state = useComboBoxState({ ...props, defaultFilter: contains });
 
-  let buttonRef = React.useRef(null);
-  let inputRef = React.useRef(null);
+  let buttonRef = React.useRef<HTMLButtonElement>(null);
+  let inputRef = React.useRef<HTMLInputElement>(null);
   let listBoxRef = React.useRef(null);
-  let popoverRef = React.useRef(null);
+  let popoverRef = React.useRef<HTMLDivElement>(null);
 
   let {
     buttonProps: triggerProps,
