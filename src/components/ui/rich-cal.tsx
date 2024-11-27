@@ -520,7 +520,7 @@ export function getDateControlValue(value: Date | null | undefined) {
   const month = value.getMonth();
   const day = value.getDate();
 
-  return new CalendarDate(year, month, day);
+  return new CalendarDate(year, month + 1, day);
 }
 
 export function getDateControlOnChangeValue(
@@ -528,7 +528,7 @@ export function getDateControlOnChangeValue(
 ) {
   if (value === undefined || value === null) return undefined;
 
-  return new Date(value.year, value.month, value.day);
+  return new Date(value.year, value.month - 1, value.day);
 }
 
 export function CalendarCell({
