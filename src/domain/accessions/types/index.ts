@@ -21,6 +21,7 @@ export type AccessionWorklistDto = {
 
 export type EditableAccessionDto = {
   id: string;
+  notes: string;
   accessionNumber: string;
   status: AccessionStatus;
   organizationId: string | undefined;

@@ -21,6 +21,7 @@ type ConfirmModalProps = {
   onConfirm: () => void;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  isConfirmDisabled?: boolean;
 };
 
 export const ConfirmModal = ({
@@ -32,6 +33,7 @@ export const ConfirmModal = ({
   onConfirm,
   isOpen,
   onOpenChange,
+  isConfirmDisabled,
 }: ConfirmModalProps) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -55,6 +57,7 @@ export const ConfirmModal = ({
               </Button>
               <Button
                 color={confirmationType}
+                isDisabled={isConfirmDisabled}
                 onPress={() => {
                   onConfirm();
                   onClose();

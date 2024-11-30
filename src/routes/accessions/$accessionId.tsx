@@ -1,12 +1,24 @@
 import { ConfirmModal } from "@/components/confirm-modal";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { ManageAttachments } from "@/domain/accession-attachments/components/manage-attachments";
 import { useGetAccessionComment } from "@/domain/accession-comments/apis/get-accession-comments";
 import { ManageAccessionComments } from "@/domain/accession-comments/feature/manage-comments";
 import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
 import AccessionStatusBadge from "@/domain/accessions/components/status-badge";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { Notification } from "@/components/notifications";
+import { Textarea } from "@/components/ui/textarea";
 import { useAbandonAccession } from "@/domain/accessions/apis/abandon-accession";
 import { useSubmitAccession } from "@/domain/accessions/apis/submit-accession";
 import {
@@ -73,6 +85,10 @@ function EditAccessionPage() {
           accessionStatus={accession?.status}
         />
       </div>
+
+      {accession?.status === "Abandoned" ? (
+        <p className="pt-2 text-sm font- semi-bold">{accession.notes}</p>
+      ) : null}
 
       <div className="pt-3 space-y-6">
         <div className="flex items-center justify-center w-full sm:justify-start">
@@ -170,43 +186,100 @@ function AbandonAccession({
     onOpenChange: onDisposeModalOpenChange,
   } = useDisclosure();
 
+  const abandonReasonSchema = z.object({
+    reason: z.string().min(5, "Reason must be at least 5 characters long"),
+  });
+
+  type AbandonReasonForm = z.infer<typeof abandonReasonSchema>;
+
+  const form = useForm<AbandonReasonForm>({
+    resolver: zodResolver(abandonReasonSchema),
+    defaultValues: {
+      reason: "",
+    },
+  });
+
   if (accessionStatus !== "Draft") return null;
+
+  const onSubmit = (values: AbandonReasonForm) => {
+    if (accessionId === undefined) return;
+
+    clearAccessionApi
+      .mutateAsync({ accessionId, reason: values.reason })
+      .then(() => {
+        Notification.success(`Accession ${accessionNumber} abandoned`);
+        onDisposeModalOpenChange();
+        form.reset();
+      })
+      .catch((err) => {
+        const statusCode = err?.response?.status;
+        if (statusCode !== 422) {
+          Notification.error(`Error abandoning accession`);
+          onDisposeModalOpenChange();
+        }
+      });
+  };
 
   return (
     <>
       <Button
         className=""
         variant="outline"
-        onClick={() => onDisposeModalOpen()}
+        onClick={() => {
+          form.reset();
+          onDisposeModalOpen();
+        }}
       >
         Abandon
       </Button>
       <ConfirmModal
-        content={<p>Are you sure you want to abandon this accession?</p>}
+        isConfirmDisabled={!form.formState.isValid}
+        content={
+          <div className="space-y-4">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-2"
+              >
+                <FormField
+                  control={form.control}
+                  name="reason"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required={true}>Reason</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          autoFocus={true}
+                          required={true}
+                          placeholder="Enter reason for abandonment..."
+                          rows={8}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
+          </div>
+        }
         labels={{
           confirm: "Yes",
           cancel: "Cancel",
         }}
         confirmationType="primary"
-        onConfirm={() => {
-          if (accessionId === undefined) return;
-
-          clearAccessionApi
-            .mutateAsync({ accessionId })
-            .then(() => {
-              Notification.success(`Accession ${accessionNumber} abandoned`);
-              onDisposeModalOpen();
-            })
-            .catch((err) => {
-              const statusCode = err?.response?.status;
-              if (statusCode != 422) {
-                Notification.error(`Error abandoning accession`);
-              }
-            });
+        onConfirm={form.handleSubmit(onSubmit)}
+        onCancel={() => {
+          form.reset();
         }}
-        onCancel={() => {}}
         isOpen={disposeModalIsOpen}
-        onOpenChange={onDisposeModalOpenChange}
+        onOpenChange={(open) => {
+          if (!open) {
+            form.reset();
+          }
+          onDisposeModalOpenChange();
+        }}
         title={`Abandon Accession ${accessionNumber}?`}
       />
     </>
@@ -263,7 +336,7 @@ function AccessionDetails({
               <path
                 fill="currentColor"
                 fillRule="evenodd"
-                d="M21.5 8.5c0-1.404 0-2.107-.337-2.611a2 2 0 0 0-.552-.552c-.441-.295-1.034-.332-2.115-.336c.004.291.004.596.004.91V7.25h1a.75.75 0 0 1 0 1.5h-1v1.5h1a.75.75 0 0 1 0 1.5h-1v1.5h1a.75.75 0 0 1 0 1.5h-1v6.5H17V6c0-1.886 0-2.828-.586-3.414C15.828 2 14.886 2 13 2h-2c-1.886 0-2.828 0-3.414.586C7 3.172 7 4.114 7 6v15.25H5.5v-6.5h-1a.75.75 0 0 1 0-1.5h1v-1.5h-1a.75.75 0 0 1 0-1.5h1v-1.5h-1a.75.75 0 0 1 0-1.5h1V5.91c0-.313 0-.618.004-.91c-1.081.005-1.674.042-2.115.337a2 2 0 0 0-.552.552C2.5 6.393 2.5 7.096 2.5 8.5v12.75H2a.75.75 0 0 0 0 1.5h20a.75.75 0 0 0 0-1.5h-.5V8.5ZM12 4.25a.75.75 0 0 1 .75.75v1.25H14a.75.75 0 0 1 0 1.5h-1.25V9a.75.75 0 0 1-1.5 0V7.75H10a.75.75 0 0 1 0-1.5h1.25V5a.75.75 0 0 1 .75-.75ZM9.25 12a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Zm0 3a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75ZM12 18.25a.75.75 0 0 1 .75.75v2.25h-1.5V19a.75.75 0 0 1 .75-.75Z"
+                d="M21.5 8.5c0-1.404 0-2.107-.337-2.611a2 2 0 0 0-.552-.552c-.441-.295-1.034-.332-2.115-.336c.004.291.004.596.004.91V7.25h1a.75.75 0 0 1 0 1.5h-1v1.5h1a.75.75 0 0 1 0 1.5h-1v1.5h1a.75.75 0 0 1 0 1.5h-1v1.5h1a.75.75 0 0 1 0 1.5h-1v1.5h1a.75.75 0 0 1 0 1.5h-1v6.5H17V6c0-1.886 0-2.828-.586-3.414C15.828 2 14.886 2 13 2h-2c-1.886 0-2.828 0-3.414.586C7 3.172 7 4.114 7 6v15.25H5.5v-6.5h-1a.75.75 0 0 1 0-1.5h1v-1.5h-1a.75.75 0 0 1 0-1.5h1v-1.5h-1a.75.75 0 0 1 0-1.5h1V5.91c0-.313 0-.618.004-.91c-1.081.005-1.674.042-2.115.337a2 2 0 0 0-.552.552C2.5 6.393 2.5 7.096 2.5 8.5v12.75H2a.75.75 0 0 0 0 1.5h20a.75.75 0 0 0 0-1.5h-.5V8.5ZM12 4.25a.75.75 0 0 1 .75.75v1.25H14a.75.75 0 0 1 0 1.5h-1.25V9a.75.75 0 0 1-1.5 0V7.75H10a.75.75 0 0 1 0-1.5h1.25V5a.75.75 0 0 1 .75-.75ZM9.25 12a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Zm0 3a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75ZM12 18.25a.75.75 0 0 1 .75.75v2.25h-1.5V19a.75.75 0 0 1 .75-.75Z"
                 clipRule="evenodd"
               />
             </svg>

@@ -1,4 +1,3 @@
-// import { generateSieveSortOrder } from "@/utils/sorting";
 import { peakLimsApi } from "@/services/api-client";
 import {
   UseMutationOptions,
@@ -8,8 +7,13 @@ import {
 import { AxiosError } from "axios";
 import { AccessionKeys } from "./accession.keys";
 
-const abandonAccession = async ({ accessionId }: { accessionId: string }) => {
-  await peakLimsApi.put(`/v1/accessions/${accessionId}/abandon`);
+type AbandonAccessionParams = {
+  accessionId: string;
+  reason: string;
+};
+
+const abandonAccession = async ({ accessionId, reason }: AbandonAccessionParams) => {
+  await peakLimsApi.put(`/v1/accessions/${accessionId}/abandon?reason=${encodeURIComponent(reason)}`);
 };
 
 type MutationContext = {
@@ -20,7 +24,7 @@ export function useAbandonAccession(
   options?: UseMutationOptions<
     void,
     AxiosError,
-    { accessionId: string },
+    AbandonAccessionParams,
     MutationContext
   >
 ) {
@@ -29,11 +33,11 @@ export function useAbandonAccession(
   return useMutation<
     void,
     AxiosError,
-    { accessionId: string },
+    AbandonAccessionParams,
     MutationContext
   >({
-    mutationFn: ({ accessionId }: { accessionId: string }) => {
-      return abandonAccession({ accessionId });
+    mutationFn: ({ accessionId, reason }: AbandonAccessionParams) => {
+      return abandonAccession({ accessionId, reason });
     },
     onMutate: (variables) => {
       // make `data` available for cache key
