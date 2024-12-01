@@ -25,17 +25,16 @@ import {
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useState } from "react";
-import { useAdjustTestOrderDueDate } from "../apis/adjust-test-order-due-date.api";
 import { useMarkTestOrderNormal } from "../apis/mark-test-order-normal.api";
 import { useMarkTestOrderStat } from "../apis/mark-test-order-stat.api";
 import { useRemovePanelOrder } from "../apis/remove-panel-order.api";
 import { PanelOrderStatus, TestOrderStatus } from "../types";
+import { AdjustDueDateModal } from "./adjust-due-date-modal";
 import { CancelModalAction } from "./cancel-test-order-modal";
 import { CancellationInfoButton } from "./cancellation-info-button";
 import { SetSampleForm } from "./set-sample-form";
 import { SetSampleButton, SetSampleModal } from "./set-sample-modal";
 import { PanelOrderStatusBadge, TestOrderStatusBadge } from "./status-badge";
-import { AdjustDueDateModal } from "./adjust-due-date-modal";
 
 type PanelOrder = {
   id: string;
@@ -359,7 +358,6 @@ function TestOrderActionMenu({
 
   const markTestOrderStat = useMarkTestOrderStat();
   const markTestOrderNormal = useMarkTestOrderNormal();
-  const adjustTestOrderDueDate = useAdjustTestOrderDueDate();
 
   const handleMarkStat = async () => {
     try {
@@ -434,15 +432,27 @@ function TestOrderActionMenu({
             </div>
           </NextDropdownItem>
 
-          <NextDropdownItem key="mark stat" className={cn("rounded-md")}>
+          <NextDropdownItem
+            key="mark stat"
+            className={cn(
+              "rounded-md",
+              testOrder.priority === "STAT" && "hidden"
+            )}
+          >
             <div className="flex items-center space-x-3">
               <p>Mark as STAT</p>
             </div>
           </NextDropdownItem>
 
-          <NextDropdownItem key="mark normal" className={cn("rounded-md")}>
+          <NextDropdownItem
+            key="mark normal"
+            className={cn(
+              "rounded-md",
+              testOrder.priority === "Normal" && "hidden"
+            )}
+          >
             <div className="flex items-center space-x-3">
-              <p>Mark as Normal Priority</p>
+              <p>Mark Normal Priority</p>
             </div>
           </NextDropdownItem>
 

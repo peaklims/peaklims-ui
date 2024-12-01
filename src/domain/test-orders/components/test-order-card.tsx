@@ -244,15 +244,27 @@ function TestOrderActionMenu({
             </div>
           </NextDropdownItem>
 
-          <NextDropdownItem key="mark stat" className={cn("rounded-md")}>
+          <NextDropdownItem
+            key="mark stat"
+            className={cn(
+              "rounded-md",
+              testOrder.priority === "STAT" && "hidden"
+            )}
+          >
             <div className="flex items-center space-x-3">
               <p>Mark as STAT</p>
             </div>
           </NextDropdownItem>
 
-          <NextDropdownItem key="mark normal" className={cn("rounded-md")}>
+          <NextDropdownItem
+            key="mark normal"
+            className={cn(
+              "rounded-md",
+              testOrder.priority === "Normal" && "hidden"
+            )}
+          >
             <div className="flex items-center space-x-3">
-              <p>Mark as Normal Priority</p>
+              <p>Mark Normal Priority</p>
             </div>
           </NextDropdownItem>
 
