@@ -57,14 +57,18 @@ export const SetSampleModal = ({
             Set Sample
           </ModalHeader>
           <ModalBody className="px-6 pb-2 overflow-y-auto grow gap-y-5">
-            <SetSampleForm
-              sampleOptions={patientSamplesForDropdown}
-              testOrderId={testOrderId}
-              sampleId={sampleId}
-              afterSubmit={() => {
-                setSetSampleDialogIsOpen(false);
-              }}
-            />
+            {(patientSamplesForDropdown?.length ?? 0) > 0 ? (
+              <SetSampleForm
+                sampleOptions={patientSamplesForDropdown}
+                testOrderId={testOrderId}
+                sampleId={sampleId}
+                afterSubmit={() => {
+                  setSetSampleDialogIsOpen(false);
+                }}
+              />
+            ) : (
+              <div className="pb-4">No samples found for this patient</div>
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>

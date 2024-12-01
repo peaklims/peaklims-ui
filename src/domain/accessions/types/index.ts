@@ -68,7 +68,7 @@ export type TestOrderDto = {
   testCode: string;
   status: string;
   dueDate: Date | null;
-  tat: number | null;
+  priority: "Normal" | "STAT";
   cancellationReason: string | null;
   cancellationComments: string | null;
   isPartOfPanel: boolean;

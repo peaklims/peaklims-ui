@@ -1,3 +1,6 @@
+import { Notification } from "@/components/notifications";
+import { Calendar } from "@/components/svgs";
+import { Stat } from "@/components/svgs/stat";
 import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { cn } from "@/lib/utils";
 import {
@@ -11,6 +14,9 @@ import {
   DropdownTrigger as NextDropdownTrigger,
   useDisclosure,
 } from "@nextui-org/react";
+import { useAdjustTestOrderDueDate } from "../apis/adjust-test-order-due-date.api";
+import { useMarkTestOrderNormal } from "../apis/mark-test-order-normal.api";
+import { useMarkTestOrderStat } from "../apis/mark-test-order-stat.api";
 import { TestOrderStatus } from "../types";
 import { CancelModalAction } from "./cancel-test-order-modal";
 import { CancellationInfoButton } from "./cancellation-info-button";
@@ -25,6 +31,8 @@ type TestOrder = {
   status: string;
   cancellationReason: string | null;
   cancellationComments: string | null;
+  priority: "Normal" | "STAT";
+  dueDate: Date | null;
   sample: {
     id: string | null;
     sampleNumber: string | null;
@@ -42,32 +50,41 @@ export function TestOrderCard({
     <div
       key={testOrder.id}
       className={cn(
-        "flex items-center py-3 pl-1 pr-3 border rounded-lg bg-white"
-        // testOrder.priority === "High" && "border-rose-400"
+        "flex items-center py-3 pl-1 pr-3 border rounded-lg bg-white",
+        testOrder.priority === "STAT" && "border-amber-500"
       )}
     >
       <div className="flex items-start flex-1 pt-4 first:pt-0">
         <div className="flex flex-col w-full pl-2">
           <div className="flex flex-col">
             <div className="flex flex-col">
-              <div className="flex items-center justify-between">
-                <h5 className="flex-1 text-sm font-semibold tracking-tight">
+              <div className="flex items-center flex-1 space-x-2">
+                <h5 className="text-sm font-semibold tracking-tight">
                   {testOrder.testName}
                 </h5>
-                {/* {testOrder.priority === "High" && (
-                      <p className="text-xs font-semibold text-rose-400">
-                        High Priority
-                      </p>
-                    )} */}
+                <p className="block text-xs font-semibold text-gray-400">
+                  [{testOrder.testCode}]
+                </p>
               </div>
-              <p className="inline-flex space-x-2 text-xs font-semibold text-gray-400">
-                <span>[{testOrder.testCode}]</span>
-                {/* {testOrder.priority === "High" && (
-                      <span className="text-xs font-semibold text-rose-400">
-                        High Priority
-                      </span>
-                    )} */}
-              </p>
+
+              <div className="flex flex-row items-center space-x-3">
+                {testOrder?.dueDate !== null &&
+                  testOrder?.dueDate !== undefined && (
+                    <div className="flex items-center space-x-1">
+                      <Calendar className="w-4 h-4 text-slate-500" />
+                      <p className="text-sm">
+                        {testOrder?.dueDate?.toString()}
+                      </p>
+                    </div>
+                  )}
+                {testOrder.priority === "STAT" && (
+                  <div className="flex items-center space-x-1">
+                    <p className="text-xs font-semibold text-amber-500">STAT</p>
+                    <Stat className="w-4 h-4 text-amber-500" />
+                  </div>
+                )}
+              </div>
+
               <div className="flex items-center justify-start pt-2 space-x-3">
                 <TestOrderStatusBadge
                   status={(testOrder.status || "-") as TestOrderStatus}
@@ -145,6 +162,15 @@ function TestOrderActionMenu({
     onOpen: onCancelModalOpen,
     onOpenChange: onCancelModalOpenChange,
   } = useDisclosure();
+  const {
+    isOpen: isAdjustDueDateModalOpen,
+    onOpen: onAdjustDueDateModalOpen,
+    onOpenChange: onAdjustDueDateModalOpenChange,
+  } = useDisclosure();
+
+  const markTestOrderStat = useMarkTestOrderStat();
+  const markTestOrderNormal = useMarkTestOrderNormal();
+  const adjustDueDate = useAdjustTestOrderDueDate();
 
   return (
     <>
@@ -180,6 +206,25 @@ function TestOrderActionMenu({
             if (key === "cancel test order") {
               onCancelModalOpen();
             }
+            if (key === "mark stat") {
+              markTestOrderStat.mutate(testOrderId, {
+                onError: () => {
+                  Notification.error("Failed to mark test order as STAT");
+                },
+              });
+            }
+            if (key === "mark normal") {
+              markTestOrderNormal.mutate(testOrderId, {
+                onError: () => {
+                  Notification.error(
+                    "Failed to mark test order as normal priority"
+                  );
+                },
+              });
+            }
+            if (key === "adjust due date") {
+              onAdjustDueDateModalOpen();
+            }
           }}
         >
           <NextDropdownItem key="set sample" className={cn("rounded-md")}>
@@ -197,6 +242,24 @@ function TestOrderActionMenu({
           >
             <div className="flex items-center space-x-3">
               <p>Cancel Test Order</p>
+            </div>
+          </NextDropdownItem>
+
+          <NextDropdownItem key="mark stat" className={cn("rounded-md")}>
+            <div className="flex items-center space-x-3">
+              <p>Mark as STAT</p>
+            </div>
+          </NextDropdownItem>
+
+          <NextDropdownItem key="mark normal" className={cn("rounded-md")}>
+            <div className="flex items-center space-x-3">
+              <p>Mark as Normal Priority</p>
+            </div>
+          </NextDropdownItem>
+
+          <NextDropdownItem key="adjust due date" className={cn("rounded-md")}>
+            <div className="flex items-center space-x-3">
+              <p>Adjust Due Date</p>
             </div>
           </NextDropdownItem>
         </NextDropdownMenu>

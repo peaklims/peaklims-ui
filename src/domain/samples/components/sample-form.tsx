@@ -26,13 +26,10 @@ import { useEffect, useState } from "react";
 import { sampleTypesDropdown } from "../types/sample-types";
 
 export const sampleFormSchema = z.object({
-  type: z.string().nonempty("Sample type is required"),
-  receivedDate: z
-    .date()
-    .refine((dob) => dob <= new Date(), {
-      message: "Date Received must not be in the future.",
-    })
-    .optional(),
+  type: z.string({ message: "Sample type is required" }),
+  receivedDate: z.date().refine((dob) => dob <= new Date(), {
+    message: "Date Received must not be in the future.",
+  }),
   collectionDate: z
     .date()
     .refine((dob) => dob <= new Date(), {
@@ -41,7 +38,7 @@ export const sampleFormSchema = z.object({
     .optional(),
   externalId: z.string().optional(),
   collectionSite: z.string().optional(),
-  containerId: z.string().optional(),
+  containerId: z.string(),
 });
 
 export const FormMode = ["Add", "Edit"] as const;
@@ -138,6 +135,7 @@ export function SampleForm({
                 <FormControl>
                   <Combobox
                     label={field.name}
+                    autoFocus={true}
                     clearable={true}
                     {...field}
                     inputValue={sampleTypeInputValue}
@@ -188,7 +186,7 @@ export function SampleForm({
                 name="containerId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel required={false}>Container</FormLabel>
+                    <FormLabel required={true}>Container</FormLabel>
                     <FormControl>
                       <Combobox
                         label={field.name}
@@ -230,7 +228,7 @@ export function SampleForm({
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel required={false}>Date Received</FormLabel>
+                      <FormLabel required={true}>Date Received</FormLabel>
                       <FormControl>
                         <RichDatePicker
                           {...field}

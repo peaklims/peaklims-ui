@@ -88,7 +88,7 @@ function OrdersPlaced({
                 {panelsArray.map((panel) => (
                   <PanelOrderCard
                     key={panel.id}
-                    panel={panel}
+                    panel={{ ...panel }}
                     accessionId={accessionId}
                     patientId={patientId}
                   />

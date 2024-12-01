@@ -72,7 +72,7 @@ export function SetSampleForm({
                 <FormLabel required={false}>Sample</FormLabel>
                 <FormControl>
                   <Combobox
-                    autoFocus
+                    autoFocus={true}
                     label={field.name}
                     clearable={true}
                     {...field}

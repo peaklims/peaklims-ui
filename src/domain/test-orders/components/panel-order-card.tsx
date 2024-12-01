@@ -1,4 +1,6 @@
 import { Notification } from "@/components/notifications";
+import { Calendar } from "@/components/svgs";
+import { Stat } from "@/components/svgs/stat";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,6 +25,9 @@ import {
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useState } from "react";
+import { useAdjustTestOrderDueDate } from "../apis/adjust-test-order-due-date.api";
+import { useMarkTestOrderNormal } from "../apis/mark-test-order-normal.api";
+import { useMarkTestOrderStat } from "../apis/mark-test-order-stat.api";
 import { useRemovePanelOrder } from "../apis/remove-panel-order.api";
 import { PanelOrderStatus, TestOrderStatus } from "../types";
 import { CancelModalAction } from "./cancel-test-order-modal";
@@ -53,6 +58,8 @@ type TestOrder = {
     id: string | null;
     sampleNumber: string | null;
   };
+  priority: string;
+  dueDate: Date;
 };
 
 export function PanelOrderCard({
@@ -68,10 +75,17 @@ export function PanelOrderCard({
   const [showPanelTestsId, setShowPanelTestsId] = useState<string | undefined>(
     undefined
   );
+  const hasTestWithStatPriority = panelOrder.tests?.some(
+    (test) => test.priority === "STAT"
+  );
+
   return (
     <div
       key={panelOrder.id}
-      className="flex items-center py-3 pl-1 pr-3 bg-white border rounded-lg"
+      className={cn(
+        "flex items-center py-3 pl-1 pr-3 bg-white border rounded-lg",
+        hasTestWithStatPriority && "border-amber-500"
+      )}
     >
       <div className="flex flex-col w-full">
         <div className="flex items-start justify-between w-full xl:items-center">
@@ -228,19 +242,35 @@ function TestOrderActions({
               <div className="flex flex-col w-full pl-2">
                 <div className="flex flex-col pl-2 border-indigo-600 border-l-3">
                   <div className="flex flex-col">
-                    <div className="flex items-center justify-between">
-                      <h5 className="flex-1 text-sm font-semibold tracking-tight">
+                    <div className="flex items-center flex-1 space-x-2">
+                      <h5 className="text-sm font-semibold tracking-tight">
                         {testOrder.testName}
                       </h5>
-                      {/* {test.priority === "High" && (
-                      <p className="text-xs font-semibold text-rose-400">
-                        High Priority
+                      <p className="block text-xs font-semibold text-gray-400">
+                        [{testOrder.testCode}]
                       </p>
-                    )} */}
                     </div>
-                    <p className="block text-xs font-semibold text-gray-400">
-                      [{testOrder.testCode}]
-                    </p>
+
+                    <div className="flex flex-row items-center space-x-3">
+                      {testOrder?.dueDate !== null &&
+                        testOrder?.dueDate !== undefined && (
+                          <div className="flex items-center space-x-1">
+                            <Calendar className="w-4 h-4 text-slate-500" />
+                            <p className="text-sm">
+                              {testOrder?.dueDate?.toString()}
+                            </p>
+                          </div>
+                        )}
+                      {testOrder.priority === "STAT" && (
+                        <div className="flex items-center space-x-1">
+                          <p className="text-xs font-semibold text-amber-500">
+                            STAT
+                          </p>
+                          <Stat className="w-4 h-4 text-amber-500" />
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex items-center justify-start pt-2 space-x-3">
                       <TestOrderStatusBadge
                         status={(testOrder.status || "-") as TestOrderStatus}
@@ -321,6 +351,32 @@ function TestOrderActionMenu({
     onOpenChange: onCancelModalOpenChange,
   } = useDisclosure();
 
+  const markTestOrderStat = useMarkTestOrderStat();
+  const markTestOrderNormal = useMarkTestOrderNormal();
+  const adjustTestOrderDueDate = useAdjustTestOrderDueDate();
+
+  const handleMarkStat = async () => {
+    try {
+      await markTestOrderStat.mutateAsync(testOrderId);
+      Notification.success("Test order marked as STAT");
+    } catch (error: any) {
+      const statusCode = error?.response?.status;
+      if (statusCode != 422) {
+        Notification.error("Failed to mark test order as STAT");
+      }
+    }
+  };
+
+  const handleMarkNormal = async () => {
+    try {
+      await markTestOrderNormal.mutateAsync(testOrderId);
+      Notification.success("Test order marked as normal priority");
+    } catch (error) {
+      console.error(error);
+      Notification.error("Failed to mark test order as normal priority");
+    }
+  };
+
   return (
     <>
       <NextDropdown>
@@ -355,11 +411,35 @@ function TestOrderActionMenu({
             if (key === "cancel test order") {
               onCancelModalOpen();
             }
+            if (key === "mark stat") {
+              handleMarkStat();
+            }
+            if (key === "mark normal") {
+              handleMarkNormal();
+            }
           }}
         >
           <NextDropdownItem key="set sample" className={cn("rounded-md")}>
             <div className="flex items-center space-x-3">
               <p>Set Sample</p>
+            </div>
+          </NextDropdownItem>
+
+          <NextDropdownItem key="mark stat" className={cn("rounded-md")}>
+            <div className="flex items-center space-x-3">
+              <p>Mark as STAT</p>
+            </div>
+          </NextDropdownItem>
+
+          <NextDropdownItem key="mark normal" className={cn("rounded-md")}>
+            <div className="flex items-center space-x-3">
+              <p>Mark as Normal Priority</p>
+            </div>
+          </NextDropdownItem>
+
+          <NextDropdownItem key="adjust due date" className={cn("rounded-md")}>
+            <div className="flex items-center space-x-3">
+              <p>Adjust Due Date</p>
             </div>
           </NextDropdownItem>
 
