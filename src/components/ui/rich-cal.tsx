@@ -253,7 +253,6 @@ function DatePickerPopover(props: PopoverProps) {
     state
   );
 
-  console.log({ os: props.state });
   return (
     // <Popover
     //   {...props}
