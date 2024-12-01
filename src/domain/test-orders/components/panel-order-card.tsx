@@ -35,6 +35,7 @@ import { CancellationInfoButton } from "./cancellation-info-button";
 import { SetSampleForm } from "./set-sample-form";
 import { SetSampleButton, SetSampleModal } from "./set-sample-modal";
 import { PanelOrderStatusBadge, TestOrderStatusBadge } from "./status-badge";
+import { AdjustDueDateModal } from "./adjust-due-date-modal";
 
 type PanelOrder = {
   id: string;
@@ -350,6 +351,11 @@ function TestOrderActionMenu({
     onOpen: onCancelModalOpen,
     onOpenChange: onCancelModalOpenChange,
   } = useDisclosure();
+  const {
+    isOpen: isAdjustDueDateModalOpen,
+    onOpen: onAdjustDueDateModalOpen,
+    onOpenChange: onAdjustDueDateModalOpenChange,
+  } = useDisclosure();
 
   const markTestOrderStat = useMarkTestOrderStat();
   const markTestOrderNormal = useMarkTestOrderNormal();
@@ -417,6 +423,9 @@ function TestOrderActionMenu({
             if (key === "mark normal") {
               handleMarkNormal();
             }
+            if (key === "adjust due date") {
+              onAdjustDueDateModalOpen();
+            }
           }}
         >
           <NextDropdownItem key="set sample" className={cn("rounded-md")}>
@@ -469,6 +478,15 @@ function TestOrderActionMenu({
         isCancelModalOpen={isCancelModalOpen}
         onCancelModalOpenChange={onCancelModalOpenChange}
         testOrderId={testOrderId}
+      />
+
+      <AdjustDueDateModal
+        isOpen={isAdjustDueDateModalOpen}
+        onOpenChange={onAdjustDueDateModalOpenChange}
+        testOrder={{
+          id: testOrderId,
+          dueDate: testOrder.dueDate,
+        }}
       />
     </>
   );
