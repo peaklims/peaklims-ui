@@ -31,9 +31,9 @@ export function useUpdatePatient(
     mutationFn: ({ id, data: updatedPatient }: UpdateProps) =>
       updatePatient(id, updatedPatient),
     onSuccess: () => {
-      queryClient.invalidateQueries(PatientKeys.lists());
-      queryClient.invalidateQueries(AccessionKeys.forEdits());
-      queryClient.invalidateQueries(PatientKeys.details());
+      queryClient.invalidateQueries({ queryKey: PatientKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: AccessionKeys.forEdits() });
+      queryClient.invalidateQueries({ queryKey: PatientKeys.details() });
       // queryClient.invalidateQueries(PatientKeys.detail(patientId));
     },
     ...options,

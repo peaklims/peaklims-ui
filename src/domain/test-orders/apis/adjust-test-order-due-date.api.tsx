@@ -1,18 +1,27 @@
+import { AccessionKeys } from "@/domain/accessions/apis/accession.keys";
 import { peakLimsApi } from "@/services/api-client";
-import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react-query";
+import { toDateOnly } from "@/utils/dates";
+import {
+  useMutation,
+  UseMutationOptions,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { TestOrderKeys } from "./test-order.keys";
-import { PatientKeys } from "@/domain/patients/apis/patient.keys";
-import { AccessionKeys } from "@/domain/accessions/apis/accession.keys";
 
 interface AdjustDueDateProps {
   testOrderId: string;
-  dueDate: string; // Format: YYYY-MM-DD
+  dueDate: Date;
 }
 
-const adjustTestOrderDueDate = async ({ testOrderId, dueDate }: AdjustDueDateProps) => {
+const adjustTestOrderDueDate = async ({
+  testOrderId,
+  dueDate,
+}: AdjustDueDateProps) => {
   return await peakLimsApi
-    .put(`/v1/testorders/${testOrderId}/duedate`, { dueDate })
+    .put(`/v1/testorders/${testOrderId}/adjustDueDate`, {
+      dueDate: toDateOnly(dueDate),
+    })
     .then((response) => response.data);
 };
 
@@ -24,10 +33,8 @@ export function useAdjustTestOrderDueDate(
   return useMutation({
     mutationFn: (props: AdjustDueDateProps) => adjustTestOrderDueDate(props),
     onSuccess: () => {
-      queryClient.invalidateQueries(PatientKeys.lists());
-      queryClient.invalidateQueries(AccessionKeys.forEdits());
-      queryClient.invalidateQueries(PatientKeys.details());
-      queryClient.invalidateQueries(TestOrderKeys.all);
+      queryClient.invalidateQueries({ queryKey: TestOrderKeys.all });
+      queryClient.invalidateQueries({ queryKey: AccessionKeys.all });
     },
     ...options,
   });
