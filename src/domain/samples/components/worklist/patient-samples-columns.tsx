@@ -162,7 +162,8 @@ export const sampleTableColumns = (
 
       useHotkeys(
         "e",
-        () => {
+        (e) => {
+          e.preventDefault();
           setIsOpen(true);
           setIsDropdownOpen(false);
         },
