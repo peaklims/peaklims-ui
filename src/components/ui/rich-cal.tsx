@@ -609,6 +609,7 @@ export function CalendarCell({
         }}
         ref={ref}
         data-today={isToday(date) ? true : undefined}
+        data-selected={isSelected ? true : undefined}
         className={cn(
           "flex items-center justify-center rounded-full outline-none cursor-default w-9 h-9 hover:bg-slate-100 focus-visible:ring ring-emerald-600/70 ring-offset-2",
           "data-[outside-month]:text-slate-300",
