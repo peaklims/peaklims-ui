@@ -8,6 +8,7 @@ import {
   today,
 } from "@internationalized/date";
 import { isFuture, isToday as isTodayFns } from "date-fns";
+import { DismissButton, usePopover } from "react-aria";
 
 import {
   createCalendar,
@@ -22,7 +23,7 @@ import {
 import { useFocusRing } from "@react-aria/focus";
 import { useLocale } from "@react-aria/i18n";
 import { mergeProps } from "@react-aria/utils";
-import { Ref, forwardRef, useRef, useState } from "react";
+import { Ref, forwardRef, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 import { useDateFormatter } from "@react-aria/i18n";
@@ -45,8 +46,8 @@ import {
   DateSegment,
   Group,
   Label,
-  Popover,
 } from "react-aria-components";
+import { useOverlayTriggerState } from "react-stately";
 
 export const RichDatePicker = forwardRef(function RichDatePicker(
   {
@@ -55,12 +56,14 @@ export const RichDatePicker = forwardRef(function RichDatePicker(
     value,
     onChange,
     srLabel,
+    shouldCloseOnSelect = true,
     ...props
   }: {
     minValue?: DateValue | undefined | "today";
     maxValue?: DateValue | undefined | "today";
     value: CalendarDate | CalendarDateTime | ZonedDateTime | null | undefined;
     srLabel?: string;
+    shouldCloseOnSelect?: boolean;
     onChange: (
       value: CalendarDate | CalendarDateTime | ZonedDateTime | null | undefined
     ) => void;
@@ -89,7 +92,10 @@ export const RichDatePicker = forwardRef(function RichDatePicker(
     state
   );
 
-  const [isOpen, setIsOpen] = useState(false);
+  let overlayState = useOverlayTriggerState(props);
+
+  let buttonRef = React.useRef<HTMLButtonElement>(null);
+  let popoverRef = React.useRef<HTMLDivElement>(null);
 
   return (
     <DatePicker
@@ -97,6 +103,7 @@ export const RichDatePicker = forwardRef(function RichDatePicker(
       value={value}
       onChange={onChange}
       placeholderValue={today(getLocalTimeZone())}
+      shouldCloseOnSelect={shouldCloseOnSelect}
     >
       <Label className="text-white cursor-default sr-only">
         {srLabel ?? "Date"}
@@ -116,53 +123,64 @@ export const RichDatePicker = forwardRef(function RichDatePicker(
           </div>
         )}
         <Button
-          onPress={() => setIsOpen(!isOpen)}
+          onPress={overlayState.toggle}
+          ref={buttonRef}
           className="flex items-center px-2 transition bg-transparent rounded-r-lg outline-none text-slate-700 border-l-emerald-200 pressed:bg-emerald-100 focus-visible:ring-2 ring-emerald-600"
         >
           <CalendarIcon />
         </Button>
       </Group>
-      <DatePickerPopover isOpen={isOpen} onOpenChange={setIsOpen}>
-        <div
-          {...calendarProps}
-          ref={ref}
-          // @ts-ignore
-          minValue={derivedMinValue}
-          maxValue={derivedMaxValue}
-          className="px-4 py-2 text-slate-600"
+
+      {overlayState.isOpen && (
+        <DatePickerPopover
+          popoverRef={popoverRef}
+          triggerRef={buttonRef}
+          state={overlayState}
+          isNonModal
+          placement="bottom end"
+          // className={cn(classNames?.listBox)}
         >
-          <CalendarHeader
-            state={state}
-            calendarProps={calendarProps}
-            prevButtonProps={prevButtonProps}
-            nextButtonProps={nextButtonProps}
-            moveForwardAYear={() =>
-              state.setFocusedDate(state.focusedDate.add({ years: 1 }))
-            }
-            moveBackAYear={() =>
-              state.setFocusedDate(state.focusedDate.add({ years: -1 }))
-            }
-            maxValue={derivedMaxValue}
+          <div
+            {...calendarProps}
+            ref={ref}
+            // @ts-ignore
             minValue={derivedMinValue}
-          />
-          <div className="flex gap-8">
-            <CalendarGrid state={state} setIsOpen={setIsOpen} />
+            maxValue={derivedMaxValue}
+            className="px-4 py-2 text-slate-600"
+          >
+            <CalendarHeader
+              state={state}
+              calendarProps={calendarProps}
+              prevButtonProps={prevButtonProps}
+              nextButtonProps={nextButtonProps}
+              moveForwardAYear={() =>
+                state.setFocusedDate(state.focusedDate.add({ years: 1 }))
+              }
+              moveBackAYear={() =>
+                state.setFocusedDate(state.focusedDate.add({ years: -1 }))
+              }
+              maxValue={derivedMaxValue}
+              minValue={derivedMinValue}
+            />
+            <div className="flex gap-8">
+              <CalendarGrid state={state} setIsOpen={overlayState.setOpen} />
+            </div>
+            <div className="flex items-center justify-center px-3 py-2">
+              <Button
+                onPress={() => {
+                  state.setFocusedDate(today(getLocalTimeZone()));
+                  state.setValue(today(getLocalTimeZone()));
+                }}
+                className={cn(
+                  "text-sm border-0 rounded outline-none text-emerald-600 focus-visible:ring-2 ring-emerald-600 ring-offset-1"
+                )}
+              >
+                Today
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center justify-center px-3 py-2">
-            <Button
-              onPress={() => {
-                state.setFocusedDate(today(getLocalTimeZone()));
-                state.setValue(today(getLocalTimeZone()));
-              }}
-              className={cn(
-                "text-sm border-0 rounded outline-none text-emerald-600 focus-visible:ring-2 ring-emerald-600 ring-offset-1"
-              )}
-            >
-              Today
-            </Button>
-          </div>
-        </div>
-      </DatePickerPopover>
+        </DatePickerPopover>
+      )}
     </DatePicker>
   );
 });
@@ -224,23 +242,49 @@ function toJSDate(date: CalendarDate) {
 }
 
 function DatePickerPopover(props: PopoverProps) {
+  let ref = React.useRef<HTMLDivElement>(null);
+  let { popoverRef = ref, state, children, className, isNonModal } = props;
+
+  let { popoverProps, underlayProps } = usePopover(
+    {
+      ...props,
+      popoverRef,
+    },
+    state
+  );
+
+  console.log({ os: props.state });
   return (
-    <Popover
-      {...props}
-      className={({ isEntering, isExiting }) => `
-        overflow-auto rounded-lg drop-shadow-lg ring-1 ring-black/10 bg-white
-        ${
-          isEntering
-            ? "animate-in fade-in placement-bottom:slide-in-from-top-1 placement-top:slide-in-from-bottom-1 ease-out duration-200"
-            : ""
-        }
-        ${
-          isExiting
-            ? "animate-out fade-out placement-bottom:slide-out-to-top-1 placement-top:slide-out-to-bottom-1 ease-in duration-150"
-            : ""
-        }
-      `}
-    />
+    // <Popover
+    //   {...props}
+    //   ref={ref}
+    //   className={({ isEntering, isExiting }) => `
+    //     overflow-auto rounded-lg drop-shadow-lg ring-1 ring-black/10 bg-white z-500
+    //     ${
+    //       isEntering
+    //         ? "animate-in fade-in placement-bottom:slide-in-from-top-1 placement-top:slide-in-from-bottom-1 ease-out duration-200"
+    //         : ""
+    //     }
+    //     ${
+    //       isExiting
+    //         ? "animate-out fade-out placement-bottom:slide-out-to-top-1 placement-top:slide-out-to-bottom-1 ease-in duration-150"
+    //         : ""
+    //     }
+    //   `}
+    // />
+
+    <>
+      {!isNonModal && <div {...underlayProps} className="fixed inset-0" />}
+      <div
+        {...popoverProps}
+        ref={popoverRef}
+        className={`z-500 mt-2 rounded-md border border-gray-300 bg-white shadow-lg ${className}`}
+      >
+        {!isNonModal && <DismissButton onDismiss={state.close} />}
+        {children}
+        <DismissButton onDismiss={state.close} />
+      </div>
+    </>
   );
 }
 
