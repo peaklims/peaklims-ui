@@ -228,7 +228,13 @@ export const sampleTableColumns = (
             </DropdownMenu>
           </Dropdown>
 
-          <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
+          <Modal
+            isOpen={isOpen}
+            onOpenChange={setIsOpen}
+            classNames={{
+              base: "overflow-y-visible",
+            }}
+          >
             <ModalContent>
               {(onClose) => (
                 <>

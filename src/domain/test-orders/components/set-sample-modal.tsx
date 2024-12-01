@@ -51,12 +51,15 @@ export const SetSampleModal = ({
         size="sm"
         isOpen={SetSampleDialogIsOpen}
         onOpenChange={setSetSampleDialogIsOpen}
+        classNames={{
+          base: "overflow-y-visible",
+        }}
       >
         <ModalContent>
           <ModalHeader className="text-2xl font-semibold scroll-m-20">
             Set Sample
           </ModalHeader>
-          <ModalBody className="px-6 pb-2 overflow-y-auto grow gap-y-5">
+          <ModalBody className="px-6 pb-2 grow gap-y-5">
             {(patientSamplesForDropdown?.length ?? 0) > 0 ? (
               <SetSampleForm
                 sampleOptions={patientSamplesForDropdown}
