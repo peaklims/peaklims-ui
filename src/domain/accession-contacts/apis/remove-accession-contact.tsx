@@ -57,13 +57,13 @@ export function useRemoveAccessionContact(
     },
     onSuccess: (_, __, context: MutationContext | undefined) => {
       if (context) {
-        queryClient.invalidateQueries(AccessionKeys.lists());
-        queryClient.invalidateQueries(
-          AccessionKeys.forEdit(context.accessionId)
-        );
-        queryClient.invalidateQueries(
-          AccessionContactKeys.byAccession(context.accessionId)
-        );
+        queryClient.invalidateQueries({ queryKey: AccessionKeys.lists() });
+        queryClient.invalidateQueries({
+          queryKey: AccessionKeys.forEdit(context.accessionId)
+        });
+        queryClient.invalidateQueries({
+          queryKey: AccessionContactKeys.byAccession(context.accessionId)
+        });
       }
     },
     ...options,

@@ -54,9 +54,9 @@ export function useAddSample(
     },
     onSuccess: (_, __, context: SampleMutationContext | undefined) => {
       if (context) {
-        queryClient.invalidateQueries(SampleKeys.lists());
-        queryClient.invalidateQueries(AccessionKeys.forEdits());
-        queryClient.invalidateQueries(SampleKeys.byPatient(context.patientId));
+        queryClient.invalidateQueries({ queryKey: SampleKeys.lists() });
+        queryClient.invalidateQueries({ queryKey: AccessionKeys.forEdits() });
+        queryClient.invalidateQueries({ queryKey: SampleKeys.byPatient(context.patientId) });
       }
     },
     ...options,

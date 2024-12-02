@@ -33,8 +33,8 @@ export function useAdjustTestOrderDueDate(
   return useMutation({
     mutationFn: (props: AdjustDueDateProps) => adjustTestOrderDueDate(props),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TestOrderKeys.all });
-      queryClient.invalidateQueries({ queryKey: AccessionKeys.all });
+      queryClient.invalidateQueries({ queryKey: TestOrderKeys.all() });
+      queryClient.invalidateQueries({ queryKey: AccessionKeys.all() });
     },
     ...options,
   });

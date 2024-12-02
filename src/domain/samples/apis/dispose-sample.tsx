@@ -37,12 +37,12 @@ export function useDisposeSample(
       return { sampleId, patientId };
     },
     onSuccess: (_, __, context: SampleMutationContext | undefined) => {
-      queryClient.invalidateQueries(SampleKeys.lists());
-      queryClient.invalidateQueries(SampleKeys.details());
-      queryClient.invalidateQueries(AccessionKeys.forEdits());
+      queryClient.invalidateQueries({ queryKey: SampleKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: SampleKeys.details() });
+      queryClient.invalidateQueries({ queryKey: AccessionKeys.forEdits() });
 
-      if (context) {
-        queryClient.invalidateQueries(SampleKeys.byPatient(context.patientId));
+      if (context?.patientId) {
+        queryClient.invalidateQueries({ queryKey: SampleKeys.byPatient(context.patientId) });
       }
     },
     ...options,

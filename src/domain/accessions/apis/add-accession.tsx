@@ -23,7 +23,7 @@ export function useAddAccession(
   return useMutation({
     mutationFn: () => addAccession(),
     onSuccess: () => {
-      queryClient.invalidateQueries(AccessionKeys.lists());
+      queryClient.invalidateQueries({ queryKey: AccessionKeys.lists() });
     },
     ...options,
   });

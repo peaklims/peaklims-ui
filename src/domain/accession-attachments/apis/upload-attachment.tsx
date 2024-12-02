@@ -50,9 +50,7 @@ export const useUploadAccessionAttachment = () => {
     onSettled: (_, __, context: MutationContext | undefined) => {
       if (context && !context.skipQueryInvalidation) {
         queryClient.invalidateQueries({ queryKey: AccessionKeys.lists() });
-        queryClient.invalidateQueries({
-          queryKey: AccessionKeys.forEdit(context.accessionId),
-        });
+        queryClient.invalidateQueries({ queryKey: AccessionKeys.forEdit(context.accessionId) });
       }
     },
   });
@@ -89,10 +87,8 @@ export const useUploadAccessionAttachments = () => {
       },
       onSettled: (_, __, context: MutationContext | undefined) => {
         if (context) {
-          queryClient.invalidateQueries(AccessionKeys.lists());
-          queryClient.invalidateQueries(
-            AccessionKeys.forEdit(context.accessionId)
-          );
+          queryClient.invalidateQueries({ queryKey: AccessionKeys.lists() });
+          queryClient.invalidateQueries({ queryKey: AccessionKeys.forEdit(context.accessionId) });
         }
       },
     }

@@ -40,9 +40,9 @@ export function useAddAccessionComment(
     },
     onSuccess: (_, __, context: CommentMutationContext | undefined) => {
       if (context) {
-        queryClient.invalidateQueries(
-          AccessionCommentKeys.byAccession(context.accessionId!)
-        );
+        queryClient.invalidateQueries({
+          queryKey: AccessionCommentKeys.byAccession(context.accessionId!)
+        });
       }
     },
     ...options,

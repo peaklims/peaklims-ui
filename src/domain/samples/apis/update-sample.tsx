@@ -35,10 +35,10 @@ export function useUpdateSample(
     mutationFn: ({ id, data: updatedSample }: UpdateProps) =>
       updateSample(id, updatedSample),
     onSuccess: () => {
-      queryClient.invalidateQueries(SampleKeys.lists());
-      queryClient.invalidateQueries(AccessionKeys.forEdits());
-      queryClient.invalidateQueries(SampleKeys.details());
-      // queryClient.invalidateQueries(SampleKeys.detail(sampleId));
+      queryClient.invalidateQueries({ queryKey: SampleKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: AccessionKeys.forEdits() });
+      queryClient.invalidateQueries({ queryKey: SampleKeys.details() });
+      // queryClient.invalidateQueries({ queryKey: SampleKeys.detail(sampleId) });
     },
     ...options,
   });
