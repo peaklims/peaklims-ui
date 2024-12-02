@@ -1,3 +1,4 @@
+import { Kbd } from "@/components";
 import { Notification } from "@/components/notifications";
 import { Calendar } from "@/components/svgs";
 import { Stat } from "@/components/svgs/stat";
@@ -14,6 +15,8 @@ import {
   DropdownTrigger as NextDropdownTrigger,
   useDisclosure,
 } from "@nextui-org/react";
+import { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { useMarkTestOrderNormal } from "../apis/mark-test-order-normal.api";
 import { useMarkTestOrderStat } from "../apis/mark-test-order-stat.api";
 import { TestOrderStatus } from "../types";
@@ -170,6 +173,77 @@ function TestOrderActionMenu({
 
   const markTestOrderStat = useMarkTestOrderStat();
   const markTestOrderNormal = useMarkTestOrderNormal();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  useHotkeys(
+    "s",
+    () => {
+      onEditModalOpen();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen,
+    }
+  );
+
+  useHotkeys(
+    "c",
+    () => {
+      onCancelModalOpen();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen && testOrder.status !== "Cancelled",
+    }
+  );
+
+  useHotkeys(
+    "t",
+    () => {
+      markStat();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen && testOrder.priority !== "STAT",
+    }
+  );
+
+  useHotkeys(
+    "n",
+    () => {
+      markNormal();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen && testOrder.priority !== "Normal",
+    }
+  );
+
+  useHotkeys(
+    "d",
+    () => {
+      onAdjustDueDateModalOpen();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen,
+    }
+  );
+
+  function markStat() {
+    return markTestOrderStat.mutate(testOrderId, {
+      onError: () => {
+        Notification.error("Failed to mark test order as STAT");
+      },
+    });
+  }
+  function markNormal() {
+    return markTestOrderNormal.mutate(testOrderId, {
+      onError: () => {
+        Notification.error("Failed to mark test order as normal priority");
+      },
+    });
+  }
 
   return (
     <>
@@ -210,20 +284,10 @@ function TestOrderActionMenu({
               onCancelModalOpen();
             }
             if (key === "mark stat") {
-              markTestOrderStat.mutate(testOrderId, {
-                onError: () => {
-                  Notification.error("Failed to mark test order as STAT");
-                },
-              });
+              markStat();
             }
             if (key === "mark normal") {
-              markTestOrderNormal.mutate(testOrderId, {
-                onError: () => {
-                  Notification.error(
-                    "Failed to mark test order as normal priority"
-                  );
-                },
-              });
+              markNormal();
             }
             if (key === "adjust due date") {
               onAdjustDueDateModalOpen();
@@ -231,8 +295,9 @@ function TestOrderActionMenu({
           }}
         >
           <NextDropdownItem key="set sample" className={cn("rounded-md")}>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-between w-full">
               <p>Set Sample</p>
+              <Kbd command="S" />
             </div>
           </NextDropdownItem>
 
@@ -243,8 +308,9 @@ function TestOrderActionMenu({
               testOrder.status === "Cancelled" && "hidden"
             )}
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-between w-full">
               <p>Cancel Test Order</p>
+              <Kbd command="C" />
             </div>
           </NextDropdownItem>
 
@@ -255,8 +321,9 @@ function TestOrderActionMenu({
               testOrder.priority === "STAT" && "hidden"
             )}
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-between w-full">
               <p>Mark as STAT</p>
+              <Kbd command="T" />
             </div>
           </NextDropdownItem>
 
@@ -267,14 +334,16 @@ function TestOrderActionMenu({
               testOrder.priority === "Normal" && "hidden"
             )}
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-between w-full">
               <p>Mark Normal Priority</p>
+              <Kbd command="N" />
             </div>
           </NextDropdownItem>
 
           <NextDropdownItem key="adjust due date" className={cn("rounded-md")}>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-between w-full">
               <p>Adjust Due Date</p>
+              <Kbd command="D" />
             </div>
           </NextDropdownItem>
         </NextDropdownMenu>
@@ -326,7 +395,13 @@ function SetSampleModalAction({
   });
 
   return (
-    <Modal isOpen={isEditModalOpen} onOpenChange={onEditModalOpenChange}>
+    <Modal
+      isOpen={isEditModalOpen}
+      onOpenChange={onEditModalOpenChange}
+      classNames={{
+        base: "overflow-y-visible",
+      }}
+    >
       <ModalContent>
         {(onClose) => (
           <>
@@ -334,7 +409,7 @@ function SetSampleModalAction({
               Set Sample
             </ModalHeader>
 
-            <ModalBody className="px-6 pb-2 overflow-y-auto grow gap-y-5">
+            <ModalBody className="px-6 pb-2 grow gap-y-5">
               <SetSampleForm
                 sampleOptions={patientSamplesForDropdown}
                 testOrderId={testOrderId}
