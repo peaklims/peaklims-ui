@@ -125,7 +125,7 @@ export function PanelOrderCard({
             </h4>
           </button>
 
-          <NextDropdown>
+          <NextDropdown placement="bottom-end">
             <NextDropdownTrigger>
               <Button
                 className={cn(
@@ -376,7 +376,7 @@ function TestOrderActionMenu({
 
   return (
     <>
-      <NextDropdown>
+      <NextDropdown placement="bottom-start">
         <NextDropdownTrigger>
           <button
             className={cn(
