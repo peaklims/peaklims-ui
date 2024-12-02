@@ -376,7 +376,11 @@ function TestOrderActionMenu({
 
   return (
     <>
-      <NextDropdown placement="bottom-start">
+      <NextDropdown
+        isOpen={isDropdownOpen}
+        onOpenChange={setIsDropdownOpen}
+        placement="bottom-start"
+      >
         <NextDropdownTrigger>
           <button
             className={cn(
