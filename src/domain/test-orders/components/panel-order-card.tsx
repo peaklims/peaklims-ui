@@ -1,14 +1,8 @@
+import { Kbd } from "@/components";
 import { Notification } from "@/components/notifications";
 import { Calendar } from "@/components/svgs";
 import { Stat } from "@/components/svgs/stat";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { cn } from "@/lib/utils";
 import {
@@ -25,6 +19,7 @@ import {
 import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { useMarkTestOrderNormal } from "../apis/mark-test-order-normal.api";
 import { useMarkTestOrderStat } from "../apis/mark-test-order-stat.api";
 import { useRemovePanelOrder } from "../apis/remove-panel-order.api";
@@ -78,6 +73,46 @@ export function PanelOrderCard({
   const hasTestWithStatPriority = panelOrder.tests?.some(
     (test) => test.priority === "STAT"
   );
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  useHotkeys(
+    "r",
+    (e) => {
+      e.preventDefault();
+      handleRemovePanelOrder();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen,
+    }
+  );
+
+  useHotkeys(
+    "c",
+    (e) => {
+      e.preventDefault();
+      handleCancelPanelOrder();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen,
+    }
+  );
+
+  function handleRemovePanelOrder() {
+    removePanelOrderApi
+      .mutateAsync({
+        accessionId: accessionId,
+        panelOrderId: panelOrder.panelOrderId,
+      })
+      .catch((e) => {
+        Notification.error("There was an error removing the Panel");
+        console.error(e);
+      });
+  }
+
+  function handleCancelPanelOrder() {
+    alert(`Cancel Panel Order ${panelOrder.id}`);
+  }
 
   return (
     <div
@@ -125,7 +160,11 @@ export function PanelOrderCard({
             </h4>
           </button>
 
-          <NextDropdown placement="bottom-end">
+          <NextDropdown
+            isOpen={isDropdownOpen}
+            onOpenChange={setIsDropdownOpen}
+            placement="bottom-end"
+          >
             <NextDropdownTrigger>
               <Button
                 className={cn(
@@ -151,36 +190,31 @@ export function PanelOrderCard({
               aria-label="Panel Actions"
               onAction={(key) => {
                 if (key === "remove") {
-                  removePanelOrderApi
-                    .mutateAsync({
-                      accessionId: accessionId,
-                      panelOrderId: panelOrder.panelOrderId,
-                    })
-                    .catch((e) => {
-                      Notification.error(
-                        "There was an error removing the Panel"
-                      );
-                      console.error(e);
-                    });
+                  handleRemovePanelOrder();
                 }
                 if (key === "cancel") {
-                  alert(`Cancel Panel Order ${panelOrder.id}`);
+                  handleCancelPanelOrder();
                 }
               }}
             >
               <NextDropdownItem key="remove" className="rounded-md">
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center justify-between w-full">
                   <p>Remove</p>
+                  <Kbd command="R" />
                 </div>
               </NextDropdownItem>
 
-              <NextDropdownItem key="cancel" className={cn(
-                "rounded-md",
-                "text-rose-500 hover:text-rose-700",
-                "dark:text-rose-400 dark:hover:text-rose-300"
-              )}>
-                <div className="flex items-center space-x-3">
+              <NextDropdownItem
+                key="cancel"
+                className={cn(
+                  "rounded-md",
+                  "text-rose-500 hover:text-rose-700",
+                  "dark:text-rose-400 dark:hover:text-rose-300"
+                )}
+              >
+                <div className="flex items-center justify-between w-full">
                   <p>Cancel Order</p>
+                  <Kbd command="C" />
                 </div>
               </NextDropdownItem>
             </NextDropdownMenu>
@@ -352,6 +386,68 @@ function TestOrderActionMenu({
   const markTestOrderStat = useMarkTestOrderStat();
   const markTestOrderNormal = useMarkTestOrderNormal();
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  useHotkeys(
+    "s",
+    (e) => {
+      e.preventDefault();
+      onEditModalOpen();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen,
+    }
+  );
+
+  useHotkeys(
+    "c",
+    (e) => {
+      e.preventDefault();
+      onCancelModalOpen();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen,
+    }
+  );
+
+  useHotkeys(
+    "t",
+    (e) => {
+      e.preventDefault();
+      handleMarkStat();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen && testOrder.priority !== "STAT",
+    }
+  );
+
+  useHotkeys(
+    "n",
+    (e) => {
+      e.preventDefault();
+      handleMarkNormal();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen && testOrder.priority !== "Normal",
+    }
+  );
+
+  useHotkeys(
+    "d",
+    (e) => {
+      e.preventDefault();
+      onAdjustDueDateModalOpen();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen,
+    }
+  );
+
   const handleMarkStat = async () => {
     try {
       await markTestOrderStat.mutateAsync(testOrderId);
@@ -404,7 +500,7 @@ function TestOrderActionMenu({
           </button>
         </NextDropdownTrigger>
         <NextDropdownMenu
-          aria-label="Actions"
+          aria-label="Test Actions"
           onAction={(key) => {
             if (key === "set sample") {
               onEditModalOpen();
@@ -423,9 +519,10 @@ function TestOrderActionMenu({
             }
           }}
         >
-          <NextDropdownItem key="set sample" className={cn("rounded-md")}>
-            <div className="flex items-center space-x-3">
+          <NextDropdownItem key="set sample" className="rounded-md">
+            <div className="flex items-center justify-between w-full">
               <p>Set Sample</p>
+              <Kbd command="S" />
             </div>
           </NextDropdownItem>
 
@@ -436,8 +533,9 @@ function TestOrderActionMenu({
               testOrder.priority === "STAT" && "hidden"
             )}
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-between w-full">
               <p>Mark as STAT</p>
+              <Kbd command="T" />
             </div>
           </NextDropdownItem>
 
@@ -448,14 +546,16 @@ function TestOrderActionMenu({
               testOrder.priority === "Normal" && "hidden"
             )}
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-between w-full">
               <p>Mark Normal Priority</p>
+              <Kbd command="N" />
             </div>
           </NextDropdownItem>
 
-          <NextDropdownItem key="adjust due date" className={cn("rounded-md")}>
-            <div className="flex items-center space-x-3">
+          <NextDropdownItem key="adjust due date" className="rounded-md">
+            <div className="flex items-center justify-between w-full">
               <p>Adjust Due Date</p>
+              <Kbd command="D" />
             </div>
           </NextDropdownItem>
 
@@ -466,8 +566,9 @@ function TestOrderActionMenu({
               testOrder.status === "Cancelled" && "hidden"
             )}
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-between w-full">
               <p>Cancel Test Order</p>
+              <Kbd command="C" />
             </div>
           </NextDropdownItem>
         </NextDropdownMenu>
@@ -519,7 +620,13 @@ function SetSampleModalAction({
   });
 
   return (
-    <Modal isOpen={isEditModalOpen} onOpenChange={onEditModalOpenChange}>
+    <Modal
+      isOpen={isEditModalOpen}
+      onOpenChange={onEditModalOpenChange}
+      classNames={{
+        base: "overflow-y-visible",
+      }}
+    >
       <ModalContent>
         {(onClose) => (
           <>
