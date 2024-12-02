@@ -25,6 +25,7 @@ import { useMarkTestOrderStat } from "../apis/mark-test-order-stat.api";
 import { useRemovePanelOrder } from "../apis/remove-panel-order.api";
 import { PanelOrderStatus, TestOrderStatus } from "../types";
 import { AdjustDueDateModal } from "./adjust-due-date-modal";
+import { CancelPanelOrderModal } from "./cancel-panel-order-modal";
 import { CancelModalAction } from "./cancel-test-order-modal";
 import { CancellationInfoButton } from "./cancellation-info-button";
 import { SetSampleForm } from "./set-sample-form";
@@ -36,6 +37,8 @@ type PanelOrder = {
   panelCode: string;
   panelName: string;
   panelOrderId: string;
+  cancellationReason: string | null;
+  cancellationComments: string | null;
   status: string;
   type: string;
   version: number;
@@ -111,8 +114,10 @@ export function PanelOrderCard({
   }
 
   function handleCancelPanelOrder() {
-    alert(`Cancel Panel Order ${panelOrder.id}`);
+    setIsCancelModalOpen(true);
   }
+
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   return (
     <div
@@ -151,10 +156,20 @@ export function PanelOrderCard({
                 <p className="block font-semibold text-gray-400 text-2xs">
                   [{panelOrder.panelCode}]
                 </p>
-                <div className="flex items-start pt-2">
+
+                <div className="flex items-center justify-start pt-2 space-x-3" onClick={(e) => e.stopPropagation()}>
                   <PanelOrderStatusBadge
                     status={(panelOrder?.status || "-") as PanelOrderStatus}
                   />
+
+                  {panelOrder.status === "Cancelled" && (
+                    <CancellationInfoButton
+                      cancellationReason={panelOrder.cancellationReason ?? ""}
+                      cancellationComments={
+                        panelOrder.cancellationComments ?? ""
+                      }
+                    />
+                  )}
                 </div>
               </div>
             </h4>
@@ -220,6 +235,11 @@ export function PanelOrderCard({
             </NextDropdownMenu>
           </NextDropdown>
         </div>
+        <CancelPanelOrderModal
+          isCancelModalOpen={isCancelModalOpen}
+          onCancelModalOpenChange={setIsCancelModalOpen}
+          panelOrderId={panelOrder.id}
+        />
         {showPanelTestsId && (
           <TestOrderActions
             panelOrder={panelOrder}
@@ -241,12 +261,18 @@ function TestOrderActions({
   showPanelTestsId: string | undefined;
   patientId: string;
 }) {
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const detailSectionVariants = {
     open: { opacity: 1, height: "100%" },
     closed: { opacity: 0, height: "0%" },
   };
   return (
     <div className="pt-2">
+      <CancelPanelOrderModal
+        isCancelModalOpen={isCancelModalOpen}
+        onCancelModalOpenChange={setIsCancelModalOpen}
+        panelOrderId={panelOrder.id}
+      />
       {panelOrder.id === showPanelTestsId &&
         panelOrder.tests?.map((testOrder, k) => {
           return (

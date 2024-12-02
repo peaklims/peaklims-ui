@@ -64,6 +64,8 @@ export type TestOrderDto = {
     version: number;
     status: string;
     panelOrderId: string;
+    cancellationReason: string | null;
+    cancellationComments: string | null;
   };
   testCode: string;
   status: string;
