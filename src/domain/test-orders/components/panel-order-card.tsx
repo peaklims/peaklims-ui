@@ -1,15 +1,12 @@
 import { Kbd } from "@/components";
 import { Notification } from "@/components/notifications";
 import { Calendar } from "@/components/svgs";
+import { ExclamationCircle } from "@/components/svgs/exclamation-circle";
 import { Stat } from "@/components/svgs/stat";
 import { Button } from "@/components/ui/button";
-import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
+import { SetSampleModal } from "@/domain/samples/components/set-sample-modal-action";
 import { cn } from "@/lib/utils";
 import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
   Dropdown as NextDropdown,
   DropdownItem as NextDropdownItem,
   DropdownMenu as NextDropdownMenu,
@@ -28,8 +25,7 @@ import { AdjustDueDateModal } from "./adjust-due-date-modal";
 import { CancelPanelOrderModal } from "./cancel-panel-order-modal";
 import { CancelModalAction } from "./cancel-test-order-modal";
 import { CancellationInfoButton } from "./cancellation-info-button";
-import { SetSampleForm } from "./set-sample-form";
-import { SetSampleButton, SetSampleModal } from "./set-sample-modal";
+import { SetSampleButton } from "./set-sample-modal";
 import { PanelOrderStatusBadge, TestOrderStatusBadge } from "./status-badge";
 
 type PanelOrder = {
@@ -157,7 +153,10 @@ export function PanelOrderCard({
                   [{panelOrder.panelCode}]
                 </p>
 
-                <div className="flex items-center justify-start pt-2 space-x-3" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="flex items-center justify-start pt-2 space-x-3"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <PanelOrderStatusBadge
                     status={(panelOrder?.status || "-") as PanelOrderStatus}
                   />
@@ -354,18 +353,7 @@ function TestOrderActions({
                             {(testOrder?.sample?.sampleNumber?.length ?? 0) <=
                               0 && (
                               <div className="pl-2">
-                                <svg
-                                  width="512"
-                                  height="512"
-                                  viewBox="0 0 20 20"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="w-4 h-4 text-rose-500"
-                                >
-                                  <path
-                                    fill="currentColor"
-                                    d="M10 2c4.42 0 8 3.58 8 8s-3.58 8-8 8s-8-3.58-8-8s3.58-8 8-8m1.13 9.38l.35-6.46H8.52l.35 6.46zm-.09 3.36c.24-.23.37-.55.37-.96c0-.42-.12-.74-.36-.97s-.59-.35-1.06-.35s-.82.12-1.07.35s-.37.55-.37.97c0 .41.13.73.38.96c.26.23.61.34 1.06.34s.8-.11 1.05-.34"
-                                  />
-                                </svg>
+                                <ExclamationCircle className="w-4 h-4 text-rose-500" />
                               </div>
                             )}
                           </>
@@ -600,7 +588,7 @@ function TestOrderActionMenu({
         </NextDropdownMenu>
       </NextDropdown>
 
-      <SetSampleModalAction
+      <SetSampleModal
         isEditModalOpen={isEditModalOpen}
         onEditModalOpenChange={onEditModalOpenChange}
         testOrderId={testOrderId}
@@ -623,56 +611,5 @@ function TestOrderActionMenu({
         }}
       />
     </>
-  );
-}
-
-function SetSampleModalAction({
-  isEditModalOpen,
-  onEditModalOpenChange,
-  testOrderId,
-  sampleId,
-  patientId,
-}: {
-  isEditModalOpen: boolean;
-  onEditModalOpenChange: (isOpen: boolean) => void;
-  testOrderId: string;
-  sampleId: string | null;
-  patientId: string | null;
-}) {
-  const { data } = useGetPatientSamples({ patientId });
-  const patientSamples = data ?? [];
-  const patientSamplesForDropdown = patientSamples.map((sample) => {
-    return { value: sample.id, label: sample.sampleNumber };
-  });
-
-  return (
-    <Modal
-      isOpen={isEditModalOpen}
-      onOpenChange={onEditModalOpenChange}
-      classNames={{
-        base: "overflow-y-visible",
-      }}
-    >
-      <ModalContent>
-        {(onClose) => (
-          <>
-            <ModalHeader className="flex flex-col gap-1">
-              Set Sample
-            </ModalHeader>
-
-            <ModalBody className="px-6 pb-2 overflow-y-auto grow gap-y-5">
-              <SetSampleForm
-                sampleOptions={patientSamplesForDropdown}
-                testOrderId={testOrderId}
-                sampleId={sampleId}
-                afterSubmit={() => {
-                  onClose();
-                }}
-              />
-            </ModalBody>
-          </>
-        )}
-      </ModalContent>
-    </Modal>
   );
 }
