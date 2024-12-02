@@ -376,7 +376,7 @@ function TestOrderActions({
                 patientId={patientId}
                 classNames={{
                   // adding because motion has a weird effect on the backdrop for the test order modal under panel orders
-                  backdrop: "bg-slate-500 bg-opacity-25",
+                  backdrop: "bg-slate-500 bg-opacity-15",
                 }}
               />
             </div>
