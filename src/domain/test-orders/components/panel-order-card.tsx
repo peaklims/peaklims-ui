@@ -279,7 +279,7 @@ function TestOrderActions({
       {panelOrder.id === showPanelTestsId &&
         panelOrder.tests?.map((testOrder, k) => {
           return (
-            <div key={k} className="">
+            <div key={k} className="flex items-center pt-4 first:pt-0">
               <motion.div
                 className="flex items-center pt-4 first:pt-0"
                 key={k}
@@ -295,7 +295,7 @@ function TestOrderActions({
                 />
 
                 <div className="flex flex-col w-full pl-2">
-                  <div className="flex flex-col pl-2 border-emerald-500 border-l-3">
+                  <div className="flex flex-col pl-2 border-violet-500 border-l-3">
                     <div className="flex flex-col">
                       <div className="flex flex-col">
                         <div className="flex items-center flex-1 space-x-2">
@@ -375,7 +375,8 @@ function TestOrderActions({
                 sampleId={testOrder?.sample?.id}
                 patientId={patientId}
                 classNames={{
-                  backdrop: "bg-slate-900 bg-opacity-50",
+                  // adding because motion has a weird effect on the backdrop for the test order modal under panel orders
+                  backdrop: "bg-slate-500 bg-opacity-25",
                 }}
               />
             </div>

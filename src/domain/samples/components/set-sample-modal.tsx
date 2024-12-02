@@ -33,9 +33,7 @@ export function SetSampleModal({
       onOpenChange={onEditModalOpenChange}
       classNames={{
         base: cn("overflow-y-visible", classNames?.base),
-
-        // adding because motion has a weird effect on the backdrop for the test order modal under panel orders
-        backdrop: cn("bg-slate-900 bg-opacity-50", classNames?.backdrop),
+        backdrop: cn(classNames?.backdrop),
       }}
     >
       <ModalContent>

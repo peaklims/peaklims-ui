@@ -118,7 +118,7 @@ module.exports = {
         light: {
           layout: {}, // light theme layout tokens
           colors: {
-            overlay: colors.slate[900],
+            overlay: colors.slate[600],
             primary: {
               DEFAULT: colors.emerald[500],
               "50": colors.emerald[50],
