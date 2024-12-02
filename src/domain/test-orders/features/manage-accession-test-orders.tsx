@@ -82,6 +82,7 @@ function OrdersPlaced({
                         key={testOrder.id}
                         test={testOrder}
                         patientId={patientId}
+                        accessionId={accessionId}
                       />
                     );
                   })}

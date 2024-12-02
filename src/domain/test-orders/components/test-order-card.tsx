@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useMarkTestOrderNormal } from "../apis/mark-test-order-normal.api";
 import { useMarkTestOrderStat } from "../apis/mark-test-order-stat.api";
+import { useRemoveTestOrder } from "../apis/remove-test-order.api";
 import { TestOrderStatus } from "../types";
 import { AdjustDueDateModal } from "./adjust-due-date-modal";
 import { CancelModalAction } from "./cancel-test-order-modal";
@@ -45,9 +46,11 @@ type TestOrder = {
 export function TestOrderCard({
   test: testOrder,
   patientId,
+  accessionId,
 }: {
   patientId: string;
   test: TestOrder;
+  accessionId: string;
 }) {
   return (
     <div
@@ -138,6 +141,7 @@ export function TestOrderCard({
           sampleId={testOrder.sample.id}
           patientId={patientId}
           testOrder={testOrder}
+          accessionId={accessionId}
         />
       </div>
     </div>
@@ -149,11 +153,13 @@ function TestOrderActionMenu({
   testOrderId,
   patientId,
   testOrder,
+  accessionId,
 }: {
   sampleId: string | null;
   testOrderId: string;
   patientId: string | null;
   testOrder: TestOrder;
+  accessionId: string;
 }) {
   const {
     isOpen: isEditModalOpen,
@@ -173,6 +179,7 @@ function TestOrderActionMenu({
 
   const markTestOrderStat = useMarkTestOrderStat();
   const markTestOrderNormal = useMarkTestOrderNormal();
+  const removeTestOrder = useRemoveTestOrder();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useHotkeys(
@@ -230,6 +237,17 @@ function TestOrderActionMenu({
     }
   );
 
+  useHotkeys(
+    "r",
+    () => {
+      handleRemoveTestOrder();
+      setIsDropdownOpen(false);
+    },
+    {
+      enabled: isDropdownOpen,
+    }
+  );
+
   function markStat() {
     return markTestOrderStat.mutate(testOrderId, {
       onError: () => {
@@ -243,6 +261,19 @@ function TestOrderActionMenu({
         Notification.error("Failed to mark test order as normal priority");
       },
     });
+  }
+
+  function handleRemoveTestOrder() {
+    if (!testOrder.id) return;
+
+    return removeTestOrder.mutate(
+      { testOrderId: testOrder.id, accessionId },
+      {
+        onError: () => {
+          Notification.error("Failed to remove test order");
+        },
+      }
+    );
   }
 
   return (
@@ -291,6 +322,9 @@ function TestOrderActionMenu({
             }
             if (key === "adjust due date") {
               onAdjustDueDateModalOpen();
+            }
+            if (key === "remove") {
+              handleRemoveTestOrder();
             }
           }}
         >
@@ -344,6 +378,13 @@ function TestOrderActionMenu({
             <div className="flex items-center justify-between w-full">
               <p>Adjust Due Date</p>
               <Kbd command="D" />
+            </div>
+          </NextDropdownItem>
+
+          <NextDropdownItem key="remove" onClick={handleRemoveTestOrder}>
+            <div className="flex items-center justify-between w-full">
+              <p>Remove Test Order</p>
+              <Kbd command="R" />
             </div>
           </NextDropdownItem>
         </NextDropdownMenu>

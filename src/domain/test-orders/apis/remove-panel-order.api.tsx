@@ -51,7 +51,7 @@ export function useRemovePanelOrder(
     },
     onSuccess: (_, __, context: MutationContext | undefined) => {
       if (context) {
-        queryClient.invalidateQueries(AccessionKeys.forEdits());
+        queryClient.invalidateQueries({ queryKey: AccessionKeys.forEdits() });
       }
     },
     ...options,
