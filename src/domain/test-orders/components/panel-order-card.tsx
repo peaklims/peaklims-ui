@@ -4,7 +4,7 @@ import { Calendar } from "@/components/svgs";
 import { ExclamationCircle } from "@/components/svgs/exclamation-circle";
 import { Stat } from "@/components/svgs/stat";
 import { Button } from "@/components/ui/button";
-import { SetSampleModal } from "@/domain/samples/components/set-sample-modal-action";
+import { SetSampleModal } from "@/domain/samples/components/set-sample-modal";
 import { cn } from "@/lib/utils";
 import {
   Dropdown as NextDropdown,
@@ -25,7 +25,6 @@ import { AdjustDueDateModal } from "./adjust-due-date-modal";
 import { CancelPanelOrderModal } from "./cancel-panel-order-modal";
 import { CancelModalAction } from "./cancel-test-order-modal";
 import { CancellationInfoButton } from "./cancellation-info-button";
-import { SetSampleButton } from "./set-sample-modal";
 import { PanelOrderStatusBadge, TestOrderStatusBadge } from "./status-badge";
 
 type PanelOrder = {
@@ -265,6 +264,11 @@ function TestOrderActions({
     open: { opacity: 1, height: "100%" },
     closed: { opacity: 0, height: "0%" },
   };
+  const {
+    isOpen: isEditModalOpen,
+    onOpen: onEditModalOpen,
+    onOpenChange: onEditModalOpenChange,
+  } = useDisclosure();
   return (
     <div className="pt-2">
       <CancelPanelOrderModal
@@ -275,76 +279,76 @@ function TestOrderActions({
       {panelOrder.id === showPanelTestsId &&
         panelOrder.tests?.map((testOrder, k) => {
           return (
-            <motion.div
-              className="flex items-center pt-4 first:pt-0"
-              key={k}
-              variants={detailSectionVariants}
-              initial="closed"
-              animate={panelOrder.id === showPanelTestsId ? "open" : "closed"}
-            >
-              <TestOrderActionMenu
-                testOrderId={testOrder.id}
-                sampleId={testOrder.sample.id}
-                patientId={patientId}
-                testOrder={testOrder}
-              />
+            <div key={k} className="">
+              <motion.div
+                className="flex items-center pt-4 first:pt-0"
+                key={k}
+                variants={detailSectionVariants}
+                initial="closed"
+                animate={panelOrder.id === showPanelTestsId ? "open" : "closed"}
+              >
+                <TestOrderActionMenu
+                  testOrderId={testOrder.id}
+                  sampleId={testOrder.sample.id}
+                  patientId={patientId}
+                  testOrder={testOrder}
+                />
 
-              <div className="flex flex-col w-full pl-2">
-                <div className="flex flex-col pl-2 border-indigo-600 border-l-3">
-                  <div className="flex flex-col">
+                <div className="flex flex-col w-full pl-2">
+                  <div className="flex flex-col pl-2 border-emerald-500 border-l-3">
                     <div className="flex flex-col">
-                      <div className="flex items-center flex-1 space-x-2">
-                        <h5 className="text-sm font-semibold tracking-tight">
-                          {testOrder.testName}
-                        </h5>
-                        <p className="block text-xs font-semibold text-gray-400">
-                          [{testOrder.testCode}]
-                        </p>
-                      </div>
+                      <div className="flex flex-col">
+                        <div className="flex items-center flex-1 space-x-2">
+                          <h5 className="text-sm font-semibold tracking-tight">
+                            {testOrder.testName}
+                          </h5>
+                          <p className="block text-xs font-semibold text-gray-400">
+                            [{testOrder.testCode}]
+                          </p>
+                        </div>
 
-                      <div className="flex flex-row items-center space-x-3">
-                        {testOrder?.dueDate !== null &&
-                          testOrder?.dueDate !== undefined && (
+                        <div className="flex flex-row items-center space-x-3">
+                          {testOrder?.dueDate !== null &&
+                            testOrder?.dueDate !== undefined && (
+                              <div className="flex items-center space-x-1">
+                                <Calendar className="w-4 h-4 text-slate-500" />
+                                <p className="text-sm">
+                                  {testOrder?.dueDate?.toString()}
+                                </p>
+                              </div>
+                            )}
+                          {testOrder.priority === "STAT" && (
                             <div className="flex items-center space-x-1">
-                              <Calendar className="w-4 h-4 text-slate-500" />
-                              <p className="text-sm">
-                                {testOrder?.dueDate?.toString()}
+                              <p className="text-xs font-semibold text-amber-500">
+                                STAT
                               </p>
+                              <Stat className="w-4 h-4 text-amber-500" />
                             </div>
                           )}
-                        {testOrder.priority === "STAT" && (
-                          <div className="flex items-center space-x-1">
-                            <p className="text-xs font-semibold text-amber-500">
-                              STAT
-                            </p>
-                            <Stat className="w-4 h-4 text-amber-500" />
-                          </div>
-                        )}
-                      </div>
+                        </div>
 
-                      <div className="flex items-center justify-start pt-2 space-x-3">
-                        <TestOrderStatusBadge
-                          status={(testOrder.status || "-") as TestOrderStatus}
-                        />
-                        {testOrder.status === "Cancelled" && (
-                          <CancellationInfoButton
-                            cancellationReason={
-                              testOrder.cancellationReason ?? ""
-                            }
-                            cancellationComments={
-                              testOrder.cancellationComments ?? ""
+                        <div className="flex items-center justify-start pt-2 space-x-3">
+                          <TestOrderStatusBadge
+                            status={
+                              (testOrder.status || "-") as TestOrderStatus
                             }
                           />
-                        )}
-                      </div>
+                          {testOrder.status === "Cancelled" && (
+                            <CancellationInfoButton
+                              cancellationReason={
+                                testOrder.cancellationReason ?? ""
+                              }
+                              cancellationComments={
+                                testOrder.cancellationComments ?? ""
+                              }
+                            />
+                          )}
+                        </div>
 
-                      <SetSampleModal
-                        testOrderId={testOrder.id}
-                        sampleId={testOrder.sample.id}
-                        testName={testOrder.testName}
-                        patientId={patientId}
-                      >
-                        <SetSampleButton className="inline-flex items-center pt-2 group">
+                        <button
+                          onClick={onEditModalOpen}
+                          className="inline-flex items-center pt-2 group"
+                        >
                           <>
                             <p className="text-xs font-medium transition-colors group-hover:text-slate-500">
                               {testOrder.sample.sampleNumber ||
@@ -357,13 +361,24 @@ function TestOrderActions({
                               </div>
                             )}
                           </>
-                        </SetSampleButton>
-                      </SetSampleModal>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+
+              <SetSampleModal
+                isEditModalOpen={isEditModalOpen}
+                onEditModalOpenChange={onEditModalOpenChange}
+                testOrderId={testOrder.id}
+                sampleId={testOrder?.sample?.id}
+                patientId={patientId}
+                classNames={{
+                  backdrop: "bg-slate-900 bg-opacity-50",
+                }}
+              />
+            </div>
           );
         })}
     </div>

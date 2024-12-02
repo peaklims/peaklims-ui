@@ -3,7 +3,7 @@ import { Notification } from "@/components/notifications";
 import { Calendar } from "@/components/svgs";
 import { ExclamationCircle } from "@/components/svgs/exclamation-circle";
 import { Stat } from "@/components/svgs/stat";
-import { SetSampleModal } from "@/domain/samples/components/set-sample-modal-action";
+import { SetSampleModal } from "@/domain/samples/components/set-sample-modal";
 import { cn } from "@/lib/utils";
 import {
   Dropdown as NextDropdown,

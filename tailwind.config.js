@@ -112,12 +112,13 @@ module.exports = {
           normal: "4px",
           medium: "6px",
           large: "8px",
-        },
+        }
       },
       themes: {
         light: {
           layout: {}, // light theme layout tokens
           colors: {
+            overlay: colors.slate[900],
             primary: {
               DEFAULT: colors.emerald[500],
               "50": colors.emerald[50],
