@@ -106,7 +106,7 @@ export function PatientSamples<TData, TValue>({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
-                      className="group hover:bg-transparent"
+                      className="group"
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>

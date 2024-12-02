@@ -178,8 +178,8 @@ export const sampleTableColumns = (
             <DropdownTrigger>
               <div
                 className={cn(
-                  "inline-flex items-center px-2 py-2 text-sm font-medium leading-5 transition duration-100 ease-in bg-white rounded-full hover:shadow",
-                  "hover:bg-slate-100 hover:text-slate-800 hover:outline-none text-slate-700",
+                  "inline-flex items-center px-2 py-2 text-sm font-medium leading-5 transition duration-100 ease-in bg-transparent rounded-full",
+                  "hover:text-slate-500 hover:outline-none text-slate-700 hover:ring-1 hover:ring-slate-500",
                   "sm:p-3 dark:hover:shadow dark:shadow-slate-400 dark:hover:shadow-slate-300"
                 )}
               >
