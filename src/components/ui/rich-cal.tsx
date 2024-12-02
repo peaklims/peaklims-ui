@@ -56,6 +56,7 @@ export const RichDatePicker = forwardRef(function RichDatePicker(
     value,
     onChange,
     srLabel,
+    autoFocus,
     shouldCloseOnSelect = true,
     ...props
   }: {
@@ -64,6 +65,7 @@ export const RichDatePicker = forwardRef(function RichDatePicker(
     value: CalendarDate | CalendarDateTime | ZonedDateTime | null | undefined;
     srLabel?: string;
     shouldCloseOnSelect?: boolean;
+    autoFocus?: boolean;
     onChange: (
       value: CalendarDate | CalendarDateTime | ZonedDateTime | null | undefined
     ) => void;
@@ -99,6 +101,7 @@ export const RichDatePicker = forwardRef(function RichDatePicker(
 
   return (
     <DatePicker
+      autoFocus={autoFocus}
       className="flex flex-col w-full gap-1 text-sm bg-transparent border rounded-md group border-slate-300 ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
       value={value}
       onChange={onChange}

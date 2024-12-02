@@ -83,6 +83,7 @@ export function AdjustDueDateForm({
               <FormControl>
                 <RichDatePicker
                   {...field}
+                  autoFocus={true}
                   value={getDateControlValue(field.value)}
                   onChange={(value) => {
                     field.onChange(getDateControlOnChangeValue(value));
@@ -95,7 +96,7 @@ export function AdjustDueDateForm({
           )}
         />
         <div className="flex items-center justify-end pt-8">
-          <Button type="submit">Ok</Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </Form>
