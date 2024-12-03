@@ -1,5 +1,5 @@
 import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react";
-import { useGetTestOrderCancellationReasons } from "../apis/get-test-order-cancellation-reasons.api";
+import { useGetPanelOrderCancellationReasons } from "../apis/get-panel-order-cancellation-reasons.api";
 import { CancelPanelOrderForm } from "./cancel-panel-order-form";
 
 export function CancelPanelOrderModal({
@@ -11,7 +11,7 @@ export function CancelPanelOrderModal({
   onCancelModalOpenChange: (isOpen: boolean) => void;
   panelOrderId: string;
 }) {
-  const { data } = useGetTestOrderCancellationReasons();
+  const { data } = useGetPanelOrderCancellationReasons();
   const reasons = data ?? [];
   const reasonsForDropdown = reasons.map((reason) => {
     return { value: reason, label: reason };

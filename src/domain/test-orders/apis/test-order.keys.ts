@@ -9,6 +9,8 @@ const TestOrderKeys = {
     [...TestOrderKeys.details(), TestOrderId] as const,
   testOrderCancellationReasons: () =>
     [...TestOrderKeys.all, "TestOrderCancellationReasons"] as const,
+  panelOrderCancellationReasons: () =>
+    [...TestOrderKeys.all, "PanelOrderCancellationReasons"] as const,
 };
 
 export { TestOrderKeys };
