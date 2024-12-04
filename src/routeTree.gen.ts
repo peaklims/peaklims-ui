@@ -11,26 +11,28 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SettingsImport } from './routes/settings'
 import { Route as IndexImport } from './routes/index'
-import { Route as SettingsIndexImport } from './routes/settings/index'
 import { Route as RunsIndexImport } from './routes/runs/index'
 import { Route as ReportingIndexImport } from './routes/reporting/index'
 import { Route as ReceivingIndexImport } from './routes/receiving/index'
 import { Route as QueueIndexImport } from './routes/queue/index'
 import { Route as AccessionsIndexImport } from './routes/accessions/index'
+import { Route as SettingsPanelsImport } from './routes/settings.panels'
+import { Route as SettingsOrganizationsImport } from './routes/settings.organizations'
 import { Route as AccessionsAccessionIdImport } from './routes/accessions/$accessionId'
 
 // Create/Update Routes
 
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+const SettingsRoute = SettingsImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRoute,
 } as any)
 
-const SettingsIndexRoute = SettingsIndexImport.update({
-  id: '/settings/',
-  path: '/settings/',
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -64,6 +66,18 @@ const AccessionsIndexRoute = AccessionsIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const SettingsPanelsRoute = SettingsPanelsImport.update({
+  id: '/panels',
+  path: '/panels',
+  getParentRoute: () => SettingsRoute,
+} as any)
+
+const SettingsOrganizationsRoute = SettingsOrganizationsImport.update({
+  id: '/organizations',
+  path: '/organizations',
+  getParentRoute: () => SettingsRoute,
+} as any)
+
 const AccessionsAccessionIdRoute = AccessionsAccessionIdImport.update({
   id: '/accessions/$accessionId',
   path: '/accessions/$accessionId',
@@ -81,12 +95,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsImport
+      parentRoute: typeof rootRoute
+    }
     '/accessions/$accessionId': {
       id: '/accessions/$accessionId'
       path: '/accessions/$accessionId'
       fullPath: '/accessions/$accessionId'
       preLoaderRoute: typeof AccessionsAccessionIdImport
       parentRoute: typeof rootRoute
+    }
+    '/settings/organizations': {
+      id: '/settings/organizations'
+      path: '/organizations'
+      fullPath: '/settings/organizations'
+      preLoaderRoute: typeof SettingsOrganizationsImport
+      parentRoute: typeof SettingsImport
+    }
+    '/settings/panels': {
+      id: '/settings/panels'
+      path: '/panels'
+      fullPath: '/settings/panels'
+      preLoaderRoute: typeof SettingsPanelsImport
+      parentRoute: typeof SettingsImport
     }
     '/accessions/': {
       id: '/accessions/'
@@ -123,106 +158,125 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RunsIndexImport
       parentRoute: typeof rootRoute
     }
-    '/settings/': {
-      id: '/settings/'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsIndexImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
 // Create and export the route tree
 
+interface SettingsRouteChildren {
+  SettingsOrganizationsRoute: typeof SettingsOrganizationsRoute
+  SettingsPanelsRoute: typeof SettingsPanelsRoute
+}
+
+const SettingsRouteChildren: SettingsRouteChildren = {
+  SettingsOrganizationsRoute: SettingsOrganizationsRoute,
+  SettingsPanelsRoute: SettingsPanelsRoute,
+}
+
+const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
+  SettingsRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/settings': typeof SettingsRouteWithChildren
   '/accessions/$accessionId': typeof AccessionsAccessionIdRoute
+  '/settings/organizations': typeof SettingsOrganizationsRoute
+  '/settings/panels': typeof SettingsPanelsRoute
   '/accessions': typeof AccessionsIndexRoute
   '/queue': typeof QueueIndexRoute
   '/receiving': typeof ReceivingIndexRoute
   '/reporting': typeof ReportingIndexRoute
   '/runs': typeof RunsIndexRoute
-  '/settings': typeof SettingsIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/settings': typeof SettingsRouteWithChildren
   '/accessions/$accessionId': typeof AccessionsAccessionIdRoute
+  '/settings/organizations': typeof SettingsOrganizationsRoute
+  '/settings/panels': typeof SettingsPanelsRoute
   '/accessions': typeof AccessionsIndexRoute
   '/queue': typeof QueueIndexRoute
   '/receiving': typeof ReceivingIndexRoute
   '/reporting': typeof ReportingIndexRoute
   '/runs': typeof RunsIndexRoute
-  '/settings': typeof SettingsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/settings': typeof SettingsRouteWithChildren
   '/accessions/$accessionId': typeof AccessionsAccessionIdRoute
+  '/settings/organizations': typeof SettingsOrganizationsRoute
+  '/settings/panels': typeof SettingsPanelsRoute
   '/accessions/': typeof AccessionsIndexRoute
   '/queue/': typeof QueueIndexRoute
   '/receiving/': typeof ReceivingIndexRoute
   '/reporting/': typeof ReportingIndexRoute
   '/runs/': typeof RunsIndexRoute
-  '/settings/': typeof SettingsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/settings'
     | '/accessions/$accessionId'
+    | '/settings/organizations'
+    | '/settings/panels'
     | '/accessions'
     | '/queue'
     | '/receiving'
     | '/reporting'
     | '/runs'
-    | '/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/settings'
     | '/accessions/$accessionId'
+    | '/settings/organizations'
+    | '/settings/panels'
     | '/accessions'
     | '/queue'
     | '/receiving'
     | '/reporting'
     | '/runs'
-    | '/settings'
   id:
     | '__root__'
     | '/'
+    | '/settings'
     | '/accessions/$accessionId'
+    | '/settings/organizations'
+    | '/settings/panels'
     | '/accessions/'
     | '/queue/'
     | '/receiving/'
     | '/reporting/'
     | '/runs/'
-    | '/settings/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SettingsRoute: typeof SettingsRouteWithChildren
   AccessionsAccessionIdRoute: typeof AccessionsAccessionIdRoute
   AccessionsIndexRoute: typeof AccessionsIndexRoute
   QueueIndexRoute: typeof QueueIndexRoute
   ReceivingIndexRoute: typeof ReceivingIndexRoute
   ReportingIndexRoute: typeof ReportingIndexRoute
   RunsIndexRoute: typeof RunsIndexRoute
-  SettingsIndexRoute: typeof SettingsIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SettingsRoute: SettingsRouteWithChildren,
   AccessionsAccessionIdRoute: AccessionsAccessionIdRoute,
   AccessionsIndexRoute: AccessionsIndexRoute,
   QueueIndexRoute: QueueIndexRoute,
   ReceivingIndexRoute: ReceivingIndexRoute,
   ReportingIndexRoute: ReportingIndexRoute,
   RunsIndexRoute: RunsIndexRoute,
-  SettingsIndexRoute: SettingsIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -236,20 +290,35 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/settings",
         "/accessions/$accessionId",
         "/accessions/",
         "/queue/",
         "/receiving/",
         "/reporting/",
-        "/runs/",
-        "/settings/"
+        "/runs/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/settings": {
+      "filePath": "settings.tsx",
+      "children": [
+        "/settings/organizations",
+        "/settings/panels"
+      ]
+    },
     "/accessions/$accessionId": {
       "filePath": "accessions/$accessionId.tsx"
+    },
+    "/settings/organizations": {
+      "filePath": "settings.organizations.tsx",
+      "parent": "/settings"
+    },
+    "/settings/panels": {
+      "filePath": "settings.panels.tsx",
+      "parent": "/settings"
     },
     "/accessions/": {
       "filePath": "accessions/index.tsx"
@@ -265,9 +334,6 @@ export const routeTree = rootRoute
     },
     "/runs/": {
       "filePath": "runs/index.tsx"
-    },
-    "/settings/": {
-      "filePath": "settings/index.tsx"
     }
   }
 }
