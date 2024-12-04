@@ -58,7 +58,7 @@ function RouteComponent() {
       <div className="pt-4">
         <AnimatedTabLinks tabs={options} />
       </div>
-
+      <div className="pt-2" />
       <Outlet />
     </>
   );
@@ -81,29 +81,33 @@ function AnimatedTabLinks({ tabs }: { tabs: { to: string; label: string }[] }) {
   useRedirectToOrganizationsTab();
 
   return (
-    <div className="flex space-x-1">
-      {tabs.map((option) => (
-        <Link
-          key={option.to}
-          to={option.to}
-          // onClick={() => setActiveTab(option.to)}
-          className={cn(
-            "relative px-3 py-1.5 text-sm font-medium text-white transition focus-visible:outline-2",
-            routerState.location.pathname === option.to
-              ? "text-emerald-500"
-              : "text-slate-700 hover:text-slate-500"
-          )}
-        >
-          <span>{option.label}</span>
-          {routerState.location.pathname === option.to && (
-            <motion.div
-              layoutId="active-underline"
-              className="absolute left-0 right-0 bottom-0 h-0.5 bg-emerald-500"
-              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-            />
-          )}
-        </Link>
-      ))}
-    </div>
+    <>
+      <div className="flex space-x-1">
+        {tabs.map((option) => (
+          <Link
+            key={option.to}
+            to={option.to}
+            // onClick={() => setActiveTab(option.to)}
+            className={cn(
+              "relative px-3 py-1.5 text-sm font-medium text-white transition focus-visible:outline-2",
+              routerState.location.pathname === option.to
+                ? "text-emerald-500"
+                : "text-slate-700 hover:text-slate-500"
+            )}
+          >
+            <span>{option.label}</span>
+            {routerState.location.pathname === option.to && (
+              <motion.div
+                layoutId="active-underline"
+                className="absolute left-0 right-0 bottom-0 h-0.5 bg-emerald-500"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+          </Link>
+        ))}
+      </div>
+
+      <div className="-mt-px border-b border-slate-200" />
+    </>
   );
 }
