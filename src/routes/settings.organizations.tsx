@@ -4,7 +4,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
@@ -46,10 +45,10 @@ function RouteComponent() {
       </div>
 
       <div className="grid flex-1 min-h-0 grid-cols-3 gap-4">
-        <div className="flex flex-col col-span-1 border rounded-lg max-h-[calc(100vh-18rem)]">
+        <div className="flex flex-col col-span-2 border rounded-lg max-h-[calc(100vh-18rem)]">
           <div className="flex items-center justify-between p-4 border-b">
             <h2 className="text-lg font-semibold">Organizations</h2>
-            <Button variant="ghost" size="sm" onClick={handleCreateOrg}>
+            <Button variant="secondary" size="sm" onClick={handleCreateOrg}>
               Add
             </Button>
           </div>
@@ -63,7 +62,7 @@ function RouteComponent() {
             />
           </div>
           <div className="flex-1 p-4 overflow-y-auto">
-            <div className="space-y-2 overflow-y-auto ">
+            <div className="space-y-0 overflow-y-auto ">
               {filteredOrganizations.map((org) => (
                 <div
                   key={org.id}
@@ -80,10 +79,10 @@ function RouteComponent() {
           </div>
         </div>
 
-        <div className="flex flex-col col-span-2 border rounded-lg max-h-[calc(100vh-18rem)]">
+        <div className="flex flex-col col-span-1 border rounded-lg max-h-[calc(100vh-18rem)]">
           <div className="flex items-center justify-between p-4 border-b">
             <h2 className="text-lg font-semibold">Contacts</h2>
-            <Button variant="ghost" size="sm" disabled={!selectedOrg}>
+            <Button variant="secondary" size="sm" disabled={!selectedOrg}>
               Add
             </Button>
           </div>
@@ -121,7 +120,7 @@ function ContactsList({ organizationId }: { organizationId: string }) {
   }
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 overflow-y-auto">
       <div className="p-2 border-b">
         <Input
           placeholder="Filter contacts..."
@@ -133,44 +132,27 @@ function ContactsList({ organizationId }: { organizationId: string }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]"></TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>NPI</TableHead>
+            {/* <TableHead className="w-[100px]"></TableHead>
+            <TableHead>Name</TableHead> */}
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredContacts.map((contact) => (
             <TableRow key={contact.id}>
-              <TableCell>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-8 h-8 p-0"
-                  onClick={() => console.log("Edit contact:", contact.id)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-4 h-4"
-                  >
-                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                    <path d="m15 5 4 4" />
-                  </svg>
-                </Button>
-              </TableCell>
               <TableCell className="font-medium">
-                {contact.firstName} {contact.lastName}
+                <button
+                  onClick={() => console.log("Edit contact:", contact.id)}
+                  className="text-sm font-medium text-sky-600 hover:underline hover:text-sky-700"
+                >
+                  {contact.firstName} {contact.lastName}
+                </button>
+                <p className="text-xs text-gray-400">{contact.email}</p>
+                <p className="text-xs text-gray-400">{contact.npi}</p>
               </TableCell>
-              <TableCell>{contact.email}</TableCell>
+              {/* <TableCell>{contact.email}</TableCell>
               <TableCell className="text-sm text-gray-500">
                 {contact.npi || "-"}
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           ))}
         </TableBody>
