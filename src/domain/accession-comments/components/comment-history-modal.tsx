@@ -1,3 +1,4 @@
+import { dateTimeToLocal } from "@/lib/utils";
 import {
   Button,
   Modal,
@@ -6,7 +7,6 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@nextui-org/react";
-import { format } from "date-fns";
 import ReactDiffViewer from "react-diff-viewer";
 import { AccessionCommentItemDto } from "../types";
 
@@ -46,10 +46,9 @@ export function CommentHistoryModal(
                                   {index === 0 ? "Created on" : "Edited on"}
                                 </span>
                                 <span> </span>
-                                {format(
-                                  historyItem.createdDate,
-                                  "yyyy-MM-dd hh:mm a"
-                                )}
+                                {dateTimeToLocal({
+                                  dateTime: historyItem.createdDate,
+                                })}
                               </span>
                             </div>
                           </div>
@@ -89,10 +88,9 @@ export function CommentHistoryModal(
                             <span className="text-xs italic font-medium text-gray-500 dark:text-white">
                               <span>Edited on</span>
                               <span> </span>
-                              {format(
-                                comment.createdDate,
-                                "yyyy-MM-dd hh:mm a"
-                              )}
+                              {dateTimeToLocal({
+                                dateTime: comment.createdDate,
+                              })}
                             </span>
                           </div>
                         </div>

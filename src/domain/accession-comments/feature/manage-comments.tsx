@@ -1,7 +1,7 @@
 import { CopyButton } from "@/components/copy-button";
 import { Notification } from "@/components/notifications";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
+import { cn, dateTimeToLocal } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dropdown,
@@ -14,7 +14,6 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { format } from "date-fns";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -173,7 +172,7 @@ function ChatBubble({
                     {comment.createdByFirstName} {comment.createdByLastName}
                   </span>
                   <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    {format(comment.originalCommentAt, "yyyy-MM-dd hh:mm a")}
+                    {dateTimeToLocal({ dateTime: comment.originalCommentAt })}
                   </span>
                 </div>
 
@@ -182,7 +181,7 @@ function ChatBubble({
                     <div className="flex items-center space-x-2 rtl:space-x-reverse">
                       <span className="text-xs italic font-medium text-gray-500 dark:text-white">
                         Edited on{" "}
-                        {format(comment.createdDate, "yyyy-MM-dd hh:mm a")}
+                        {dateTimeToLocal({ dateTime: comment.createdDate })}
                       </span>
                     </div>
                   </div>
@@ -192,7 +191,7 @@ function ChatBubble({
               <div className="flex flex-col">
                 <div className="flex items-center justify-end space-x-2 rtl:space-x-reverse">
                   <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    {format(comment.originalCommentAt, "yyyy-MM-dd hh:mm a")}
+                    {dateTimeToLocal({ dateTime: comment.originalCommentAt })}
                   </span>
                   <span className="text-sm font-semibold text-gray-900 dark:text-white">
                     (Me)
@@ -206,7 +205,7 @@ function ChatBubble({
                     <div className="flex items-center justify-end space-x-2 rtl:space-x-reverse">
                       <span className="text-xs italic font-medium text-gray-500 dark:text-white">
                         Edited on{" "}
-                        {format(comment.createdDate, "yyyy-MM-dd hh:mm a")}
+                        {dateTimeToLocal({ dateTime: comment.createdDate })}
                       </span>
                     </div>
                   </div>
