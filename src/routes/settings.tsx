@@ -24,12 +24,14 @@ const options = [
     to: "/settings/organizations",
     label: "Organizations",
     helmet: "Organization Settings",
+    false: true,
     // activeOptions: { exact: true },
   }),
   linkOptions({
     to: "/settings/panels",
     label: "Panels",
     helmet: "Panel Settings",
+    disabled: true,
   }),
 ];
 
@@ -76,7 +78,11 @@ function useRedirectToOrganizationsTab() {
   }, [navigate, routerState.location.pathname]);
 }
 
-function AnimatedTabLinks({ tabs }: { tabs: { to: string; label: string }[] }) {
+function AnimatedTabLinks({
+  tabs,
+}: {
+  tabs: { to: string; label: string; disabled: boolean }[];
+}) {
   const routerState = useRouterState();
   useRedirectToOrganizationsTab();
 
@@ -86,13 +92,14 @@ function AnimatedTabLinks({ tabs }: { tabs: { to: string; label: string }[] }) {
         {tabs.map((option) => (
           <Link
             key={option.to}
+            disabled={option.disabled}
             to={option.to}
-            // onClick={() => setActiveTab(option.to)}
             className={cn(
-              "relative px-3 py-1.5 text-sm font-medium text-white transition focus-visible:outline-2",
+              "relative px-3 py-1.5 text-sm font-medium text-white transition focus-visible:outline-2 select-none",
               routerState.location.pathname === option.to
                 ? "text-emerald-500"
-                : "text-slate-700 hover:text-slate-500"
+                : "text-slate-700 hover:text-slate-500",
+              option.disabled && "text-slate-300 hover:text-slate-300"
             )}
           >
             <span>{option.label}</span>

@@ -10,11 +10,11 @@ export const getContactsByOrganization = async (organizationId: string) => {
     .then((response: AxiosResponse<OrganizationContactDto[]>) => response.data);
 };
 
-export const useGetContactsByOrganization = (organizationId: string) => {
+export const useGetContactsByOrganization = (organizationId: string | null) => {
   return useQuery({
     queryKey: OrganizationContactKeys.byOrg(organizationId),
     queryFn: () => getContactsByOrganization(organizationId),
-    enabled: (organizationId.length ?? 0) > 0,
+    enabled: (organizationId?.length ?? 0) > 0,
     gcTime: 2 * 60 * 1000,
   });
 };

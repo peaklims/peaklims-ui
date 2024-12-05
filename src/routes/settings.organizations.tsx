@@ -1,18 +1,21 @@
 import { Button } from "@/components/ui/button";
+import { Combobox, getLabelById } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { useGetContactsByOrganization } from "@/domain/organization-contacts/apis/get-all-contacts-by-organization";
 import { useGetAllOrganizations } from "@/domain/organizations/apis/get-all-organizations";
 import { OrganizationDto } from "@/domain/organizations/types";
-import { useDebouncedValue } from "@/hooks/use-debounced-value.tsx";
+import { useDebouncedValue } from "@/hooks";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Item } from "react-stately";
 
 export const Route = createFileRoute("/settings/organizations")({
   component: RouteComponent,
@@ -21,21 +24,26 @@ export const Route = createFileRoute("/settings/organizations")({
 function RouteComponent() {
   const { data: organizations = [] } = useGetAllOrganizations();
   const [selectedOrg, setSelectedOrg] = useState<OrganizationDto | null>();
-  const [orgFilter, setOrgFilter] = useState("");
-  const [debouncedOrgFilter] = useDebouncedValue(orgFilter, 300);
+  const [inputValue, setInputValue] = useState<string | undefined>();
 
-  const filteredOrganizations = organizations.filter((org) =>
-    org.name.toLowerCase().includes(debouncedOrgFilter.toLowerCase())
-  );
+  const orgOptions = organizations.map((org) => ({
+    value: org.id,
+    label: org.name,
+  }));
 
   useEffect(() => {
-    if (filteredOrganizations.length > 0 && !selectedOrg) {
-      setSelectedOrg(filteredOrganizations[0]);
+    if (organizations.length > 0 && !selectedOrg) {
+      const firstOrg = organizations[0];
+      setSelectedOrg(firstOrg);
+      setInputValue(firstOrg.name);
     }
-  }, [filteredOrganizations, selectedOrg]);
+  }, [organizations, selectedOrg]);
 
   const handleCreateOrg = () => {
     console.log("Create new organization clicked");
+  };
+  const handleEditOrg = ({ organizationId }: { organizationId: string }) => {
+    console.log("Edit organization clicked", organizationId);
   };
 
   return (
@@ -44,56 +52,59 @@ function RouteComponent() {
         <h1 className="text-2xl font-bold">Organizations</h1>
       </div>
 
-      <div className="grid flex-1 min-h-0 grid-cols-3 gap-4">
-        <div className="flex flex-col col-span-2 border rounded-lg max-h-[calc(100vh-18rem)]">
-          <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="text-lg font-semibold">Organizations</h2>
-            <Button variant="secondary" size="sm" onClick={handleCreateOrg}>
-              Add
-            </Button>
-          </div>
-          <div className="p-2 border-b">
-            <Input
+      <div className="flex flex-col flex-1 min-h-0 border rounded-lg">
+        <div className="flex items-center gap-2 p-4 border-b">
+          <div className="w-[300px]">
+            <Combobox
               autoFocus={true}
-              placeholder="Filter organizations..."
-              value={orgFilter}
-              onChange={(e) => setOrgFilter(e.target.value)}
-              className="h-8"
-            />
-          </div>
-          <div className="flex-1 p-4 overflow-y-auto">
-            <div className="space-y-0 overflow-y-auto ">
-              {filteredOrganizations.map((org) => (
-                <div
-                  key={org.id}
-                  className={`p-3 rounded cursor-pointer hover:bg-gray-100 ${
-                    selectedOrg?.id === org.id ? "bg-gray-100" : ""
-                  }`}
-                  onClick={() => setSelectedOrg(org)}
-                >
-                  <div className="font-medium">{org.name}</div>
-                  <div className="text-xs text-gray-400">{org.status}</div>
-                </div>
+              label="Organization"
+              inputValue={inputValue}
+              onInputChange={(value) => {
+                setInputValue(value);
+              }}
+              onClear={() => {
+                setSelectedOrg(null);
+                setInputValue("");
+              }}
+              selectedKey={selectedOrg?.id}
+              onSelectionChange={(key) => {
+                const org = organizations.find((o) => o.id === key);
+                setSelectedOrg(org ?? null);
+                setInputValue(
+                  getLabelById({
+                    id: key?.toString() ?? "",
+                    data: orgOptions,
+                  })
+                );
+              }}
+            >
+              {orgOptions.map((org) => (
+                <Item key={org.value} textValue={org.label}>
+                  {org.label}
+                </Item>
               ))}
-            </div>
+            </Combobox>
           </div>
+          <Button
+            variant="default"
+            size="sm"
+            disabled={!selectedOrg}
+            onClick={() => handleEditOrg({ organizationId: selectedOrg!.id })}
+          >
+            Edit
+          </Button>
+          <Button variant="secondary" size="sm" onClick={handleCreateOrg}>
+            Add
+          </Button>
         </div>
 
-        <div className="flex flex-col col-span-1 border rounded-lg max-h-[calc(100vh-18rem)]">
-          <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="text-lg font-semibold">Contacts</h2>
-            <Button variant="secondary" size="sm" disabled={!selectedOrg}>
-              Add
-            </Button>
-          </div>
-          {selectedOrg && <ContactsList organizationId={selectedOrg.id} />}
-        </div>
+        {selectedOrg && <ContactsList organizationId={selectedOrg.id} />}
       </div>
     </div>
   );
 }
 
-function ContactsList({ organizationId }: { organizationId: string }) {
+function ContactsList({ organizationId }: { organizationId: string | null }) {
   const { data: contacts = [] } = useGetContactsByOrganization(organizationId);
   const [contactFilter, setContactFilter] = useState("");
   const [debouncedContactFilter] = useDebouncedValue(contactFilter, 300);
@@ -119,21 +130,38 @@ function ContactsList({ organizationId }: { organizationId: string }) {
     return <div className="p-4 text-gray-500">No contacts found</div>;
   }
 
+  const handleCreateContact = () => {
+    console.log("Create new contact clicked");
+  };
+
   return (
     <div className="flex flex-col flex-1 overflow-y-auto">
-      <div className="p-2 border-b">
-        <Input
-          placeholder="Filter contacts..."
-          value={contactFilter}
-          onChange={(e) => setContactFilter(e.target.value)}
-          className="h-8"
-        />
+      <div className="flex p-2 space-x-3 border-b">
+        <div className="w-full md:w-96">
+          <Input
+            placeholder="Filter contacts..."
+            value={contactFilter}
+            onChange={(e) => setContactFilter(e.target.value)}
+            className="h-8"
+          />
+        </div>
+        <div className="w-36 md:w-96">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={handleCreateContact}
+            disabled={organizationId === null}
+          >
+            Add Contact
+          </Button>
+        </div>
       </div>
       <Table>
         <TableHeader>
           <TableRow>
-            {/* <TableHead className="w-[100px]"></TableHead>
-            <TableHead>Name</TableHead> */}
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>NPI</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -146,13 +174,11 @@ function ContactsList({ organizationId }: { organizationId: string }) {
                 >
                   {contact.firstName} {contact.lastName}
                 </button>
-                <p className="text-xs text-gray-400">{contact.email}</p>
-                <p className="text-xs text-gray-400">{contact.npi}</p>
               </TableCell>
-              {/* <TableCell>{contact.email}</TableCell>
+              <TableCell>{contact.email}</TableCell>
               <TableCell className="text-sm text-gray-500">
                 {contact.npi || "-"}
-              </TableCell> */}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
