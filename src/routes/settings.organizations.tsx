@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { useGetContactsByOrganization } from "@/domain/organization-contacts/apis/get-all-contacts-by-organization";
 import { useGetAllOrganizations } from "@/domain/organizations/apis/get-all-organizations";
+import { OrganizationModal } from "@/domain/organizations/features/organization-modal";
 import { OrganizationDto } from "@/domain/organizations/types";
 import { useDebouncedValue } from "@/hooks";
 import { createFileRoute } from "@tanstack/react-router";
@@ -25,6 +26,9 @@ function RouteComponent() {
   const { data: organizations = [] } = useGetAllOrganizations();
   const [selectedOrg, setSelectedOrg] = useState<OrganizationDto | null>();
   const [inputValue, setInputValue] = useState<string | undefined>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [organizationToEdit, setOrganizationToEdit] =
+    useState<OrganizationDto>();
 
   const orgOptions = organizations.map((org) => ({
     value: org.id,
@@ -40,10 +44,22 @@ function RouteComponent() {
   }, [organizations, selectedOrg]);
 
   const handleCreateOrg = () => {
-    console.log("Create new organization clicked");
+    setOrganizationToEdit(undefined);
+    setIsModalOpen(true);
   };
+
   const handleEditOrg = ({ organizationId }: { organizationId: string }) => {
-    console.log("Edit organization clicked", organizationId);
+    const org = organizations.find((o) => o.id === organizationId);
+    if (org) {
+      setOrganizationToEdit(org);
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleOrganizationSuccess = (organization: OrganizationDto) => {
+    setOrganizationToEdit(undefined);
+    setSelectedOrg(organization);
+    setInputValue(organization.name);
   };
 
   return (
@@ -100,6 +116,13 @@ function RouteComponent() {
 
         {selectedOrg && <ContactsList organizationId={selectedOrg.id} />}
       </div>
+
+      <OrganizationModal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        organization={organizationToEdit}
+        onSuccess={handleOrganizationSuccess}
+      />
     </div>
   );
 }
@@ -126,13 +149,42 @@ function ContactsList({ organizationId }: { organizationId: string | null }) {
           .includes(debouncedContactFilter.toLowerCase()))
   );
 
-  if (contacts.length === 0) {
-    return <div className="p-4 text-gray-500">No contacts found</div>;
-  }
-
   const handleCreateContact = () => {
     console.log("Create new contact clicked");
   };
+
+  if (contacts.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-4 mt-2 space-y-4 text-gray-500 md:mt-10">
+        <button
+          onClick={handleCreateContact}
+          className="flex flex-col items-center justify-center p-10 space-y-4 border border-dashed rounded-lg cursor-pointer border-slate-300 hover:border-slate-500 hover:text-slate-700"
+        >
+          {/* https://iconbuddy.com/solar/user-plus-linear */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={200}
+            height={200}
+            viewBox="0 0 24 24"
+            className="w-8 h-8"
+          >
+            <g fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx={12} cy={6} r={4} />
+              <path d="M15 13.327A13.57 13.57 0 0 0 12 13c-4.418 0-8 2.015-8 4.5S4 22 12 22c5.687 0 7.331-1.018 7.807-2.5" />
+              <circle cx={18} cy={16} r={4} />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M18 14.667v2.666M16.666 16h2.667"
+              />
+            </g>
+          </svg>
+
+          <p>No contacts found, click here add your first contact</p>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1 overflow-y-auto">
