@@ -21,14 +21,12 @@ export const updateOrganization = async (
   id: string,
   data: OrganizationForUpdateDto
 ) => {
-  return peakLimsApi
-    .put(`/v1/healthcareOrganizations/${id}`, data)
-    .then((response) => response.data);
+  await peakLimsApi.put(`/v1/healthcareOrganizations/${id}`, data);
 };
 
 export const useUpdateOrganization = (
   options?: Omit<
-    UseMutationOptions<OrganizationDto, AxiosError, UpdateProps, unknown>,
+    UseMutationOptions<void, AxiosError, UpdateProps, unknown>,
     "mutationFn"
   >
 ) => {

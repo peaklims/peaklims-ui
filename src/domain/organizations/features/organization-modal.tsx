@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useAddOrganization } from "../apis/add-organization";
@@ -45,6 +46,19 @@ export function OrganizationModal({
     },
   });
 
+  // Reset form when organization changes
+  useEffect(() => {
+    if (organization) {
+      form.reset({
+        name: organization.name,
+      });
+    } else {
+      form.reset({
+        name: "",
+      });
+    }
+  }, [organization, form]);
+
   const addOrganizationApi = useAddOrganization();
   const updateOrganizationApi = useUpdateOrganization();
 
@@ -54,10 +68,9 @@ export function OrganizationModal({
         updateOrganizationApi.mutate(
           { id: organization.id, data: { name: data.name } },
           {
-            onSuccess: (updatedOrg) => {
-              form.reset();
+            onSuccess: () => {
+              onSuccess?.({ ...organization, name: data.name });
               onOpenChange(false);
-              onSuccess?.(updatedOrg);
               Notification.success("Organization updated successfully");
             },
           }
@@ -67,9 +80,8 @@ export function OrganizationModal({
           { name: data.name },
           {
             onSuccess: (newOrg) => {
-              form.reset();
-              onOpenChange(false);
               onSuccess?.(newOrg);
+              onOpenChange(false);
               Notification.success("Organization created successfully");
             },
           }
@@ -81,7 +93,6 @@ export function OrganizationModal({
           ? "Failed to update organization"
           : "Failed to create organization"
       );
-      console.error(error);
     }
   };
 
@@ -94,10 +105,10 @@ export function OrganizationModal({
       }}
     >
       <ModalContent>
-        {(onClose) => (
+        {() => (
           <>
             <ModalHeader className="text-2xl font-semibold scroll-m-20">
-              {isEditing ? "Edit Organization" : "Add Organization"}
+              {isEditing ? "Edit" : "Add"} Organization
             </ModalHeader>
             <ModalBody className="px-6 pb-2 grow gap-y-5">
               <Form {...form}>
@@ -127,10 +138,7 @@ export function OrganizationModal({
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => {
-                        onClose();
-                        form.reset();
-                      }}
+                      onClick={() => onOpenChange(false)}
                     >
                       Cancel
                     </Button>

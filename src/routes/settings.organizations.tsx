@@ -36,10 +36,14 @@ function RouteComponent() {
   }));
 
   useEffect(() => {
-    if (organizations.length > 0 && !selectedOrg) {
+    if (organizations.length > 0 && selectedOrg === undefined) {
       const firstOrg = organizations[0];
       setSelectedOrg(firstOrg);
       setInputValue(firstOrg.name);
+      return;
+    }
+    if (selectedOrg) {
+      setInputValue(selectedOrg.name);
     }
   }, [organizations, selectedOrg]);
 
@@ -48,10 +52,9 @@ function RouteComponent() {
     setIsModalOpen(true);
   };
 
-  const handleEditOrg = ({ organizationId }: { organizationId: string }) => {
-    const org = organizations.find((o) => o.id === organizationId);
-    if (org) {
-      setOrganizationToEdit(org);
+  const handleEditOrg = () => {
+    if (selectedOrg) {
+      setOrganizationToEdit(selectedOrg);
       setIsModalOpen(true);
     }
   };
@@ -105,7 +108,7 @@ function RouteComponent() {
             variant="default"
             size="sm"
             disabled={!selectedOrg}
-            onClick={() => handleEditOrg({ organizationId: selectedOrg!.id })}
+            onClick={handleEditOrg}
           >
             Edit
           </Button>
