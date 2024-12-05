@@ -220,22 +220,34 @@ function ContactsList({ organizationId }: { organizationId: string | null }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredContacts.map((contact) => (
-            <TableRow key={contact.id}>
-              <TableCell className="font-medium">
-                <button
-                  onClick={() => console.log("Edit contact:", contact.id)}
-                  className="text-sm font-medium text-sky-600 hover:underline hover:text-sky-700"
-                >
-                  {contact.firstName} {contact.lastName}
-                </button>
-              </TableCell>
-              <TableCell>{contact.email}</TableCell>
-              <TableCell className="text-sm text-gray-500">
-                {contact.npi || "-"}
+          {filteredContacts?.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={3}>
+                <div className="flex items-center justify-center pt-4">
+                  <p>No contacts found</p>
+                </div>
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            <>
+              {filteredContacts.map((contact) => (
+                <TableRow key={contact.id}>
+                  <TableCell className="font-medium">
+                    <button
+                      onClick={() => console.log("Edit contact:", contact.id)}
+                      className="text-sm font-medium text-sky-600 hover:underline hover:text-sky-700"
+                    >
+                      {contact.firstName} {contact.lastName}
+                    </button>
+                  </TableCell>
+                  <TableCell>{contact.email}</TableCell>
+                  <TableCell className="text-sm text-gray-500">
+                    {contact.npi || "-"}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </>
+          )}
         </TableBody>
       </Table>
     </div>
