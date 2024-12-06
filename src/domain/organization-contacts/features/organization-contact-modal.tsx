@@ -23,6 +23,7 @@ const organizationContactFormSchema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email"),
   npi: z.string().optional(),
+  title: z.string().optional(),
 });
 
 type OrganizationContactFormData = z.infer<
@@ -53,6 +54,7 @@ export function OrganizationContactModal({
       lastName: organizationContact?.lastName ?? "",
       email: organizationContact?.email ?? "",
       npi: organizationContact?.npi ?? "",
+      title: organizationContact?.title ?? "",
     },
   });
 
@@ -64,6 +66,7 @@ export function OrganizationContactModal({
         lastName: organizationContact.lastName,
         email: organizationContact.email,
         npi: organizationContact.npi,
+        title: organizationContact.title,
       });
     } else {
       form.reset({
@@ -71,6 +74,7 @@ export function OrganizationContactModal({
         lastName: "",
         email: "",
         npi: "",
+        title: "",
       });
     }
   }, [organizationContact, form]);
@@ -136,6 +140,20 @@ export function OrganizationContactModal({
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-4"
                 >
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Enter title" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <FormField
                     control={form.control}
                     name="firstName"
