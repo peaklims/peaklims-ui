@@ -81,6 +81,7 @@ export function ManageAccessionComments({
               {comments?.accessionComments?.map((comment) => {
                 return (
                   <ChatBubble
+                    key={comment.id}
                     bubbleSide={comment.ownedByCurrentUser ? "right" : "left"}
                     comment={comment}
                     accessionId={accessionId}
