@@ -124,24 +124,26 @@ export function PanelOrderCard({
     >
       <div className="flex flex-col w-full">
         <div className="flex items-start justify-between w-full xl:items-center">
-          <button
-            className={
-              "flex items-start xl:items-center h-full px-2 py-1 space-x-2"
-            }
-            onClick={() =>
-              setShowPanelTestsId(
-                panelOrder.id === showPanelTestsId ? undefined : panelOrder.id
-              )
-            }
-          >
-            <motion.div
-              initial={false}
-              animate={{
-                rotate: panelOrder.id === showPanelTestsId ? 90 : 0,
-              }}
+          <div className="flex items-start justify-start w-full xl:items-center">
+            <button
+              className={
+                "flex items-start xl:items-center h-full px-2 py-1 space-x-2"
+              }
+              onClick={() =>
+                setShowPanelTestsId(
+                  panelOrder.id === showPanelTestsId ? undefined : panelOrder.id
+                )
+              }
             >
-              <ChevronRightIcon className="w-5 h-5 hover:text-slate-700 text-slate-900" />
-            </motion.div>
+              <motion.div
+                initial={false}
+                animate={{
+                  rotate: panelOrder.id === showPanelTestsId ? 90 : 0,
+                }}
+              >
+                <ChevronRightIcon className="w-5 h-5 hover:text-slate-700 text-slate-900" />
+              </motion.div>
+            </button>
             <h4 className="flex flex-col text-base font-medium xl:space-x-2">
               <div className="flex flex-col items-start">
                 <span className="hidden sm:block text-start xl:pt-0">
@@ -171,8 +173,7 @@ export function PanelOrderCard({
                 </div>
               </div>
             </h4>
-          </button>
-
+          </div>
           <NextDropdown
             isOpen={isDropdownOpen}
             onOpenChange={setIsDropdownOpen}
