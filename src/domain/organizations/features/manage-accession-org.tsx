@@ -202,7 +202,9 @@ export function AccessionOrganizationForm({
                         classNames={{
                           wrapper: "w-full",
                         }}
-                        isDisabled={!organizationId}
+                        isDisabled={
+                          !organizationId || contactOptions?.length === 0
+                        }
                         label={field.name}
                         selectedKey={field.value}
                         onSelectionChange={(key) => field.onChange(key)}
@@ -220,9 +222,14 @@ export function AccessionOrganizationForm({
                 )}
               />
               <Button
+                variant="default"
+                size="sm"
                 type="submit"
-                className="mt-2"
-                disabled={!organizationId || contactOptions?.length === 0}
+                disabled={
+                  !contactForm.getValues("contactId") ||
+                  !organizationId ||
+                  contactOptions?.length === 0
+                }
               >
                 Add Contact
               </Button>
