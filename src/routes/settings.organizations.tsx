@@ -10,6 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useGetContactsByOrganization } from "@/domain/organization-contacts/apis/get-all-contacts-by-organization";
+import { OrganizationContactModal } from "@/domain/organization-contacts/features/organization-contact-modal";
+import { OrganizationContactDto } from "@/domain/organization-contacts/types";
 import { useGetAllOrganizations } from "@/domain/organizations/apis/get-all-organizations";
 import { OrganizationModal } from "@/domain/organizations/features/organization-modal";
 import { OrganizationDto } from "@/domain/organizations/types";
@@ -134,6 +136,8 @@ function ContactsList({ organizationId }: { organizationId: string | null }) {
   const { data: contacts = [] } = useGetContactsByOrganization(organizationId);
   const [contactFilter, setContactFilter] = useState("");
   const [debouncedContactFilter] = useDebouncedValue(contactFilter, 300);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [contactToEdit, setContactToEdit] = useState<OrganizationContactDto>();
 
   const filteredContacts = contacts.filter(
     (contact) =>
@@ -153,7 +157,13 @@ function ContactsList({ organizationId }: { organizationId: string | null }) {
   );
 
   const handleCreateContact = () => {
-    console.log("Create new contact clicked");
+    setContactToEdit(undefined);
+    setIsContactModalOpen(true);
+  };
+
+  const handleEditContact = (contact: OrganizationContactDto) => {
+    setContactToEdit(contact);
+    setIsContactModalOpen(true);
   };
 
   if (contacts.length === 0) {
@@ -230,26 +240,42 @@ function ContactsList({ organizationId }: { organizationId: string | null }) {
             </TableRow>
           ) : (
             <>
-              {filteredContacts.map((contact) => (
-                <TableRow key={contact.id}>
-                  <TableCell className="font-medium">
-                    <button
-                      onClick={() => console.log("Edit contact:", contact.id)}
-                      className="text-sm font-medium text-sky-600 hover:underline hover:text-sky-700"
-                    >
-                      {contact.firstName} {contact.lastName}
-                    </button>
-                  </TableCell>
-                  <TableCell>{contact.email}</TableCell>
-                  <TableCell className="text-sm text-gray-500">
-                    {contact.npi || "-"}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {filteredContacts
+                .sort((a, b) =>
+                  a.lastName === b.lastName
+                    ? a.firstName.localeCompare(b.firstName)
+                    : a.lastName.localeCompare(b.lastName)
+                )
+                .map((contact) => (
+                  <TableRow key={contact.id}>
+                    <TableCell className="font-medium">
+                      <button
+                        onClick={() => handleEditContact(contact)}
+                        className="text-sm font-medium text-sky-600 hover:underline hover:text-sky-700"
+                      >
+                        {contact.lastName}, {contact.firstName}
+                      </button>
+                    </TableCell>
+                    <TableCell>{contact.email}</TableCell>
+                    <TableCell className="text-sm text-gray-500">
+                      {contact.npi || "-"}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </>
           )}
         </TableBody>
       </Table>
+
+      <OrganizationContactModal
+        isOpen={isContactModalOpen}
+        onOpenChange={setIsContactModalOpen}
+        organizationContact={contactToEdit}
+        organizationId={organizationId ?? ""}
+        onSuccess={() => {
+          setContactToEdit(undefined);
+        }}
+      />
     </div>
   );
 }

@@ -5,7 +5,6 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { OrganizationDto } from "../types";
 import { OrganizationKeys } from "./organization.keys";
 
 export type OrganizationForUpdateDto = {
@@ -21,7 +20,9 @@ export const updateOrganization = async (
   id: string,
   data: OrganizationForUpdateDto
 ) => {
-  await peakLimsApi.put(`/v1/healthcareOrganizations/${id}`, data);
+  return peakLimsApi
+    .put(`/v1/healthcareOrganizations/${id}`, data)
+    .then((response) => response.data);
 };
 
 export const useUpdateOrganization = (

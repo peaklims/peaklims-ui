@@ -3,5 +3,5 @@ export type OrganizationContactDto = {
   firstName: string;
   lastName: string;
   email: string;
-  npi: string;
+  npi?: string | undefined;
 };

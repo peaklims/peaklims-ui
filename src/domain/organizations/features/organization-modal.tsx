@@ -69,7 +69,7 @@ export function OrganizationModal({
           { id: organization.id, data: { name: data.name } },
           {
             onSuccess: () => {
-              onSuccess?.({ ...organization, name: data.name });
+              onSuccess?.({ id: organization.id, name: data.name });
               onOpenChange(false);
               Notification.success("Organization updated successfully");
             },
