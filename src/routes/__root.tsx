@@ -5,7 +5,11 @@ import { ReactQueryDevtools } from "@/lib/dev-tools";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import { useAuthUser } from "@/services/auth";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import {
+  Outlet,
+  ScrollRestoration,
+  createRootRoute,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { ClickToComponent } from "click-to-react-component";
 import { Helmet } from "react-helmet";
@@ -64,6 +68,7 @@ function RootComponent() {
         <AuthLayout>
           <Outlet />
         </AuthLayout>
+        <ScrollRestoration />
         <Notification />
         <ClickToComponent />
         {!runInDemoMode && (
