@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Helmet } from 'react-helmet'
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/_auth-layout/')({
   component: HomeComponent,
 })
 

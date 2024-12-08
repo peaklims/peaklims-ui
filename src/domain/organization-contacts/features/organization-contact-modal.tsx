@@ -147,7 +147,7 @@ export function OrganizationContactModal({
                       <FormItem>
                         <FormLabel>Title</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter title" />
+                          <Input {...field} placeholder="Enter title like Dr" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

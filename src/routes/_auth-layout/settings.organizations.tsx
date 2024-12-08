@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Combobox, getLabelById } from "@/components/ui/combobox";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button'
+import { Combobox, getLabelById } from '@/components/ui/combobox'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -8,64 +8,64 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { useGetContactsByOrganization } from "@/domain/organization-contacts/apis/get-all-contacts-by-organization";
-import { OrganizationContactModal } from "@/domain/organization-contacts/features/organization-contact-modal";
-import { OrganizationContactDto } from "@/domain/organization-contacts/types";
-import { useGetAllOrganizations } from "@/domain/organizations/apis/get-all-organizations";
-import { OrganizationModal } from "@/domain/organizations/features/organization-modal";
-import { OrganizationDto } from "@/domain/organizations/types";
-import { useDebouncedValue } from "@/hooks";
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Item } from "react-stately";
+} from '@/components/ui/table'
+import { useGetContactsByOrganization } from '@/domain/organization-contacts/apis/get-all-contacts-by-organization'
+import { OrganizationContactModal } from '@/domain/organization-contacts/features/organization-contact-modal'
+import { OrganizationContactDto } from '@/domain/organization-contacts/types'
+import { useGetAllOrganizations } from '@/domain/organizations/apis/get-all-organizations'
+import { OrganizationModal } from '@/domain/organizations/features/organization-modal'
+import { OrganizationDto } from '@/domain/organizations/types'
+import { useDebouncedValue } from '@/hooks'
+import { createFileRoute } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { Item } from 'react-stately'
 
-export const Route = createFileRoute("/settings/organizations")({
+export const Route = createFileRoute('/_auth-layout/settings/organizations')({
   component: RouteComponent,
-});
+})
 
 function RouteComponent() {
-  const { data: organizations = [] } = useGetAllOrganizations();
-  const [selectedOrg, setSelectedOrg] = useState<OrganizationDto | null>();
-  const [inputValue, setInputValue] = useState<string | undefined>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data: organizations = [] } = useGetAllOrganizations()
+  const [selectedOrg, setSelectedOrg] = useState<OrganizationDto | null>()
+  const [inputValue, setInputValue] = useState<string | undefined>()
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [organizationToEdit, setOrganizationToEdit] =
-    useState<OrganizationDto>();
+    useState<OrganizationDto>()
 
   const orgOptions = organizations.map((org) => ({
     value: org.id,
     label: org.name,
-  }));
+  }))
 
   useEffect(() => {
     if (organizations.length > 0 && selectedOrg === undefined) {
-      const firstOrg = organizations[0];
-      setSelectedOrg(firstOrg);
-      setInputValue(firstOrg.name);
-      return;
+      const firstOrg = organizations[0]
+      setSelectedOrg(firstOrg)
+      setInputValue(firstOrg.name)
+      return
     }
     if (selectedOrg) {
-      setInputValue(selectedOrg.name);
+      setInputValue(selectedOrg.name)
     }
-  }, [organizations, selectedOrg]);
+  }, [organizations, selectedOrg])
 
   const handleCreateOrg = () => {
-    setOrganizationToEdit(undefined);
-    setIsModalOpen(true);
-  };
+    setOrganizationToEdit(undefined)
+    setIsModalOpen(true)
+  }
 
   const handleEditOrg = () => {
     if (selectedOrg) {
-      setOrganizationToEdit(selectedOrg);
-      setIsModalOpen(true);
+      setOrganizationToEdit(selectedOrg)
+      setIsModalOpen(true)
     }
-  };
+  }
 
   const handleOrganizationSuccess = (organization: OrganizationDto) => {
-    setOrganizationToEdit(undefined);
-    setSelectedOrg(organization);
-    setInputValue(organization.name);
-  };
+    setOrganizationToEdit(undefined)
+    setSelectedOrg(organization)
+    setInputValue(organization.name)
+  }
 
   return (
     <div className="h-[calc(100vh-12rem)] flex flex-col p-4">
@@ -81,22 +81,22 @@ function RouteComponent() {
               label="Organization"
               inputValue={inputValue}
               onInputChange={(value) => {
-                setInputValue(value);
+                setInputValue(value)
               }}
               onClear={() => {
-                setSelectedOrg(null);
-                setInputValue("");
+                setSelectedOrg(null)
+                setInputValue('')
               }}
               selectedKey={selectedOrg?.id}
               onSelectionChange={(key) => {
-                const org = organizations.find((o) => o.id === key);
-                setSelectedOrg(org ?? null);
+                const org = organizations.find((o) => o.id === key)
+                setSelectedOrg(org ?? null)
                 setInputValue(
                   getLabelById({
-                    id: key?.toString() ?? "",
+                    id: key?.toString() ?? '',
                     data: orgOptions,
-                  })
-                );
+                  }),
+                )
               }}
             >
               {orgOptions.map((org) => (
@@ -129,15 +129,15 @@ function RouteComponent() {
         onSuccess={handleOrganizationSuccess}
       />
     </div>
-  );
+  )
 }
 
 function ContactsList({ organizationId }: { organizationId: string | null }) {
-  const { data: contacts = [] } = useGetContactsByOrganization(organizationId);
-  const [contactFilter, setContactFilter] = useState("");
-  const [debouncedContactFilter] = useDebouncedValue(contactFilter, 300);
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-  const [contactToEdit, setContactToEdit] = useState<OrganizationContactDto>();
+  const { data: contacts = [] } = useGetContactsByOrganization(organizationId)
+  const [contactFilter, setContactFilter] = useState('')
+  const [debouncedContactFilter] = useDebouncedValue(contactFilter, 300)
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
+  const [contactToEdit, setContactToEdit] = useState<OrganizationContactDto>()
 
   const filteredContacts = contacts.filter(
     (contact) =>
@@ -153,18 +153,18 @@ function ContactsList({ organizationId }: { organizationId: string | null }) {
       (contact.npi &&
         contact.npi
           .toLowerCase()
-          .includes(debouncedContactFilter.toLowerCase()))
-  );
+          .includes(debouncedContactFilter.toLowerCase())),
+  )
 
   const handleCreateContact = () => {
-    setContactToEdit(undefined);
-    setIsContactModalOpen(true);
-  };
+    setContactToEdit(undefined)
+    setIsContactModalOpen(true)
+  }
 
   const handleEditContact = (contact: OrganizationContactDto) => {
-    setContactToEdit(contact);
-    setIsContactModalOpen(true);
-  };
+    setContactToEdit(contact)
+    setIsContactModalOpen(true)
+  }
 
   if (contacts.length === 0) {
     return (
@@ -196,7 +196,7 @@ function ContactsList({ organizationId }: { organizationId: string | null }) {
           <p>No contacts found, click here add your first contact</p>
         </button>
       </div>
-    );
+    )
   }
 
   return (
@@ -244,7 +244,7 @@ function ContactsList({ organizationId }: { organizationId: string | null }) {
                 .sort((a, b) =>
                   a.lastName === b.lastName
                     ? a.firstName.localeCompare(b.firstName)
-                    : a.lastName.localeCompare(b.lastName)
+                    : a.lastName.localeCompare(b.lastName),
                 )
                 .map((contact) => (
                   <TableRow key={contact.id}>
@@ -258,7 +258,7 @@ function ContactsList({ organizationId }: { organizationId: string | null }) {
                     </TableCell>
                     <TableCell>{contact.email}</TableCell>
                     <TableCell className="text-sm text-gray-500">
-                      {contact.npi || "-"}
+                      {contact.npi || '-'}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -271,11 +271,11 @@ function ContactsList({ organizationId }: { organizationId: string | null }) {
         isOpen={isContactModalOpen}
         onOpenChange={setIsContactModalOpen}
         organizationContact={contactToEdit}
-        organizationId={organizationId ?? ""}
+        organizationId={organizationId ?? ''}
         onSuccess={() => {
-          setContactToEdit(undefined);
+          setContactToEdit(undefined)
         }}
       />
     </div>
-  );
+  )
 }

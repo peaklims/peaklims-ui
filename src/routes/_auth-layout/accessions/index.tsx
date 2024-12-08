@@ -5,7 +5,7 @@ import { useAccessioningWorklistTableStore } from '@/domain/accessions/features/
 import { createFileRoute } from '@tanstack/react-router'
 import { Helmet } from 'react-helmet'
 
-export const Route = createFileRoute('/accessions/')({
+export const Route = createFileRoute('/_auth-layout/accessions/')({
   component: AccessionWorklistPage,
 })
 

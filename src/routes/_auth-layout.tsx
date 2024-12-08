@@ -31,7 +31,12 @@ import { useActionButtonKey } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useAuthUser } from "@/services/auth";
 import { Tooltip } from "@nextui-org/react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  createFileRoute,
+  useNavigate,
+} from "@tanstack/react-router";
 import {
   LogOut,
   MailQuestion,
@@ -44,70 +49,12 @@ import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 const sideNavWidth = "lg:w-52";
-function ProfileManagement({
-  user,
-  logoutUrl,
-}: {
-  user: {
-    name: string;
-    initials: string;
-  };
-  logoutUrl: string | undefined;
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <div
-          className={
-            "flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 lg:pr-6 lg:py-1 gap-x-4 hover:bg-slate-200 rounded-lg overflow-hidden text-ellipsis"
-          }
-        >
-          <Avatar>
-            {/* <AvatarImage src={user?.image} /> */}
-            <AvatarFallback>{user?.initials}</AvatarFallback>
-          </Avatar>
-          <div className="inline-flex flex-col items-start">
-            <span className="sr-only">Your profile</span>
-            <span aria-hidden="true" className="inline">
-              {user?.name}
-            </span>
-          </div>
-        </div>
-      </DropdownMenuTrigger>
 
-      <DropdownMenuContent className={cn("rounded-b-none", sideNavWidth)}>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {logoutUrl && (
-          <>
-            <a href={logoutUrl}>
-              <DropdownMenuItem className="cursor-pointer">
-                <LogOut className="w-4.5 h-4.5 mr-2" />
-                <span>Log out</span>
-                {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
-              </DropdownMenuItem>
-            </a>
-            <DropdownMenuSeparator />
-          </>
-        )}
-        <DropdownMenuGroup>
-          <DropdownMenuItem disabled>
-            <UserIcon className="w-4.5 h-4.5 mr-2" />
-            <span>Profile</span>
-            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled>
-            <Settings className="w-4.5 h-4.5 mr-2" />
-            <span>Settings</span>
-            {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
+export const Route = createFileRoute("/_auth-layout")({
+  component: AuthLayout,
+});
 
-export function AuthLayout({ children }: { children: React.ReactNode }) {
+function AuthLayout() {
   const { user, logoutUrl } = useAuthUser();
   const [quickActionIsOpen, setQuickActionIsOpen] = useState(false);
 
@@ -422,8 +369,71 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
           </Sidebar>
         }
       >
-        {children}
+        <Outlet />
       </SidebarLayout>
     </SidebarProvider>
+  );
+}
+
+function ProfileManagement({
+  user,
+  logoutUrl,
+}: {
+  user: {
+    name: string;
+    initials: string;
+  };
+  logoutUrl: string | undefined;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <div
+          className={
+            "flex items-center flex-1 px-1 text-sm font-semibold leading-6 text-gray-900 lg:pr-6 lg:py-1 gap-x-4 hover:bg-slate-200 rounded-lg overflow-hidden text-ellipsis"
+          }
+        >
+          <Avatar>
+            {/* <AvatarImage src={user?.image} /> */}
+            <AvatarFallback>{user?.initials}</AvatarFallback>
+          </Avatar>
+          <div className="inline-flex flex-col items-start">
+            <span className="sr-only">Your profile</span>
+            <span aria-hidden="true" className="inline">
+              {user?.name}
+            </span>
+          </div>
+        </div>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent className={cn("rounded-b-none", sideNavWidth)}>
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {logoutUrl && (
+          <>
+            <a href={logoutUrl}>
+              <DropdownMenuItem className="cursor-pointer">
+                <LogOut className="w-4.5 h-4.5 mr-2" />
+                <span>Log out</span>
+                {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
+              </DropdownMenuItem>
+            </a>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        <DropdownMenuGroup>
+          <DropdownMenuItem disabled>
+            <UserIcon className="w-4.5 h-4.5 mr-2" />
+            <span>Profile</span>
+            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
+          </DropdownMenuItem>
+          <DropdownMenuItem disabled>
+            <Settings className="w-4.5 h-4.5 mr-2" />
+            <span>Settings</span>
+            {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/queue/')({
+export const Route = createFileRoute('/_auth-layout/runs/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  return 'Hello /queue/!'
+  return 'Hello /runs/!'
 }

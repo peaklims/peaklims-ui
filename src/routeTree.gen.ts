@@ -11,217 +11,260 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SettingsImport } from './routes/settings'
-import { Route as IndexImport } from './routes/index'
-import { Route as RunsIndexImport } from './routes/runs/index'
-import { Route as ReportingIndexImport } from './routes/reporting/index'
-import { Route as ReceivingIndexImport } from './routes/receiving/index'
-import { Route as QueueIndexImport } from './routes/queue/index'
-import { Route as AccessionsIndexImport } from './routes/accessions/index'
-import { Route as SettingsPanelsImport } from './routes/settings.panels'
-import { Route as SettingsOrganizationsImport } from './routes/settings.organizations'
-import { Route as AccessionsAccessionIdImport } from './routes/accessions/$accessionId'
+import { Route as AuthLayoutImport } from './routes/_auth-layout'
+import { Route as AuthLayoutIndexImport } from './routes/_auth-layout/index'
+import { Route as AuthLayoutSettingsImport } from './routes/_auth-layout/settings'
+import { Route as AuthLayoutRunsIndexImport } from './routes/_auth-layout/runs/index'
+import { Route as AuthLayoutReportingIndexImport } from './routes/_auth-layout/reporting/index'
+import { Route as AuthLayoutReceivingIndexImport } from './routes/_auth-layout/receiving/index'
+import { Route as AuthLayoutQueueIndexImport } from './routes/_auth-layout/queue/index'
+import { Route as AuthLayoutAccessionsIndexImport } from './routes/_auth-layout/accessions/index'
+import { Route as AuthLayoutSettingsPanelsImport } from './routes/_auth-layout/settings.panels'
+import { Route as AuthLayoutSettingsOrganizationsImport } from './routes/_auth-layout/settings.organizations'
+import { Route as AuthLayoutAccessionsAccessionIdImport } from './routes/_auth-layout/accessions/$accessionId'
 
 // Create/Update Routes
 
-const SettingsRoute = SettingsImport.update({
-  id: '/settings',
-  path: '/settings',
+const AuthLayoutRoute = AuthLayoutImport.update({
+  id: '/_auth-layout',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const AuthLayoutIndexRoute = AuthLayoutIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
-const RunsIndexRoute = RunsIndexImport.update({
+const AuthLayoutSettingsRoute = AuthLayoutSettingsImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
+
+const AuthLayoutRunsIndexRoute = AuthLayoutRunsIndexImport.update({
   id: '/runs/',
   path: '/runs/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
-const ReportingIndexRoute = ReportingIndexImport.update({
+const AuthLayoutReportingIndexRoute = AuthLayoutReportingIndexImport.update({
   id: '/reporting/',
   path: '/reporting/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
-const ReceivingIndexRoute = ReceivingIndexImport.update({
+const AuthLayoutReceivingIndexRoute = AuthLayoutReceivingIndexImport.update({
   id: '/receiving/',
   path: '/receiving/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
-const QueueIndexRoute = QueueIndexImport.update({
+const AuthLayoutQueueIndexRoute = AuthLayoutQueueIndexImport.update({
   id: '/queue/',
   path: '/queue/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
-const AccessionsIndexRoute = AccessionsIndexImport.update({
+const AuthLayoutAccessionsIndexRoute = AuthLayoutAccessionsIndexImport.update({
   id: '/accessions/',
   path: '/accessions/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
-const SettingsPanelsRoute = SettingsPanelsImport.update({
+const AuthLayoutSettingsPanelsRoute = AuthLayoutSettingsPanelsImport.update({
   id: '/panels',
   path: '/panels',
-  getParentRoute: () => SettingsRoute,
+  getParentRoute: () => AuthLayoutSettingsRoute,
 } as any)
 
-const SettingsOrganizationsRoute = SettingsOrganizationsImport.update({
-  id: '/organizations',
-  path: '/organizations',
-  getParentRoute: () => SettingsRoute,
-} as any)
+const AuthLayoutSettingsOrganizationsRoute =
+  AuthLayoutSettingsOrganizationsImport.update({
+    id: '/organizations',
+    path: '/organizations',
+    getParentRoute: () => AuthLayoutSettingsRoute,
+  } as any)
 
-const AccessionsAccessionIdRoute = AccessionsAccessionIdImport.update({
-  id: '/accessions/$accessionId',
-  path: '/accessions/$accessionId',
-  getParentRoute: () => rootRoute,
-} as any)
+const AuthLayoutAccessionsAccessionIdRoute =
+  AuthLayoutAccessionsAccessionIdImport.update({
+    id: '/accessions/$accessionId',
+    path: '/accessions/$accessionId',
+    getParentRoute: () => AuthLayoutRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_auth-layout': {
+      id: '/_auth-layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthLayoutImport
       parentRoute: typeof rootRoute
     }
-    '/settings': {
-      id: '/settings'
+    '/_auth-layout/settings': {
+      id: '/_auth-layout/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof SettingsImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthLayoutSettingsImport
+      parentRoute: typeof AuthLayoutImport
     }
-    '/accessions/$accessionId': {
-      id: '/accessions/$accessionId'
+    '/_auth-layout/': {
+      id: '/_auth-layout/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthLayoutIndexImport
+      parentRoute: typeof AuthLayoutImport
+    }
+    '/_auth-layout/accessions/$accessionId': {
+      id: '/_auth-layout/accessions/$accessionId'
       path: '/accessions/$accessionId'
       fullPath: '/accessions/$accessionId'
-      preLoaderRoute: typeof AccessionsAccessionIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthLayoutAccessionsAccessionIdImport
+      parentRoute: typeof AuthLayoutImport
     }
-    '/settings/organizations': {
-      id: '/settings/organizations'
+    '/_auth-layout/settings/organizations': {
+      id: '/_auth-layout/settings/organizations'
       path: '/organizations'
       fullPath: '/settings/organizations'
-      preLoaderRoute: typeof SettingsOrganizationsImport
-      parentRoute: typeof SettingsImport
+      preLoaderRoute: typeof AuthLayoutSettingsOrganizationsImport
+      parentRoute: typeof AuthLayoutSettingsImport
     }
-    '/settings/panels': {
-      id: '/settings/panels'
+    '/_auth-layout/settings/panels': {
+      id: '/_auth-layout/settings/panels'
       path: '/panels'
       fullPath: '/settings/panels'
-      preLoaderRoute: typeof SettingsPanelsImport
-      parentRoute: typeof SettingsImport
+      preLoaderRoute: typeof AuthLayoutSettingsPanelsImport
+      parentRoute: typeof AuthLayoutSettingsImport
     }
-    '/accessions/': {
-      id: '/accessions/'
+    '/_auth-layout/accessions/': {
+      id: '/_auth-layout/accessions/'
       path: '/accessions'
       fullPath: '/accessions'
-      preLoaderRoute: typeof AccessionsIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthLayoutAccessionsIndexImport
+      parentRoute: typeof AuthLayoutImport
     }
-    '/queue/': {
-      id: '/queue/'
+    '/_auth-layout/queue/': {
+      id: '/_auth-layout/queue/'
       path: '/queue'
       fullPath: '/queue'
-      preLoaderRoute: typeof QueueIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthLayoutQueueIndexImport
+      parentRoute: typeof AuthLayoutImport
     }
-    '/receiving/': {
-      id: '/receiving/'
+    '/_auth-layout/receiving/': {
+      id: '/_auth-layout/receiving/'
       path: '/receiving'
       fullPath: '/receiving'
-      preLoaderRoute: typeof ReceivingIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthLayoutReceivingIndexImport
+      parentRoute: typeof AuthLayoutImport
     }
-    '/reporting/': {
-      id: '/reporting/'
+    '/_auth-layout/reporting/': {
+      id: '/_auth-layout/reporting/'
       path: '/reporting'
       fullPath: '/reporting'
-      preLoaderRoute: typeof ReportingIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthLayoutReportingIndexImport
+      parentRoute: typeof AuthLayoutImport
     }
-    '/runs/': {
-      id: '/runs/'
+    '/_auth-layout/runs/': {
+      id: '/_auth-layout/runs/'
       path: '/runs'
       fullPath: '/runs'
-      preLoaderRoute: typeof RunsIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthLayoutRunsIndexImport
+      parentRoute: typeof AuthLayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface SettingsRouteChildren {
-  SettingsOrganizationsRoute: typeof SettingsOrganizationsRoute
-  SettingsPanelsRoute: typeof SettingsPanelsRoute
+interface AuthLayoutSettingsRouteChildren {
+  AuthLayoutSettingsOrganizationsRoute: typeof AuthLayoutSettingsOrganizationsRoute
+  AuthLayoutSettingsPanelsRoute: typeof AuthLayoutSettingsPanelsRoute
 }
 
-const SettingsRouteChildren: SettingsRouteChildren = {
-  SettingsOrganizationsRoute: SettingsOrganizationsRoute,
-  SettingsPanelsRoute: SettingsPanelsRoute,
+const AuthLayoutSettingsRouteChildren: AuthLayoutSettingsRouteChildren = {
+  AuthLayoutSettingsOrganizationsRoute: AuthLayoutSettingsOrganizationsRoute,
+  AuthLayoutSettingsPanelsRoute: AuthLayoutSettingsPanelsRoute,
 }
 
-const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
-  SettingsRouteChildren,
+const AuthLayoutSettingsRouteWithChildren =
+  AuthLayoutSettingsRoute._addFileChildren(AuthLayoutSettingsRouteChildren)
+
+interface AuthLayoutRouteChildren {
+  AuthLayoutSettingsRoute: typeof AuthLayoutSettingsRouteWithChildren
+  AuthLayoutIndexRoute: typeof AuthLayoutIndexRoute
+  AuthLayoutAccessionsAccessionIdRoute: typeof AuthLayoutAccessionsAccessionIdRoute
+  AuthLayoutAccessionsIndexRoute: typeof AuthLayoutAccessionsIndexRoute
+  AuthLayoutQueueIndexRoute: typeof AuthLayoutQueueIndexRoute
+  AuthLayoutReceivingIndexRoute: typeof AuthLayoutReceivingIndexRoute
+  AuthLayoutReportingIndexRoute: typeof AuthLayoutReportingIndexRoute
+  AuthLayoutRunsIndexRoute: typeof AuthLayoutRunsIndexRoute
+}
+
+const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
+  AuthLayoutSettingsRoute: AuthLayoutSettingsRouteWithChildren,
+  AuthLayoutIndexRoute: AuthLayoutIndexRoute,
+  AuthLayoutAccessionsAccessionIdRoute: AuthLayoutAccessionsAccessionIdRoute,
+  AuthLayoutAccessionsIndexRoute: AuthLayoutAccessionsIndexRoute,
+  AuthLayoutQueueIndexRoute: AuthLayoutQueueIndexRoute,
+  AuthLayoutReceivingIndexRoute: AuthLayoutReceivingIndexRoute,
+  AuthLayoutReportingIndexRoute: AuthLayoutReportingIndexRoute,
+  AuthLayoutRunsIndexRoute: AuthLayoutRunsIndexRoute,
+}
+
+const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(
+  AuthLayoutRouteChildren,
 )
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/settings': typeof SettingsRouteWithChildren
-  '/accessions/$accessionId': typeof AccessionsAccessionIdRoute
-  '/settings/organizations': typeof SettingsOrganizationsRoute
-  '/settings/panels': typeof SettingsPanelsRoute
-  '/accessions': typeof AccessionsIndexRoute
-  '/queue': typeof QueueIndexRoute
-  '/receiving': typeof ReceivingIndexRoute
-  '/reporting': typeof ReportingIndexRoute
-  '/runs': typeof RunsIndexRoute
+  '': typeof AuthLayoutRouteWithChildren
+  '/settings': typeof AuthLayoutSettingsRouteWithChildren
+  '/': typeof AuthLayoutIndexRoute
+  '/accessions/$accessionId': typeof AuthLayoutAccessionsAccessionIdRoute
+  '/settings/organizations': typeof AuthLayoutSettingsOrganizationsRoute
+  '/settings/panels': typeof AuthLayoutSettingsPanelsRoute
+  '/accessions': typeof AuthLayoutAccessionsIndexRoute
+  '/queue': typeof AuthLayoutQueueIndexRoute
+  '/receiving': typeof AuthLayoutReceivingIndexRoute
+  '/reporting': typeof AuthLayoutReportingIndexRoute
+  '/runs': typeof AuthLayoutRunsIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/settings': typeof SettingsRouteWithChildren
-  '/accessions/$accessionId': typeof AccessionsAccessionIdRoute
-  '/settings/organizations': typeof SettingsOrganizationsRoute
-  '/settings/panels': typeof SettingsPanelsRoute
-  '/accessions': typeof AccessionsIndexRoute
-  '/queue': typeof QueueIndexRoute
-  '/receiving': typeof ReceivingIndexRoute
-  '/reporting': typeof ReportingIndexRoute
-  '/runs': typeof RunsIndexRoute
+  '/settings': typeof AuthLayoutSettingsRouteWithChildren
+  '/': typeof AuthLayoutIndexRoute
+  '/accessions/$accessionId': typeof AuthLayoutAccessionsAccessionIdRoute
+  '/settings/organizations': typeof AuthLayoutSettingsOrganizationsRoute
+  '/settings/panels': typeof AuthLayoutSettingsPanelsRoute
+  '/accessions': typeof AuthLayoutAccessionsIndexRoute
+  '/queue': typeof AuthLayoutQueueIndexRoute
+  '/receiving': typeof AuthLayoutReceivingIndexRoute
+  '/reporting': typeof AuthLayoutReportingIndexRoute
+  '/runs': typeof AuthLayoutRunsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/settings': typeof SettingsRouteWithChildren
-  '/accessions/$accessionId': typeof AccessionsAccessionIdRoute
-  '/settings/organizations': typeof SettingsOrganizationsRoute
-  '/settings/panels': typeof SettingsPanelsRoute
-  '/accessions/': typeof AccessionsIndexRoute
-  '/queue/': typeof QueueIndexRoute
-  '/receiving/': typeof ReceivingIndexRoute
-  '/reporting/': typeof ReportingIndexRoute
-  '/runs/': typeof RunsIndexRoute
+  '/_auth-layout': typeof AuthLayoutRouteWithChildren
+  '/_auth-layout/settings': typeof AuthLayoutSettingsRouteWithChildren
+  '/_auth-layout/': typeof AuthLayoutIndexRoute
+  '/_auth-layout/accessions/$accessionId': typeof AuthLayoutAccessionsAccessionIdRoute
+  '/_auth-layout/settings/organizations': typeof AuthLayoutSettingsOrganizationsRoute
+  '/_auth-layout/settings/panels': typeof AuthLayoutSettingsPanelsRoute
+  '/_auth-layout/accessions/': typeof AuthLayoutAccessionsIndexRoute
+  '/_auth-layout/queue/': typeof AuthLayoutQueueIndexRoute
+  '/_auth-layout/receiving/': typeof AuthLayoutReceivingIndexRoute
+  '/_auth-layout/reporting/': typeof AuthLayoutReportingIndexRoute
+  '/_auth-layout/runs/': typeof AuthLayoutRunsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
+    | ''
     | '/settings'
+    | '/'
     | '/accessions/$accessionId'
     | '/settings/organizations'
     | '/settings/panels'
@@ -232,8 +275,8 @@ export interface FileRouteTypes {
     | '/runs'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/settings'
+    | '/'
     | '/accessions/$accessionId'
     | '/settings/organizations'
     | '/settings/panels'
@@ -244,39 +287,26 @@ export interface FileRouteTypes {
     | '/runs'
   id:
     | '__root__'
-    | '/'
-    | '/settings'
-    | '/accessions/$accessionId'
-    | '/settings/organizations'
-    | '/settings/panels'
-    | '/accessions/'
-    | '/queue/'
-    | '/receiving/'
-    | '/reporting/'
-    | '/runs/'
+    | '/_auth-layout'
+    | '/_auth-layout/settings'
+    | '/_auth-layout/'
+    | '/_auth-layout/accessions/$accessionId'
+    | '/_auth-layout/settings/organizations'
+    | '/_auth-layout/settings/panels'
+    | '/_auth-layout/accessions/'
+    | '/_auth-layout/queue/'
+    | '/_auth-layout/receiving/'
+    | '/_auth-layout/reporting/'
+    | '/_auth-layout/runs/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  SettingsRoute: typeof SettingsRouteWithChildren
-  AccessionsAccessionIdRoute: typeof AccessionsAccessionIdRoute
-  AccessionsIndexRoute: typeof AccessionsIndexRoute
-  QueueIndexRoute: typeof QueueIndexRoute
-  ReceivingIndexRoute: typeof ReceivingIndexRoute
-  ReportingIndexRoute: typeof ReportingIndexRoute
-  RunsIndexRoute: typeof RunsIndexRoute
+  AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  SettingsRoute: SettingsRouteWithChildren,
-  AccessionsAccessionIdRoute: AccessionsAccessionIdRoute,
-  AccessionsIndexRoute: AccessionsIndexRoute,
-  QueueIndexRoute: QueueIndexRoute,
-  ReceivingIndexRoute: ReceivingIndexRoute,
-  ReportingIndexRoute: ReportingIndexRoute,
-  RunsIndexRoute: RunsIndexRoute,
+  AuthLayoutRoute: AuthLayoutRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -289,51 +319,65 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/settings",
-        "/accessions/$accessionId",
-        "/accessions/",
-        "/queue/",
-        "/receiving/",
-        "/reporting/",
-        "/runs/"
+        "/_auth-layout"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/settings": {
-      "filePath": "settings.tsx",
+    "/_auth-layout": {
+      "filePath": "_auth-layout.tsx",
       "children": [
-        "/settings/organizations",
-        "/settings/panels"
+        "/_auth-layout/settings",
+        "/_auth-layout/",
+        "/_auth-layout/accessions/$accessionId",
+        "/_auth-layout/accessions/",
+        "/_auth-layout/queue/",
+        "/_auth-layout/receiving/",
+        "/_auth-layout/reporting/",
+        "/_auth-layout/runs/"
       ]
     },
-    "/accessions/$accessionId": {
-      "filePath": "accessions/$accessionId.tsx"
+    "/_auth-layout/settings": {
+      "filePath": "_auth-layout/settings.tsx",
+      "parent": "/_auth-layout",
+      "children": [
+        "/_auth-layout/settings/organizations",
+        "/_auth-layout/settings/panels"
+      ]
     },
-    "/settings/organizations": {
-      "filePath": "settings.organizations.tsx",
-      "parent": "/settings"
+    "/_auth-layout/": {
+      "filePath": "_auth-layout/index.tsx",
+      "parent": "/_auth-layout"
     },
-    "/settings/panels": {
-      "filePath": "settings.panels.tsx",
-      "parent": "/settings"
+    "/_auth-layout/accessions/$accessionId": {
+      "filePath": "_auth-layout/accessions/$accessionId.tsx",
+      "parent": "/_auth-layout"
     },
-    "/accessions/": {
-      "filePath": "accessions/index.tsx"
+    "/_auth-layout/settings/organizations": {
+      "filePath": "_auth-layout/settings.organizations.tsx",
+      "parent": "/_auth-layout/settings"
     },
-    "/queue/": {
-      "filePath": "queue/index.tsx"
+    "/_auth-layout/settings/panels": {
+      "filePath": "_auth-layout/settings.panels.tsx",
+      "parent": "/_auth-layout/settings"
     },
-    "/receiving/": {
-      "filePath": "receiving/index.tsx"
+    "/_auth-layout/accessions/": {
+      "filePath": "_auth-layout/accessions/index.tsx",
+      "parent": "/_auth-layout"
     },
-    "/reporting/": {
-      "filePath": "reporting/index.tsx"
+    "/_auth-layout/queue/": {
+      "filePath": "_auth-layout/queue/index.tsx",
+      "parent": "/_auth-layout"
     },
-    "/runs/": {
-      "filePath": "runs/index.tsx"
+    "/_auth-layout/receiving/": {
+      "filePath": "_auth-layout/receiving/index.tsx",
+      "parent": "/_auth-layout"
+    },
+    "/_auth-layout/reporting/": {
+      "filePath": "_auth-layout/reporting/index.tsx",
+      "parent": "/_auth-layout"
+    },
+    "/_auth-layout/runs/": {
+      "filePath": "_auth-layout/runs/index.tsx",
+      "parent": "/_auth-layout"
     }
   }
 }

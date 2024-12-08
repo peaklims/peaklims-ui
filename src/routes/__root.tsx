@@ -1,6 +1,5 @@
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { Notification } from "@/components/notifications";
-import { AuthLayout } from "@/layouts/auth-layout";
 import { ReactQueryDevtools } from "@/lib/dev-tools";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
@@ -65,9 +64,7 @@ function RootComponent() {
           !runInDemoMode && "debug-screens"
         )}
       >
-        <AuthLayout>
-          <Outlet />
-        </AuthLayout>
+        <Outlet />
         <ScrollRestoration />
         <Notification />
         <ClickToComponent />
