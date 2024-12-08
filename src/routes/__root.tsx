@@ -64,8 +64,8 @@ function RootComponent() {
           !runInDemoMode && "debug-screens"
         )}
       >
-        <Outlet />
         <ScrollRestoration />
+        <Outlet />
         <Notification />
         <ClickToComponent />
         {!runInDemoMode && (
