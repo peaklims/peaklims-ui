@@ -1,6 +1,8 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
-const {nextui} = require("@nextui-org/react");
+import { nextui } from '@nextui-org/react';
+import tailwindcssAnimate from 'tailwindcss-animate';
+import debugScreens from 'tailwindcss-debug-screens';
+import colors from 'tailwindcss/colors';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 
 /** @type {import('tailwindcss').Config} */
@@ -103,8 +105,8 @@ module.exports = {
     },
   },
   plugins: [
-    require("tailwindcss-animate"),
-    require("tailwindcss-debug-screens"),
+    tailwindcssAnimate,
+    debugScreens,
     nextui({
       layout: {
         radius: {
