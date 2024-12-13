@@ -35,7 +35,7 @@ import { ManageAccessionSamples } from '@/domain/samples/components/manage-acces
 import { useGetOrderables } from '@/domain/test-orders/apis/get-orderables.api'
 import { ManageAccessionTestOrders } from '@/domain/test-orders/features/manage-accession-test-orders'
 import { Tab, Tabs, useDisclosure } from '@nextui-org/react'
-import { createFileRoute, useParams } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { Paperclip } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 
@@ -44,10 +44,7 @@ export const Route = createFileRoute('/_auth-layout/accessions/$accessionId')({
 })
 
 function EditAccessionPage() {
-  const queryParams = useParams({
-    from: '/accessions/$accessionId',
-  })
-  const accessionId = queryParams.accessionId
+  const { accessionId } = Route.useParams()
   const { data: accession } = useGetAccessionForEdit(accessionId)
 
   const accessionNumber = accession?.accessionNumber ?? ''
