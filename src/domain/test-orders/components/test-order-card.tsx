@@ -105,7 +105,7 @@ export function TestOrderCard({
 
               <button
                 onClick={onEditModalOpen}
-                className="inline-flex items-center pt-2 group"
+                className="inline-flex items-center pt-2 max-w-28 group"
               >
                 <>
                   <p className="text-xs font-medium transition-colors group-hover:text-slate-500">
