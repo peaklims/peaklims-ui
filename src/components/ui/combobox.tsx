@@ -26,6 +26,7 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
     classNames,
     clearable = false,
     onClear,
+    hideButton,
     ...props
   }: {
     classNames?: {
@@ -36,6 +37,7 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
       // option?: string;
     };
     clearable?: boolean;
+    hideButton?: boolean;
     onClear?: () => void;
   } & ComboBoxStateOptions<T>,
   ref: React.Ref<HTMLDivElement>
@@ -141,6 +143,7 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
               ? "border-emerald-500 text-emerald-600 border-l-2"
               : "border-slate-300 text-gray-500",
             "disabled:text-slate-400 disabled:cursor-not-allowed",
+            hideButton ? "hidden" : "",
             classNames?.button
           )}
         >
