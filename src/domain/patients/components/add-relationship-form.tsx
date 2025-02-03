@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Combobox, getLabelById } from "@/components/ui/combobox";
 import {
   Form,
@@ -183,6 +184,24 @@ export const PatientRelationshipForm = ({
             )}
           />
         </div>
+
+        <FormField
+          control={form.control}
+          name="isConfirmedBidirectional"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Bidirectional</FormLabel>
+              </div>
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
