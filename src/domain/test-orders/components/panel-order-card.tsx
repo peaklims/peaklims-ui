@@ -480,10 +480,8 @@ function TestOrderActionMenu({
   );
 
   const handleMarkStat = async () => {
-    try {
-      await markTestOrderStat.mutateAsync(testOrderId);
-      Notification.success("Test order marked as STAT");
-    } 
+    await markTestOrderStat.mutateAsync(testOrderId);
+    Notification.success("Test order marked as STAT");
   };
 
   const handleMarkNormal = async () => {
