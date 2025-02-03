@@ -54,9 +54,9 @@ function commonRejection(error: any) {
   // return Promise.reject(error);
   const statusCode = error?.response?.status;
 
-  if (statusCode === 422) {
+  if (statusCode === 422 || statusCode === 400 || statusCode === 500) {
     const detailMessage =
-      error.response.data.detail || "Validation error occurred.";
+      error.response.data.detail || "An unknown error occurred.";
     Notification.error(`${detailMessage}`);
   }
 

@@ -1,5 +1,5 @@
-import { ConfirmModal } from '@/components/confirm-modal'
-import { Button } from '@/components/ui/button'
+import { ConfirmModal } from "@/components/confirm-modal";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -7,49 +7,49 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { ManageAttachments } from '@/domain/accession-attachments/components/manage-attachments'
-import { useGetAccessionComment } from '@/domain/accession-comments/apis/get-accession-comments'
-import { ManageAccessionComments } from '@/domain/accession-comments/feature/manage-comments'
-import { useGetAccessionForEdit } from '@/domain/accessions/apis/get-editable-aggregate'
-import AccessionStatusBadge from '@/domain/accessions/components/status-badge'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+} from "@/components/ui/form";
+import { ManageAttachments } from "@/domain/accession-attachments/components/manage-attachments";
+import { useGetAccessionComment } from "@/domain/accession-comments/apis/get-accession-comments";
+import { ManageAccessionComments } from "@/domain/accession-comments/feature/manage-comments";
+import { useGetAccessionForEdit } from "@/domain/accessions/apis/get-editable-aggregate";
+import AccessionStatusBadge from "@/domain/accessions/components/status-badge";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Notification } from '@/components/notifications'
-import { Textarea } from '@/components/ui/textarea'
-import { useAbandonAccession } from '@/domain/accessions/apis/abandon-accession'
-import { useSubmitAccession } from '@/domain/accessions/apis/submit-accession'
+import { Notification } from "@/components/notifications";
+import { Textarea } from "@/components/ui/textarea";
+import { useAbandonAccession } from "@/domain/accessions/apis/abandon-accession";
+import { useSubmitAccession } from "@/domain/accessions/apis/submit-accession";
 import {
   AccessionAttachmentDto,
   AccessionContactDto,
   AccessionStatus,
   TestOrderDto,
-} from '@/domain/accessions/types'
-import { useGetAllOrganizationsForDropdown } from '@/domain/organizations/apis/get-all-organizations'
-import { AccessionOrganizationForm } from '@/domain/organizations/features/manage-accession-org'
-import { ManageAccessionPatientCard } from '@/domain/patients/components/manage-accession-patient'
-import { useGetPatientSamples } from '@/domain/samples/apis/get-patient-samples'
-import { ManageAccessionSamples } from '@/domain/samples/components/manage-accession-samples'
-import { useGetOrderables } from '@/domain/test-orders/apis/get-orderables.api'
-import { ManageAccessionTestOrders } from '@/domain/test-orders/features/manage-accession-test-orders'
-import { Tab, Tabs, useDisclosure } from '@nextui-org/react'
-import { createFileRoute } from '@tanstack/react-router'
-import { Paperclip } from 'lucide-react'
-import { Helmet } from 'react-helmet'
+} from "@/domain/accessions/types";
+import { useGetAllOrganizationsForDropdown } from "@/domain/organizations/apis/get-all-organizations";
+import { AccessionOrganizationForm } from "@/domain/organizations/features/manage-accession-org";
+import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-accession-patient";
+import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
+import { ManageAccessionSamples } from "@/domain/samples/components/manage-accession-samples";
+import { useGetOrderables } from "@/domain/test-orders/apis/get-orderables.api";
+import { ManageAccessionTestOrders } from "@/domain/test-orders/features/manage-accession-test-orders";
+import { Tab, Tabs, useDisclosure } from "@nextui-org/react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Paperclip } from "lucide-react";
+import { Helmet } from "react-helmet";
 
-export const Route = createFileRoute('/_auth-layout/accessions/$accessionId')({
+export const Route = createFileRoute("/_auth-layout/accessions/$accessionId")({
   component: EditAccessionPage,
-})
+});
 
 function EditAccessionPage() {
-  const { accessionId } = Route.useParams()
-  const { data: accession } = useGetAccessionForEdit(accessionId)
+  const { accessionId } = Route.useParams();
+  const { data: accession } = useGetAccessionForEdit(accessionId);
 
-  const accessionNumber = accession?.accessionNumber ?? ''
-  useGetAccessionComment(accessionId)
-  const accessionNumberTitle = accessionNumber ? ` - ${accessionNumber}` : ''
+  const accessionNumber = accession?.accessionNumber ?? "";
+  useGetAccessionComment(accessionId);
+  const accessionNumberTitle = accessionNumber ? ` - ${accessionNumber}` : "";
 
   return (
     <div className="">
@@ -83,7 +83,7 @@ function EditAccessionPage() {
         />
       </div>
 
-      {accession?.status === 'Abandoned' ? (
+      {accession?.status === "Abandoned" ? (
         <p className="pt-2 text-sm font- semi-bold">{accession.notes}</p>
       ) : null}
 
@@ -109,7 +109,7 @@ function EditAccessionPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function SubmitAccession({
@@ -117,18 +117,18 @@ function SubmitAccession({
   accessionNumber,
   accessionStatus,
 }: {
-  accessionId: string | undefined
-  accessionNumber: string | undefined
-  accessionStatus: AccessionStatus | undefined
+  accessionId: string | undefined;
+  accessionNumber: string | undefined;
+  accessionStatus: AccessionStatus | undefined;
 }) {
-  const submitAccessionApi = useSubmitAccession()
+  const submitAccessionApi = useSubmitAccession();
   const {
     isOpen: disposeModalIsOpen,
     onOpen: onDisposeModalOpen,
     onOpenChange: onDisposeModalOpenChange,
-  } = useDisclosure()
+  } = useDisclosure();
 
-  if (accessionStatus !== 'Draft') return null
+  if (accessionStatus !== "Draft") return null;
 
   return (
     <>
@@ -138,25 +138,17 @@ function SubmitAccession({
       <ConfirmModal
         content={<p>Are you sure you want to submit this accession?</p>}
         labels={{
-          confirm: 'Yes',
-          cancel: 'Cancel',
+          confirm: "Yes",
+          cancel: "Cancel",
         }}
         confirmationType="primary"
         onConfirm={() => {
-          if (accessionId === undefined) return
+          if (accessionId === undefined) return;
 
-          submitAccessionApi
-            .mutateAsync({ accessionId })
-            .then(() => {
-              Notification.success(`Accession ${accessionNumber} submitted`)
-              onDisposeModalOpen()
-            })
-            .catch((err) => {
-              const statusCode = err?.response?.status
-              if (statusCode != 422) {
-                Notification.error(`Error submitting accession`)
-              }
-            })
+          submitAccessionApi.mutateAsync({ accessionId }).then(() => {
+            Notification.success(`Accession ${accessionNumber} submitted`);
+            onDisposeModalOpen();
+          });
         }}
         onCancel={() => {}}
         isOpen={disposeModalIsOpen}
@@ -164,7 +156,7 @@ function SubmitAccession({
         title={`Submit Accession ${accessionNumber}?`}
       />
     </>
-  )
+  );
 }
 
 function AbandonAccession({
@@ -172,50 +164,43 @@ function AbandonAccession({
   accessionNumber,
   accessionStatus,
 }: {
-  accessionId: string | undefined
-  accessionNumber: string | undefined
-  accessionStatus: AccessionStatus | undefined
+  accessionId: string | undefined;
+  accessionNumber: string | undefined;
+  accessionStatus: AccessionStatus | undefined;
 }) {
-  const clearAccessionApi = useAbandonAccession()
+  const clearAccessionApi = useAbandonAccession();
   const {
     isOpen: disposeModalIsOpen,
     onOpen: onDisposeModalOpen,
     onOpenChange: onDisposeModalOpenChange,
-  } = useDisclosure()
+  } = useDisclosure();
 
   const abandonReasonSchema = z.object({
-    reason: z.string().min(5, 'Reason must be at least 5 characters long'),
-  })
+    reason: z.string().min(5, "Reason must be at least 5 characters long"),
+  });
 
-  type AbandonReasonForm = z.infer<typeof abandonReasonSchema>
+  type AbandonReasonForm = z.infer<typeof abandonReasonSchema>;
 
   const form = useForm<AbandonReasonForm>({
     resolver: zodResolver(abandonReasonSchema),
     defaultValues: {
-      reason: '',
+      reason: "",
     },
-  })
+  });
 
-  if (accessionStatus !== 'Draft') return null
+  if (accessionStatus !== "Draft") return null;
 
   const onSubmit = (values: AbandonReasonForm) => {
-    if (accessionId === undefined) return
+    if (accessionId === undefined) return;
 
     clearAccessionApi
       .mutateAsync({ accessionId, reason: values.reason })
       .then(() => {
-        Notification.success(`Accession ${accessionNumber} abandoned`)
-        onDisposeModalOpenChange()
-        form.reset()
-      })
-      .catch((err) => {
-        const statusCode = err?.response?.status
-        if (statusCode !== 422) {
-          Notification.error(`Error abandoning accession`)
-          onDisposeModalOpenChange()
-        }
-      })
-  }
+        Notification.success(`Accession ${accessionNumber} abandoned`);
+        onDisposeModalOpenChange();
+        form.reset();
+      });
+  };
 
   return (
     <>
@@ -223,8 +208,8 @@ function AbandonAccession({
         className=""
         variant="outline"
         onClick={() => {
-          form.reset()
-          onDisposeModalOpen()
+          form.reset();
+          onDisposeModalOpen();
         }}
       >
         Abandon
@@ -262,25 +247,25 @@ function AbandonAccession({
           </div>
         }
         labels={{
-          confirm: 'Yes',
-          cancel: 'Cancel',
+          confirm: "Yes",
+          cancel: "Cancel",
         }}
         confirmationType="primary"
         onConfirm={form.handleSubmit(onSubmit)}
         onCancel={() => {
-          form.reset()
+          form.reset();
         }}
         isOpen={disposeModalIsOpen}
         onOpenChange={(open) => {
           if (!open) {
-            form.reset()
+            form.reset();
           }
-          onDisposeModalOpenChange()
+          onDisposeModalOpenChange();
         }}
         title={`Abandon Accession ${accessionNumber}?`}
       />
     </>
-  )
+  );
 }
 
 function AccessionDetails({
@@ -291,30 +276,30 @@ function AccessionDetails({
   testOrders,
   attachments,
 }: {
-  accessionId: string | undefined
-  organizationId: string | undefined
-  accessionContacts: AccessionContactDto[] | undefined
-  patientId: string | undefined
-  testOrders: TestOrderDto[] | undefined
-  attachments: AccessionAttachmentDto[] | undefined
+  accessionId: string | undefined;
+  organizationId: string | undefined;
+  accessionContacts: AccessionContactDto[] | undefined;
+  patientId: string | undefined;
+  testOrders: TestOrderDto[] | undefined;
+  attachments: AccessionAttachmentDto[] | undefined;
 }) {
   const { data: samples } = useGetPatientSamples({
-    patientId: patientId ?? '',
-  })
+    patientId: patientId ?? "",
+  });
   const { data: orgs, isLoading: orgsAreLoading } =
-    useGetAllOrganizationsForDropdown()
-  const { data: orderables } = useGetOrderables()
+    useGetAllOrganizationsForDropdown();
+  const { data: orderables } = useGetOrderables();
   return (
     <Tabs
       aria-label="Accession Details"
       color="primary"
       variant="underlined"
       classNames={{
-        tab: 'max-w-fit px-2 h-10',
+        tab: "max-w-fit px-2 h-10",
         tabList:
-          'gap-4 w-full relative rounded-none p-0 border-b border-divider',
+          "gap-4 w-full relative rounded-none p-0 border-b border-divider",
         panel:
-          'shadow-lg rounded-lg px-6 py-2 h-full min-h-[56-rem] min-h-[48rem]', // h-[56rem] sm:h-[48rem]
+          "shadow-lg rounded-lg px-6 py-2 h-full min-h-[56-rem] min-h-[48rem]", // h-[56rem] sm:h-[48rem]
       }}
       radius="lg"
     >
@@ -404,7 +389,7 @@ function AccessionDetails({
             orderables={orderables}
             accessionId={accessionId}
             testOrders={testOrders}
-            patientId={patientId ?? ''}
+            patientId={patientId ?? ""}
           />
         )}
       </Tab>
@@ -488,5 +473,5 @@ function AccessionDetails({
         </div>
       </Tab>
     </Tabs>
-  )
+  );
 }

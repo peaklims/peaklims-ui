@@ -483,12 +483,7 @@ function TestOrderActionMenu({
     try {
       await markTestOrderStat.mutateAsync(testOrderId);
       Notification.success("Test order marked as STAT");
-    } catch (error: any) {
-      const statusCode = error?.response?.status;
-      if (statusCode != 422) {
-        Notification.error("Failed to mark test order as STAT");
-      }
-    }
+    } 
   };
 
   const handleMarkNormal = async () => {

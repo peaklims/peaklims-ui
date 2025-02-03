@@ -1,5 +1,4 @@
 import { LoadingSpinner } from "@/components/loading-spinner";
-import { Notification } from "@/components/notifications";
 import { PatientAvatar } from "@/components/svgs/patient-avatar";
 import { Button } from "@/components/ui/button";
 import { useRemoveAccessionPatient } from "@/domain/accessions/apis/remove-accession-patient";
@@ -30,14 +29,7 @@ export function PatientCard({ patientInfo }: { patientInfo: PatientForCard }) {
   const accessionId = usePatientCardContext().accessionId;
   const removeAccessionApi = useRemoveAccessionPatient();
   function removePatientFromAccession() {
-    removeAccessionApi.mutateAsync(accessionId!).catch((err) => {
-      const statusCode = err?.response?.status;
-      if (statusCode != 422) {
-        Notification.error(
-          "There was an error removing the patient from this accession"
-        );
-      }
-    });
+    removeAccessionApi.mutateAsync(accessionId!);
   }
 
   const firstName = patientInfo?.firstName ?? "";

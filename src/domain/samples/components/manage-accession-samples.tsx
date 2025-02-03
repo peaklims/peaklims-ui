@@ -155,17 +155,9 @@ export function AddSampleButton({
                     ...value,
                     patientId: patientId,
                   } as SampleForCreationDto;
-                  addSampleApi
-                    .mutateAsync({ data: dto })
-                    .then(() => {
-                      setSampleFormIsOpen(false);
-                    })
-                    .catch((err) => {
-                      const statusCode = err?.response?.status;
-                      if (statusCode != 422) {
-                        Notification.error(`Error adding sample`);
-                      }
-                    });
+                  addSampleApi.mutateAsync({ data: dto }).then(() => {
+                    setSampleFormIsOpen(false);
+                  });
                 }}
               />
             </div>

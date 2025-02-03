@@ -1,4 +1,3 @@
-import { Notification } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
 import { Combobox, getLabelById } from "@/components/ui/combobox";
 import {
@@ -54,12 +53,6 @@ export function CancelTestOrderForm({
       .then(() => {
         if (afterSubmit) {
           afterSubmit();
-        }
-      })
-      .catch((err) => {
-        const statusCode = err?.response?.status;
-        if (statusCode != 422) {
-          Notification.error(`Error cancelling test order`);
         }
       });
   }

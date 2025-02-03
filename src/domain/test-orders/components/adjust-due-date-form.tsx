@@ -61,13 +61,6 @@ export function AdjustDueDateForm({
         Notification.success("Due date updated successfully");
         onClose();
         form.reset();
-      })
-      .catch((err) => {
-        const statusCode = err?.response?.status;
-        if (statusCode !== 422) {
-          Notification.error("Error updating due date");
-          onClose();
-        }
       });
   };
 

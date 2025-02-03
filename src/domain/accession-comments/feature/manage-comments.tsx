@@ -52,12 +52,6 @@ export function ManageAccessionComments({
       })
       .then(() => {
         reset();
-      })
-      .catch((err) => {
-        const statusCode = err?.response?.status;
-        if (statusCode != 422) {
-          Notification.error(`Error adding comment`);
-        }
       });
   }
 
