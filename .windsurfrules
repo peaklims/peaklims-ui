@@ -295,6 +295,7 @@ server/
 - Avoid unnecessary curly braces in conditionals
 - Use declarative JSX
 - Implement proper TypeScript discriminated unions for message types
+- Do NOT modify svg elements unless explicitly asked to
 
 ## UI and Styling
 
