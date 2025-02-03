@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Notification } from "@/components/notifications";
+import { Relationships } from "@/components/svgs/relationships";
 import { Textarea } from "@/components/ui/textarea";
 import { useAbandonAccession } from "@/domain/accessions/apis/abandon-accession";
 import { useSubmitAccession } from "@/domain/accessions/apis/submit-accession";
@@ -30,6 +31,7 @@ import {
 import { useGetAllOrganizationsForDropdown } from "@/domain/organizations/apis/get-all-organizations";
 import { AccessionOrganizationForm } from "@/domain/organizations/features/manage-accession-org";
 import { ManageAccessionPatientCard } from "@/domain/patients/components/manage-accession-patient";
+import { PatientRelationshipsTab } from "@/domain/patients/features/patient-relationships-tab";
 import { useGetPatientSamples } from "@/domain/samples/apis/get-patient-samples";
 import { ManageAccessionSamples } from "@/domain/samples/components/manage-accession-samples";
 import { useGetOrderables } from "@/domain/test-orders/apis/get-orderables.api";
@@ -360,6 +362,17 @@ function AccessionDetails({
         }
       >
         <ManageAccessionSamples patientId={patientId} samples={samples} />
+      </Tab>
+      <Tab
+        key="relationships"
+        title={
+          <div className="flex items-center space-x-2 text-sm">
+            <Relationships className="w-4.5 h-4.5" />
+            <p>Relationships</p>
+          </div>
+        }
+      >
+        {patientId && <PatientRelationshipsTab patientId={patientId} />}
       </Tab>
       <Tab
         key="panels-and-tests"

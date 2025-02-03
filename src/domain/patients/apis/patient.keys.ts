@@ -5,6 +5,8 @@ const PatientKeys = {
     [...PatientKeys.lists(), { queryParams }] as const,
   details: () => [...PatientKeys.all, "detail"] as const,
   detail: (PatientId: string) => [...PatientKeys.details(), PatientId] as const,
+  relationships: (patientId: string) =>
+    [...PatientKeys.all, "relationships", patientId] as const,
   searchExistingPatients: () =>
     [...PatientKeys.all, "searchExistingPatient"] as const,
   searchExistingPatient: (queryParams: string) =>
