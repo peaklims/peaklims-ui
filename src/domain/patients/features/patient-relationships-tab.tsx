@@ -7,7 +7,7 @@ import { useGetPatientRelationships } from "../apis/get-patient-relationships";
 import {
   PatientRelationshipForm,
   PatientRelationshipFormValues,
-} from "../components/add-relationship-form";
+} from "../components/patient-relationship-form";
 import { PatientRelationships } from "../components/relationships/patient-relationships";
 import { relationshipTableColumns } from "../components/relationships/patient-relationships-columns";
 

@@ -1,3 +1,4 @@
+import { QuestionCircle } from "@/components/svgs/question-circle";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Combobox, getLabelById } from "@/components/ui/combobox";
@@ -12,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Tooltip } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { Item } from "react-stately";
 import * as z from "zod";
@@ -54,7 +56,7 @@ export const PatientRelationshipForm = ({
       toPatientId: "",
       fromRelationship: "",
       toRelationship: "",
-      isConfirmedBidirectional: false,
+      isConfirmedBidirectional: true,
       notes: "",
       ...initialData,
     },
@@ -115,6 +117,7 @@ export const PatientRelationshipForm = ({
                 <FormControl>
                   <Combobox
                     clearable={true}
+                    autoFocus={true}
                     label={field.name}
                     {...field}
                     inputValue={getLabelById({
@@ -146,11 +149,7 @@ export const PatientRelationshipForm = ({
               <FormItem>
                 <FormLabel required={true}>To patient</FormLabel>
                 <FormControl>
-                  <Input
-                    value={field.value}
-                    onChange={field.onChange}
-                    autoFocus={true}
-                  />
+                  <Input value={field.value} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -195,13 +194,27 @@ export const PatientRelationshipForm = ({
           render={({ field }) => (
             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
               <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Checkbox isSelected={field.value} onChange={field.onChange} />
               </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Bidirectional</FormLabel>
+              <div className="flex items-center space-x-2 leading-none">
+                <FormLabel>Confirmed Bidirectional</FormLabel>
+                <Tooltip
+                  placement="bottom"
+                  closeDelay={0}
+                  delay={600}
+                  className="shadow-md bg-slate-100 border-slate-800"
+                  content={
+                    <p className="max-w-sm bg-slate-100">
+                      You can confirm that the relationship is valid in both
+                      directions. When true, the inverse relationship will be
+                      added to the other patient.
+                    </p>
+                  }
+                >
+                  <div className="">
+                    <QuestionCircle className="text-sky-600" />
+                  </div>
+                </Tooltip>
               </div>
             </FormItem>
           )}
