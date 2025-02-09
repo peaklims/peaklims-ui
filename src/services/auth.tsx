@@ -18,7 +18,7 @@ function useClaims() {
   return useQuery({
     queryKey: claimsApiKeys.claims,
     queryFn: async () => {
-      const delay = new Promise((resolve) => setTimeout(resolve, 550));
+      const delay = new Promise((resolve) => setTimeout(resolve, 400));
       return Promise.all([fetchClaims(), delay]).then(
         ([claims]) => claims as ClaimsType[]
       );

@@ -4,8 +4,10 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { HotkeysProvider } from "react-hotkeys-hook";
+import { FullScreenLoading } from "./components/full-screen-loading";
 import "./index.css";
 import { routeTree } from "./routeTree.gen";
+import { useAuthUser } from "./services/auth";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,10 +36,17 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <QueryClientProvider client={queryClient}>
         <NextUIProvider>
           <HotkeysProvider>
-            <RouterProvider router={router} />
+            <App />
           </HotkeysProvider>
         </NextUIProvider>
       </QueryClientProvider>
     </Suspense>
   </StrictMode>
 );
+
+function App() {
+  const { isLoading } = useAuthUser();
+  if (isLoading) return <FullScreenLoading />;
+
+  return <RouterProvider router={router} />;
+}

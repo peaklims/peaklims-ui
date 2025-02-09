@@ -1,9 +1,7 @@
-import { LoadingSpinner } from "@/components/loading-spinner";
 import { Notification } from "@/components/notifications";
 import { ReactQueryDevtools } from "@/lib/dev-tools";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
-import { useAuthUser } from "@/services/auth";
 import {
   Outlet,
   ScrollRestoration,
@@ -13,14 +11,6 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { ClickToComponent } from "click-to-react-component";
 import { Helmet } from "react-helmet";
 
-function Loading() {
-  return (
-    <div className="relative flex items-center justify-center w-full bg-white isolate min-h-svh max-lg:flex-col lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">
-      <LoadingSpinner />
-    </div>
-  );
-}
-
 export const Route = createRootRoute({
   component: RootComponent,
 });
@@ -28,9 +18,6 @@ export const Route = createRootRoute({
 const runInDemoMode = false;
 
 function RootComponent() {
-  const { isLoading } = useAuthUser();
-  if (isLoading) return <Loading />;
-
   return (
     <>
       <Helmet

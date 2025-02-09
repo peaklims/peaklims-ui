@@ -1,5 +1,6 @@
 import logo from "@/assets/logo-with-name.svg";
 import { Kbd, TooltipHotkey } from "@/components";
+import { FullScreenLoading } from "@/components/full-screen-loading";
 import {
   Sidebar,
   SidebarBody,
@@ -55,7 +56,7 @@ export const Route = createFileRoute("/_auth-layout")({
 });
 
 function AuthLayout() {
-  const { user, logoutUrl } = useAuthUser();
+  const { user, logoutUrl, isLoggedIn, isLoading } = useAuthUser();
   const [quickActionIsOpen, setQuickActionIsOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -84,6 +85,9 @@ function AuthLayout() {
 
   const { data: organizationInfo, isLoading: isLoadingOrganizationInfo } =
     useGetUserPeakOrganization();
+
+  if (!isLoggedIn || isLoading) return <FullScreenLoading />;
+
   return (
     <SidebarProvider>
       <SidebarLayout
