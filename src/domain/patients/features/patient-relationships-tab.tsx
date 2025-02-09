@@ -95,7 +95,7 @@ export function AddRelationshipButton({
             <div className="px-6 pb-2 grow gap-y-5">
               <PatientRelationshipForm
                 onSubmit={handleSubmit}
-                fromPatinetName={`${patientInfo?.firstName} ${patientInfo?.lastName}`}
+                fromPatientName={`${patientInfo?.firstName} ${patientInfo?.lastName}`}
                 onCancel={() => setRelationshipFormIsOpen(false)}
                 initialData={{ fromPatientId: patientId }}
                 isSubmitting={isPending}

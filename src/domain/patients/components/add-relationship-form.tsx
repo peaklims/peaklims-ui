@@ -20,17 +20,21 @@ import { relationshipsDropdown } from "../types/patient-relationship";
 export const patientRelationshipFormSchema = z.object({
   fromPatientId: z.string({ required_error: "From patient is required" }),
   toPatientId: z.string({ required_error: "To patient is required" }),
-  fromRelationship: z.string({ required_error: "From relationship is required" }),
+  fromRelationship: z.string({
+    required_error: "From relationship is required",
+  }),
   toRelationship: z.string({ required_error: "To relationship is required" }),
   isConfirmedBidirectional: z.boolean().default(false),
   notes: z.string().optional(),
 });
 
-export type PatientRelationshipFormValues = z.infer<typeof patientRelationshipFormSchema>;
+export type PatientRelationshipFormValues = z.infer<
+  typeof patientRelationshipFormSchema
+>;
 
 interface PatientRelationshipFormProps {
   onSubmit: (values: PatientRelationshipFormValues) => Promise<void> | void;
-  fromPatinetName: string;
+  fromPatientName: string;
   onCancel?: () => void;
   initialData?: Partial<PatientRelationshipFormValues>;
   isSubmitting?: boolean;
@@ -39,7 +43,7 @@ interface PatientRelationshipFormProps {
 export const PatientRelationshipForm = ({
   onSubmit,
   onCancel,
-  fromPatinetName,
+  fromPatientName,
   initialData,
   isSubmitting = false,
 }: PatientRelationshipFormProps) => {
@@ -63,7 +67,7 @@ export const PatientRelationshipForm = ({
   const fromPatientOption = [
     {
       value: form.getValues("fromPatientId"),
-      label: fromPatinetName,
+      label: fromPatientName,
     },
   ];
 
