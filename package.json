@@ -10,7 +10,11 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "serve": "vite preview",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "exec playwright test",
+    "test:report": "exec playwright show-report",
+    "test:ui": "exec playwright test --ui",
+    "test:cg": "exec playwright test codegen"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -61,6 +65,7 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.50.0",
     "@tanstack/eslint-plugin-query": "^5.61.4",
     "@tanstack/react-query-devtools": "^5.61.4",
     "@tanstack/router-devtools": "^1.82.12",

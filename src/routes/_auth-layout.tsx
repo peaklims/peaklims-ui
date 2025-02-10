@@ -1,6 +1,5 @@
 import logo from "@/assets/logo-with-name.svg";
 import { Kbd, TooltipHotkey } from "@/components";
-import { FullScreenLoading } from "@/components/full-screen-loading";
 import {
   Sidebar,
   SidebarBody,
@@ -86,7 +85,7 @@ function AuthLayout() {
   const { data: organizationInfo, isLoading: isLoadingOrganizationInfo } =
     useGetUserPeakOrganization();
 
-  if (!isLoggedIn || isLoading) return <FullScreenLoading />;
+  // if (!isLoggedIn || isLoading) return <FullScreenLoading />;
 
   return (
     <SidebarProvider>

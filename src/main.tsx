@@ -1,7 +1,7 @@
 import { NextUIProvider } from "@nextui-org/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { StrictMode, Suspense } from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { HotkeysProvider } from "react-hotkeys-hook";
 import { FullScreenLoading } from "./components/full-screen-loading";
@@ -32,15 +32,15 @@ declare module "@tanstack/react-router" {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Suspense fallback={null}>
-      <QueryClientProvider client={queryClient}>
-        <NextUIProvider>
-          <HotkeysProvider>
-            <App />
-          </HotkeysProvider>
-        </NextUIProvider>
-      </QueryClientProvider>
-    </Suspense>
+    {/* <Suspense fallback={null}> */}
+    <QueryClientProvider client={queryClient}>
+      <NextUIProvider>
+        <HotkeysProvider>
+          <App />
+        </HotkeysProvider>
+      </NextUIProvider>
+    </QueryClientProvider>
+    {/* </Suspense> */}
   </StrictMode>
 );
 

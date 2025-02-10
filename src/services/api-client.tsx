@@ -7,6 +7,7 @@ export const peakLimsBff = axios.create({
   headers: {
     "X-CSRF": "1",
   },
+  withCredentials: true,
 });
 
 export const peakLimsApi = axios.create({
@@ -14,6 +15,7 @@ export const peakLimsApi = axios.create({
   headers: {
     "X-CSRF": "1",
   },
+  withCredentials: true,
 });
 
 peakLimsBff.interceptors.response.use(
