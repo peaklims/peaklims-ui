@@ -1,6 +1,6 @@
 name: Playwright Tests
 
-on: [pull_requests, workflow_dispatch]
+on: [pull_request, workflow_dispatch]
 
 jobs:
   test:
