@@ -39,7 +39,7 @@ import { ManageAccessionTestOrders } from "@/domain/test-orders/features/manage-
 import { Tab, Tabs, useDisclosure } from "@nextui-org/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Paperclip } from "lucide-react";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 export const Route = createFileRoute("/_auth-layout/accessions/$accessionId")({
   component: EditAccessionPage,
@@ -55,9 +55,11 @@ function EditAccessionPage() {
 
   return (
     <div className="">
-      <Helmet>
-        <title>Edit Accession {accessionNumberTitle}</title>
-      </Helmet>
+      <HelmetProvider>
+        <Helmet>
+          <title>Edit Accession {accessionNumberTitle}</title>
+        </Helmet>
+      </HelmetProvider>
 
       <div className="flex items-center justify-start w-full space-x-4">
         <div className="flex items-center justify-start w-full space-x-4">

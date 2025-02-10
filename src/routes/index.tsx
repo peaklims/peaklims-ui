@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
-export const Route = createFileRoute("/_auth-layout/")({
+export const Route = createFileRoute("/")({
   component: HomeComponent,
 });
 

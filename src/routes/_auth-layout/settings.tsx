@@ -8,7 +8,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 export const Route = createFileRoute("/_auth-layout/settings")({
   component: RouteComponent,
@@ -52,9 +52,11 @@ function RouteComponent() {
 
   return (
     <>
-      <Helmet>
-        <title>{helmetTitle}</title>
-      </Helmet>
+      <HelmetProvider>
+        <Helmet>
+          <title>{helmetTitle}</title>
+        </Helmet>
+      </HelmetProvider>
 
       <h1 className="text-4xl font-bold tracking-tight scroll-m-20">
         Settings
