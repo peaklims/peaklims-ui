@@ -305,7 +305,7 @@ function ExistingPatientsDisplay({
   const searchQuery = {
     filters:
       debouncedFirstName && debouncedLastName
-        ? `firstName@=*${debouncedFirstName} && lastName@=*${debouncedLastName}`
+        ? `firstName@=*"${debouncedFirstName}" && lastName@=*"${debouncedLastName}"`
         : undefined,
     pageSize,
     pageNumber,
