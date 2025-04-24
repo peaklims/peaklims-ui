@@ -10,13 +10,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useDebounce } from "@/hooks/use-debounce";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Tooltip } from "@nextui-org/react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Item } from "react-stately";
 import * as z from "zod";
+import { useExistingPatientSearch } from "../apis/search-existing-patients";
 import { relationshipsDropdown } from "../types/patient-relationship";
 
 export const patientRelationshipFormSchema = z.object({
@@ -60,6 +62,22 @@ export const PatientRelationshipForm = ({
       notes: "",
       ...initialData,
     },
+  });
+  const [pageSize, setPageSize] = useState(500);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [inputValue, setInputValue] = useState("");
+  const filterValue = useDebounce(inputValue, 300);
+  console.log([filterValue]);
+
+  const searchQuery = {
+    filters: filterValue ? `fullname@=*"${filterValue}"` : undefined,
+    pageSize,
+    pageNumber,
+  };
+
+  const { data: searchResults } = useExistingPatientSearch({
+    ...searchQuery,
+    options: { enabled: true },
   });
 
   const handleSubmit = form.handleSubmit(async (values) => {
@@ -149,7 +167,44 @@ export const PatientRelationshipForm = ({
               <FormItem>
                 <FormLabel required={true}>To patient</FormLabel>
                 <FormControl>
-                  <Input value={field.value} onChange={field.onChange} />
+                  <Combobox
+                    classNames={{
+                      wrapper: "w-full",
+                      input: "w-full",
+                    }}
+                    placeholder="Search for a patient"
+                    label={field.name}
+                    inputValue={inputValue}
+                    onInputChange={setInputValue}
+                    selectedKey={field.value}
+                    onSelectionChange={(key) => {
+                      field.onChange(key);
+                      const selectedPatient = searchResults?.data.find(
+                        (patient) => patient.id === key
+                      );
+                      if (selectedPatient) {
+                        setInputValue(
+                          `${selectedPatient.firstName} ${selectedPatient.lastName}`
+                        );
+                      }
+                    }}
+                  >
+                    {searchResults?.data.map((patient) => (
+                      <Item
+                        key={patient.id}
+                        textValue={`${patient.firstName} ${patient.lastName}`}
+                      >
+                        <div className="flex flex-col">
+                          <span className="font-medium">
+                            {patient.firstName} {patient.lastName}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            {patient.internalId}
+                          </span>
+                        </div>
+                      </Item>
+                    ))}
+                  </Combobox>
                 </FormControl>
                 <FormMessage />
               </FormItem>

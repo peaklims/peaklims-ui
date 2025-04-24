@@ -41,13 +41,16 @@ const getExistingPatientSearch = async ({
   return json;
 };
 
-interface PatientListHookProps extends QueryParams, delayProps {}
+interface PatientListHookProps extends QueryParams, delayProps {
+  options?: any;
+}
 export const useExistingPatientSearch = ({
   pageNumber,
   pageSize,
   filters,
   sortOrder,
   delayInMs = 0,
+  options = {},
 }: PatientListHookProps = {}) => {
   const sortOrderString = generateSieveSortOrder(sortOrder);
   const queryParams = queryString.stringify({
@@ -60,7 +63,6 @@ export const useExistingPatientSearch = ({
 
   return useQuery({
     queryKey: PatientKeys.searchExistingPatient(queryParams ?? ""),
-
     queryFn: () =>
       getExistingPatientSearch({
         queryString: queryParams,
@@ -70,6 +72,7 @@ export const useExistingPatientSearch = ({
     enabled: filters !== undefined && (filters?.length ?? 0) > 0,
     gcTime: 1000 * 30,
     staleTime: 1000 * 30,
+    ...options,
   });
 };
 

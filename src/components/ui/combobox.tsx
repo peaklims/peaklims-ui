@@ -27,12 +27,14 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
     clearable = false,
     onClear,
     hideButton,
+    menuTrigger,
     ...props
   }: {
     classNames?: {
       wrapper?: string;
       input?: string;
       button?: string;
+      menuTrigger?: "focus" | "manual" | "input";
       // listBox?: string;
       // option?: string;
     };
@@ -62,6 +64,7 @@ export const Combobox = React.forwardRef(function Combobox<T extends object>(
       buttonRef,
       listBoxRef,
       popoverRef,
+      menuTrigger,
     },
     state
   );
