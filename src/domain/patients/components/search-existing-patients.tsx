@@ -108,8 +108,7 @@ function FilterForm({
       setFilterValue("");
       return;
     }
-    setFilterValue(`firstName @=* "${filterInputValue}" 
-      || lastName @=* "${filterInputValue}" 
+    setFilterValue(`fullname @=* "${filterInputValue}" 
       || internalId @=* "${filterInputValue}"
       || accessionNumber @=* "${filterInputValue}"`);
   };
