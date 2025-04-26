@@ -41,20 +41,6 @@ export const columns: ColumnDef<AccessionWorklistDto>[] = [
     },
   },
   {
-    accessorKey: "organizationName",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Organization" />
-    ),
-    cell: ({ row }) => {
-      const organizationName = row.getValue("organizationName") as string;
-      return (organizationName?.length ?? 0) > 0 ? (
-        <p>{organizationName}</p>
-      ) : (
-        "—"
-      );
-    },
-  },
-  {
     accessorKey: "patient",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Patient" canSort={false} />
@@ -79,6 +65,20 @@ export const columns: ColumnDef<AccessionWorklistDto>[] = [
             </p>
           ) : null}
         </div>
+      );
+    },
+  },
+  {
+    accessorKey: "organizationName",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Organization" />
+    ),
+    cell: ({ row }) => {
+      const organizationName = row.getValue("organizationName") as string;
+      return (organizationName?.length ?? 0) > 0 ? (
+        <p>{organizationName}</p>
+      ) : (
+        "—"
       );
     },
   },

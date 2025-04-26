@@ -1,5 +1,4 @@
 import { Kbd } from "@/components";
-import { Notification } from "@/components/notifications";
 import { Calendar } from "@/components/svgs";
 import { ExclamationCircle } from "@/components/svgs/exclamation-circle";
 import { Stat } from "@/components/svgs/stat";
@@ -105,7 +104,7 @@ export function TestOrderCard({
 
               <button
                 onClick={onEditModalOpen}
-                className="inline-flex items-center pt-2 max-w-28 group"
+                className="inline-flex items-center pt-2 max-w-48 group"
               >
                 <>
                   <p className="text-xs font-medium transition-colors group-hover:text-slate-500">
@@ -242,18 +241,10 @@ function TestOrderActionMenu({
   );
 
   function markStat() {
-    return markTestOrderStat.mutate(testOrderId, {
-      onError: () => {
-        Notification.error("Failed to mark test order as STAT");
-      },
-    });
+    return markTestOrderStat.mutate(testOrderId, {});
   }
   function markNormal() {
-    return markTestOrderNormal.mutate(testOrderId, {
-      onError: () => {
-        Notification.error("Failed to mark test order as normal priority");
-      },
-    });
+    return markTestOrderNormal.mutate(testOrderId, {});
   }
 
   function handleRemoveTestOrder() {
@@ -261,11 +252,7 @@ function TestOrderActionMenu({
 
     return removeTestOrder.mutate(
       { testOrderId: testOrder.id, accessionId },
-      {
-        onError: () => {
-          Notification.error("Failed to remove test order");
-        },
-      }
+      {}
     );
   }
 

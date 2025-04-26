@@ -61,93 +61,6 @@ export const sampleTableColumns = (
     header: "Status",
   },
   {
-    accessorKey: "sampleNumber",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Sample Number" />
-    ),
-    cell: ({ row }) => {
-      const sampleNumber = row.getValue("sampleNumber") as string;
-      const status = row.getValue("status");
-      const externalId = row.getValue("externalId") as string;
-      return (
-        <div className="inline-flex space-x-3">
-          <div className="inline-flex flex-col">
-            <div className="flex items-center space-x-3">
-              <p className="block">{sampleNumber}</p>
-              <SampleStatusBadge
-                status={status as SampleStatus}
-                className="hidden sm:inline-flex"
-              />
-            </div>
-            {(externalId?.length ?? 0) > 0 && (
-              <span className="block text-xs text-slate-700">{externalId}</span>
-            )}
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "type",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Type" canSort={false} />
-    ),
-    cell: ({ row }) => {
-      const type = row.getValue("type") as string;
-      const containerType = row.getValue("containerType") as string;
-      return (
-        <div className="flex flex-col">
-          {type?.length > 0 ? <p>{type}</p> : "—"}
-          {containerType ? (
-            <span className="text-xs text-slate-700">{containerType}</span>
-          ) : null}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "collectionInfo",
-    accessorFn: (row) => `${row.collectionSite}-${row.collectionDate}`,
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Collection Info"
-        canSort={false}
-      />
-    ),
-    cell: ({ row }) => {
-      const site = row.getValue("collectionSite") as string;
-      const hasSite = (site?.length ?? 0) > 0;
-      const collectionDate = row.getValue("collectionDate") as string;
-      const hasCollectionDate = (collectionDate?.length ?? 0) > 0;
-
-      return (
-        <div className="flex flex-col space-y-1">
-          <p className={cn(!hasSite && "opacity-40")}>
-            {hasSite ? site : "(No Site Given)"}
-          </p>
-          {hasCollectionDate ? (
-            <p className="text-xs text-slate-700">{collectionDate}</p>
-          ) : null}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "receivedDate",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Date Received"
-        canSort={true}
-      />
-    ),
-    cell: ({ row }) => {
-      const receivedDate = row.getValue("receivedDate") as string;
-      return (receivedDate?.length ?? 0) > 0 ? <p>{receivedDate}</p> : "—";
-    },
-  },
-  {
     accessorKey: "actions",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} canSort={false} />
@@ -264,6 +177,93 @@ export const sampleTableColumns = (
           </Modal>
         </div>
       );
+    },
+  },
+  {
+    accessorKey: "sampleNumber",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Sample Number" />
+    ),
+    cell: ({ row }) => {
+      const sampleNumber = row.getValue("sampleNumber") as string;
+      const status = row.getValue("status");
+      const externalId = row.getValue("externalId") as string;
+      return (
+        <div className="inline-flex space-x-3">
+          <div className="inline-flex flex-col">
+            <div className="flex items-center space-x-3">
+              <p className="block">{sampleNumber}</p>
+              <SampleStatusBadge
+                status={status as SampleStatus}
+                className="hidden sm:inline-flex"
+              />
+            </div>
+            {(externalId?.length ?? 0) > 0 && (
+              <span className="block text-xs text-slate-700">{externalId}</span>
+            )}
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "type",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Type" canSort={false} />
+    ),
+    cell: ({ row }) => {
+      const type = row.getValue("type") as string;
+      const containerType = row.getValue("containerType") as string;
+      return (
+        <div className="flex flex-col">
+          {type?.length > 0 ? <p>{type}</p> : "—"}
+          {containerType ? (
+            <span className="text-xs text-slate-700">{containerType}</span>
+          ) : null}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "collectionInfo",
+    accessorFn: (row) => `${row.collectionSite}-${row.collectionDate}`,
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Collection Info"
+        canSort={false}
+      />
+    ),
+    cell: ({ row }) => {
+      const site = row.getValue("collectionSite") as string;
+      const hasSite = (site?.length ?? 0) > 0;
+      const collectionDate = row.getValue("collectionDate") as string;
+      const hasCollectionDate = (collectionDate?.length ?? 0) > 0;
+
+      return (
+        <div className="flex flex-col space-y-1">
+          <p className={cn(!hasSite && "opacity-40")}>
+            {hasSite ? site : "(No Site Given)"}
+          </p>
+          {hasCollectionDate ? (
+            <p className="text-xs text-slate-700">{collectionDate}</p>
+          ) : null}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "receivedDate",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Date Received"
+        canSort={true}
+      />
+    ),
+    cell: ({ row }) => {
+      const receivedDate = row.getValue("receivedDate") as string;
+      return (receivedDate?.length ?? 0) > 0 ? <p>{receivedDate}</p> : "—";
     },
   },
 ];

@@ -103,11 +103,13 @@ function FilterForm({
   const filterInputValue = filterForm.watch("filterInputValue");
 
   const onSubmit = (data: z.infer<typeof filterFormSchema>) => {
-    const filterInputValue = data.filterInputValue;
+    const filterInputValue = data.filterInputValue?.trim();
     if ((filterInputValue?.length ?? 0) <= 0) {
       setFilterValue("");
       return;
     }
+    filterForm.setValue("filterInputValue", filterInputValue);
+
     setFilterValue(`fullname @=* "${filterInputValue}" 
       || internalId @=* "${filterInputValue}"
       || accessionNumber @=* "${filterInputValue}"`);
