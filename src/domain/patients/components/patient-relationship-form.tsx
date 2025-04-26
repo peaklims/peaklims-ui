@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Item } from "react-stately";
 import * as z from "zod";
+import { useGetSuggestedRelationship } from "../apis/get-suggested-relationship";
 import { useExistingPatientSearch } from "../apis/search-existing-patients";
 import { relationshipsDropdown } from "../types/patient-relationship";
 
@@ -90,6 +91,25 @@ export const PatientRelationshipForm = ({
       label: fromPatientName,
     },
   ];
+
+  const relationship = form.watch("fromRelationship");
+  const toPatientId = form.watch("toPatientId");
+  const toRelationship = form.watch("toRelationship");
+
+  const suggestionEnabled = !!relationship && !!toPatientId && !toRelationship;
+  const suggestionPayload = suggestionEnabled
+    ? { relationship, toPatientId }
+    : undefined;
+  const { data: suggestedToRelationship, error: suggestedError } =
+    useGetSuggestedRelationship(suggestionPayload);
+
+  const handleApplySuggestion = () => {
+    if (suggestedToRelationship) {
+      form.setValue("toRelationship", suggestedToRelationship, {
+        shouldValidate: true,
+      });
+    }
+  };
 
   return (
     <Form {...form}>
@@ -237,6 +257,33 @@ export const PatientRelationshipForm = ({
                     ))}
                   </Combobox>
                 </FormControl>
+                {suggestedError && (
+                  <div className="mt-1 text-xs text-red-500">
+                    Could not fetch suggested relationship
+                  </div>
+                )}
+                {suggestedToRelationship && !toRelationship && (
+                  <div className="flex items-center mt-1 space-x-2">
+                    <span className="text-xs text-sky-700">
+                      Suggested:{" "}
+                      <b>
+                        {getLabelById({
+                          id: suggestedToRelationship,
+                          data: relationshipsDropdown,
+                        }) || suggestedToRelationship}
+                      </b>
+                    </span>
+                    <Button
+                      type="button"
+                      size="xs"
+                      variant="link"
+                      className="h-auto min-w-0 p-0 text-xs"
+                      onClick={handleApplySuggestion}
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                )}
                 <FormMessage />
               </FormItem>
             )}
