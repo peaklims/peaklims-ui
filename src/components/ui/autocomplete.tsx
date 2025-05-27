@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { useAutoComplete } from "wispe";
+import { useAutoComplete } from "@wispe/wispe-react";
 
 interface AutocompleteProps<Item, Value extends string | number = string> {
   items: Item[];
