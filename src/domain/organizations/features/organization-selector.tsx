@@ -1,5 +1,5 @@
 // OrganizationSelector.tsx
-import { Combobox, getLabelById } from "@/components/ui/combobox";
+import { Autocomplete } from "@/components/ui/autocomplete";
 import {
   Form,
   FormControl,
@@ -12,9 +12,7 @@ import { useGetAccessionForEdit } from "@/domain/accessions";
 import { useClearAccessionOrganization } from "@/domain/accessions/apis/clear-accession-org";
 import { useSetAccessionOrganization } from "@/domain/accessions/apis/set-accession-org";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Item } from "react-stately";
 import { z } from "zod";
 
 const orgFormSchema = z.object({
@@ -42,18 +40,6 @@ export function OrganizationSelector({
     (o) => !o.disabled || o.value === organizationId
   );
 
-  // derive the label for the current organization
-  const deriveLabel = (id?: string) =>
-    id ? getLabelById({ id, data: options ?? [] }) ?? "" : "";
-
-  const [inputValue, setInputValue] = useState(() =>
-    deriveLabel(organizationId)
-  );
-
-  useEffect(() => {
-    setInputValue(deriveLabel(organizationId));
-  }, [organizationId, options]);
-
   const form = useForm<OrgFormData>({
     resolver: zodResolver(orgFormSchema),
     values: { organization: organizationId ?? "" },
@@ -75,42 +61,37 @@ export function OrganizationSelector({
           name="organization"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Organization</FormLabel>
+              <FormLabel htmlFor="organization">Organization</FormLabel>
               <FormControl>
-                <Combobox
-                  classNames={{ wrapper: "w-full md:w-[25rem]" }}
-                  autoFocus
-                  label={field.name}
-                  clearable
-                  inputValue={inputValue}
-                  onInputChange={setInputValue}
-                  isDisabled={orgsAreLoading || !isDraft}
-                  onClear={() => {
-                    field.onChange("");
-                    setInputValue("");
-                    if (accessionId) clearOrg.mutateAsync({ accessionId });
-                  }}
-                  selectedKey={field.value}
-                  onSelectionChange={(key) => {
-                    field.onChange(key);
-                    setInputValue(
-                      getLabelById({
-                        id: key?.toString() ?? "",
-                        data: options ?? [],
-                      }) ?? ""
-                    );
+                <Autocomplete
+                  inputId="organization"
+                  items={options ?? []}
+                  selectedValue={field.value}
+                  placeholder="Select an organization"
+                  setSelectedValue={(value) => {
+                    field.onChange(value);
                     form.handleSubmit(onSubmit)();
                   }}
-                  disabledKeys={orgs
-                    ?.filter((o) => o.disabled)
-                    .map((o) => o.value)}
-                >
-                  {options?.map((o) => (
-                    <Item key={o.value} textValue={o.label}>
-                      {o.label}
-                    </Item>
-                  ))}
-                </Combobox>
+                  mapValue={(item) => item.value}
+                  onFilterAsync={async ({ searchTerm }) => {
+                    return (
+                      orgs?.filter((o) =>
+                        o.label.toLowerCase().includes(searchTerm.toLowerCase())
+                      ) ?? []
+                    );
+                  }}
+                  onClearAsync={async () => {
+                    field.onChange(undefined);
+                    if (accessionId)
+                      await clearOrg.mutateAsync({ accessionId });
+                  }}
+                  itemToString={(item) => item.label}
+                  disabled={orgsAreLoading || !isDraft}
+                  label="Organization"
+                  asyncDebounceMs={300}
+                  isItemDisabled={(o) => o.disabled ?? false}
+                  labelSrOnly={true}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

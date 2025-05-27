@@ -1,6 +1,6 @@
 import { Notification } from "@/components/notifications";
+import { Autocomplete } from "@/components/ui/autocomplete";
 import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/ui/combobox";
 import {
   Form,
   FormControl,
@@ -13,7 +13,6 @@ import { useAddAccessionContact } from "@/domain/accession-contacts/apis/add-acc
 import { AccessionContactDto } from "@/domain/accessions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Item } from "react-stately";
 import { z } from "zod";
 import { useGetContactsByOrganization } from "../../organization-contacts/apis/get-all-contacts-by-organization";
 import { AccessionContacts } from "./accession-contacts";
@@ -76,22 +75,30 @@ export function ContactsManager({
               name="contactId"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Select Contact</FormLabel>
+                  <FormLabel htmlFor="contact">Select Contact</FormLabel>
                   <FormControl>
-                    <Combobox
-                      classNames={{ wrapper: "w-full" }}
-                      label={field.name}
+                    <Autocomplete
+                      inputId="contact"
+                      items={options ?? []}
+                      selectedValue={field.value}
+                      setSelectedValue={field.onChange}
+                      mapValue={(item) => item.value}
                       placeholder="Select a contact"
-                      selectedKey={field.value}
-                      onSelectionChange={field.onChange}
-                      isDisabled={!organizationId || options?.length === 0}
-                    >
-                      {options?.map((opt) => (
-                        <Item key={opt.value} textValue={opt.label}>
-                          {opt.label}
-                        </Item>
-                      ))}
-                    </Combobox>
+                      onFilterAsync={async ({ searchTerm }) => {
+                        return (
+                          options?.filter((o) =>
+                            o.label
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase())
+                          ) ?? []
+                        );
+                      }}
+                      itemToString={(item) => item.label}
+                      disabled={!organizationId || options?.length === 0}
+                      label="Organization"
+                      asyncDebounceMs={300}
+                      labelSrOnly={true}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
