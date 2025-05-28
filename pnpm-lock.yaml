@@ -69,8 +69,8 @@ importers:
         specifier: ^8.20.5
         version: 8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@wispe/wispe-react':
-        specifier: 0.0.2
-        version: 0.0.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.0.3
+        version: 0.0.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       axios:
         specifier: ^1.7.8
         version: 1.9.0
@@ -3054,8 +3054,8 @@ packages:
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0
 
-  '@wispe/wispe-react@0.0.2':
-    resolution: {integrity: sha512-Qhk942NOLX23Q+oUN+2mfMmzIRRz3ZMgs36utqZLPg0joQPyZGNlZAkA75lwfz7prJApMFjSrI8tHyYRkfDy3w==}
+  '@wispe/wispe-react@0.0.3':
+    resolution: {integrity: sha512-XnpNAyrpvcJ6JD1Lajhmja4otVpCSc1Hx6Fd5lGeTBc/TMidRrcxkjTz4hh2VPOENUloeiZEzizze+1kv4pbkQ==}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
@@ -8424,7 +8424,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@wispe/wispe-react@0.0.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@wispe/wispe-react@0.0.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)

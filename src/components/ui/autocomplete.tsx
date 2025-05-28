@@ -51,7 +51,7 @@ export function Autocomplete<Item, Value extends string | number = string>({
   } = useAutoComplete<Item, Value>({
     items,
     mapValue,
-    state: { selectedValue, setSelectedValue, label },
+    state: { selectedValue, setSelectedValue },
     asyncDebounceMs,
     onFilterAsync,
     onClearAsync,
